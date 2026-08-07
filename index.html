@@ -297,6 +297,8 @@ p{margin:0}
   font-variant-numeric:tabular-nums;
 }
 .w-hd .dot{width:5px;height:5px;border-radius:50%;background:var(--data);box-shadow:0 0 7px var(--data);flex:none}
+.w-shot{display:block;width:100%;height:auto}
+.w-photo{background:none;border:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .w-hd .t{color:var(--tx-2);letter-spacing:.16em}
 .w-hd .r{margin-left:auto;color:var(--tx-4);letter-spacing:.1em}
 .w-bd{padding:var(--wp)}
@@ -370,6 +372,8 @@ p{margin:0}
   opacity:0;transition:opacity .32s;
 }
 .fcard:hover .mv::after{opacity:1}
+.fcard .mv.mv-photo{border:none;background:none;padding:0;display:grid;place-items:center}
+.fcard .mv.mv-photo img{display:block;max-width:100%;max-height:112px;width:auto;height:auto;object-fit:contain}
 .fcard .ft{display:flex;align-items:baseline;gap:9px}
 .fcard h3{font-family:var(--f-display);font-size:17px;font-stretch:90%;letter-spacing:.004em;color:var(--tx)}
 .fcard .idx{font-family:var(--f-mono);font-size:10px;color:var(--tx-4);letter-spacing:.1em;margin-left:auto}
@@ -425,12 +429,6 @@ p{margin:0}
 /* ============================================================
    why us — instrument readouts
    ============================================================ */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media (max-width:980px){.why-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:600px){.why-grid{grid-template-columns:1fr}}
-.mcard{padding:20px;display:flex;flex-direction:column;gap:14px;min-height:190px;
-  transition:transform .28s cubic-bezier(.2,.7,.3,1),border-color .28s}
-.mcard:hover{transform:translateY(-3px);border-color:var(--line-2)}
 .mcard .mk{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-4)}
 .mcard .mv-num{
   font-family:var(--f-mono);font-variant-numeric:tabular-nums;
@@ -444,6 +442,35 @@ p{margin:0}
 .gauge i.on{background:var(--data);box-shadow:0 0 7px rgba(63,216,224,.5)}
 .gauge i.hot{background:var(--brand);box-shadow:0 0 7px rgba(255,0,102,.6)}
 
+/* single consolidated performance strip */
+.stat-panel{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  position:relative;overflow:hidden;
+}
+.stat-panel::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 140% at 12% -10%, rgba(255,0,102,.09), transparent 55%),
+             radial-gradient(90% 120% at 100% 120%, rgba(63,216,224,.08), transparent 55%);
+}
+.stat-item{
+  position:relative;padding:26px 24px;display:flex;flex-direction:column;gap:11px;
+  border-left:1px solid var(--line);
+}
+.stat-item:first-child{border-left:none}
+.stat-item .mv-num{font-size:clamp(1.7rem,2.6vw,2.15rem)}
+.stat-item p{font-size:12.6px;margin-top:0}
+.stat-item .pip{font-size:10px}
+@media (max-width:980px){
+  .stat-panel{grid-template-columns:repeat(2,1fr)}
+  .stat-item{border-left:none;border-top:1px solid var(--line)}
+  .stat-item:nth-child(1),.stat-item:nth-child(2){border-top:none}
+}
+@media (max-width:600px){
+  .stat-panel{grid-template-columns:1fr}
+  .stat-item{border-top:1px solid var(--line)}
+  .stat-item:first-child{border-top:none}
+}
+
 /* ============================================================
    gallery
    ============================================================ */
@@ -455,6 +482,7 @@ p{margin:0}
 .frame{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg-sub);
   border-bottom:1px solid var(--line)}
 .shot{position:absolute;top:0;left:0;width:960px;height:540px;transform-origin:0 0}
+.g-photo{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
 .gcap{display:flex;align-items:center;gap:12px;padding:13px 16px}
 .gcap h3{font-size:15px;font-family:var(--f-display);font-stretch:90%}
 .gcap span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-4)}
@@ -519,9 +547,23 @@ p{margin:0}
 }
 
 /* ============================================================
+   photo lightbox (hero + feature-card screenshots)
+   ============================================================ */
+.w-shot,.mv-photo img{cursor:zoom-in}
+.plb{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  padding:clamp(14px,4vw,44px);background:rgba(1,7,20,.86);backdrop-filter:blur(14px);
+  animation:lbIn .26s cubic-bezier(.2,.7,.3,1)}
+.plb[hidden]{display:none}
+.plb-box{width:min(1100px,100%);display:flex;flex-direction:column;gap:12px}
+.plb-frame{display:flex;align-items:center;justify-content:center;max-height:78vh;
+  border-radius:var(--r);overflow:hidden;border:1px solid var(--line-2);background:var(--bg-sub);
+  box-shadow:0 50px 100px -40px #000}
+.plb-frame img{display:block;width:auto;height:auto;max-width:100%;max-height:78vh;object-fit:contain}
+
+/* ============================================================
    testimonials
    ============================================================ */
-.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.t-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:820px}
 @media (max-width:900px){.t-grid{grid-template-columns:1fr}}
 .tcard{padding:24px;display:flex;flex-direction:column;gap:20px;
   transition:transform .28s cubic-bezier(.2,.7,.3,1),border-color .28s}
@@ -632,7 +674,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <a href="#features">Возможности</a>
       <a href="#why">Почему мы</a>
       <a href="#gallery">Галерея</a>
-      <a href="#reviews">Отзывы</a>
+      <a href="#reviews">Кому нужно</a>
       <a href="#faq">FAQ</a>
     </nav>
 
@@ -656,7 +698,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <li><a href="#features">Возможности</a></li>
       <li><a href="#why">Почему мы</a></li>
       <li><a href="#gallery">Галерея</a></li>
-      <li><a href="#reviews">Отзывы</a></li>
+      <li><a href="#reviews">Кому нужно</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="m-cta">
@@ -681,9 +723,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   </div>
 
   <div class="wrap hero-in">
-    <span class="eyebrow">Windows · 10 виджетов · &lt;2% CPU</span>
-    <h1>Вся телеметрия iRacing — в одном <span class="acc">слое</span></h1>
-    <p class="lead">Позиции, гэпы, топливо, радар и карта трассы поверх симулятора. Отдельные окна, независимая настройка, ноль просадок кадров.</p>
+    <span class="eyebrow">Windows · 21 виджет · &lt;2% CPU</span>
+    <h1>Вся телеметрия iRacing — в одном <span class="acc">приложении</span></h1>
+    <p class="lead">Полная свобода настройки каждого элемента — от внешнего вида до отображаемых данных.</p>
     <div class="hero-actions">
       <a class="btn btn-primary btn-lg" href="#download">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -694,7 +736,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <a class="btn btn-ghost btn-lg" href="#faq">Documentation</a>
     </div>
     <div class="hero-meta">
-      <span>v2.4.1</span><i>/</i><span>18.4 МБ</span><i>/</i><span>Win 10 · 11 x64</span><i>/</i><span>OBS-ready</span>
+      <span>v2.4.1</span><i>/</i><span>Win 10 · 11 x64</span><i>/</i><span>OBS-ready</span>
     </div>
   </div>
 
@@ -702,73 +744,24 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="cluster" aria-label="Пример интерфейса оверлеев">
 
-      <!-- STANDINGS -->
-      <div class="w c-a">
-        <div class="w-hd"><span class="dot"></span><span class="t">Standings</span><span class="r" data-sim="lap">LAP 24 / 32</span></div>
-        <div class="w-bd" style="padding:6px 10px 8px">
-          <table class="tbl">
-            <tbody>
-              <tr><td class="c-pos">1</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#12</td><td class="c-nm">R. Kaarna</td><td class="c-gp">1:47.204</td></tr>
-              <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#77</td><td class="c-nm">M. Sørensen</td><td class="c-gp" data-sim="g2">+2.418</td></tr>
-              <tr><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#04</td><td class="c-nm">J. Almeida</td><td class="c-gp" data-sim="g3">+5.902</td></tr>
-              <tr class="me"><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#31</td><td class="c-nm">Вы</td><td class="c-gp" data-sim="g4">+6.771</td></tr>
-              <tr><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#88</td><td class="c-nm">L. Fábián</td><td class="c-gp" data-sim="g5">+9.340</td></tr>
-              <tr><td class="c-pos">6</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#23</td><td class="c-nm">P. Novotný</td><td class="c-gp">+13.106</td></tr>
-              <tr class="out"><td class="c-pos">7</td><td class="c-cls"><i style="background:var(--cls-4)"></i></td><td class="c-no">#59</td><td class="c-nm">K. Ferrand</td><td class="c-gp">PIT</td></tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- RELATIVE -->
+      <div class="w w-photo c-a">
+        <img class="w-shot" src="img/relative.png" alt="Relative overlay">
       </div>
 
-      <!-- RELATIVE -->
-      <div class="w c-b">
-        <div class="w-hd"><span class="dot"></span><span class="t">Relative</span><span class="r">Spa-Francorchamps · GT3</span></div>
-        <div class="w-bd" style="padding:6px 10px 8px">
-          <table class="tbl">
-            <tbody>
-              <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#77</td><td class="c-nm">M. Sørensen</td><td class="c-gp dl" data-sim="r1">−4.35</td></tr>
-              <tr><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#04</td><td class="c-nm">J. Almeida</td><td class="c-gp dl" data-sim="r2">−0.87</td></tr>
-              <tr class="me"><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#31</td><td class="c-nm">Вы · 1:47.881</td><td class="c-gp">0.00</td></tr>
-              <tr><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#88</td><td class="c-nm">L. Fábián</td><td class="c-gp dl-w" data-sim="r3">+1.62</td></tr>
-              <tr><td class="c-pos">6</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#23</td><td class="c-nm">P. Novotný</td><td class="c-gp dl-w" data-sim="r4">+3.94</td></tr>
-              <tr class="out"><td class="c-pos">9</td><td class="c-cls"><i style="background:var(--cls-4)"></i></td><td class="c-no">#41</td><td class="c-nm">D. Ostrowski</td><td class="c-gp dl-w">+7.28</td></tr>
-            </tbody>
-          </table>
-          <div style="display:flex;gap:16px;align-items:center;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)">
-            <span class="pip d">Green flag</span>
-            <span class="pip">Tyres OK</span>
-            <span class="pip w">Fuel −1 lap</span>
-            <span class="mono" style="margin-left:auto;font-size:10px;color:var(--tx-4)" data-sim="clock">01:12:44</span>
-          </div>
-        </div>
+      <!-- STANDINGS -->
+      <div class="w w-photo c-b">
+        <img class="w-shot" src="img/standings.png" alt="Standings overlay">
       </div>
 
       <div class="c-c">
         <!-- INPUTS -->
-        <div class="w">
-          <div class="w-hd"><span class="dot"></span><span class="t">Inputs</span></div>
-          <div class="w-bd" style="display:flex;gap:11px;align-items:flex-end">
-            <div class="chans">
-              <div class="chan thr"><i id="ch-thr" style="height:72%"></i></div>
-              <div class="chan brk"><i id="ch-brk" style="height:0%"></i></div>
-              <div class="chan clu"><i id="ch-clu" style="height:0%"></i></div>
-            </div>
-            <svg viewBox="0 0 150 52" preserveAspectRatio="none" style="flex:1;height:52px" aria-hidden="true">
-              <polyline id="tr-thr" fill="none" stroke="var(--good)" stroke-width="1.4" stroke-linejoin="round" points=""/>
-              <polyline id="tr-brk" fill="none" stroke="var(--brand)" stroke-width="1.4" stroke-linejoin="round" points=""/>
-            </svg>
-          </div>
+        <div class="w w-photo">
+          <img class="w-shot" src="img/inputs.png" alt="Inputs overlay">
         </div>
         <!-- FUEL -->
-        <div class="w">
-          <div class="w-hd"><span class="dot" style="background:var(--warn);box-shadow:0 0 7px var(--warn)"></span><span class="t">Fuel</span></div>
-          <div class="w-bd" style="display:flex;flex-direction:column;gap:10px">
-            <div class="ro"><span class="ro-k">В баке</span><span class="ro-v" data-sim="fuel">34.8<small>L</small></span></div>
-            <div class="bar brandbar"><i id="fuel-bar" style="width:58%"></i></div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10px;color:var(--tx-3);font-variant-numeric:tabular-nums">
-              <span>3.02 L/lap</span><span class="dl-w" data-sim="need">+2.1 L</span>
-            </div>
-          </div>
+        <div class="w w-photo">
+          <img class="w-shot" src="img/fuel-calculator.png" alt="Fuel Calculator overlay">
         </div>
       </div>
 
@@ -782,24 +775,16 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
       <span class="eyebrow" data-reveal>01 / Возможности</span>
-      <h2 data-reveal style="--d:60ms">Десять виджетов.<br>Каждый — отдельное окно.</h2>
-      <p class="lead" data-reveal style="--d:110ms">Включайте только то, что нужно в текущей сессии. Позиция, размер, прозрачность и набор колонок настраиваются у каждого виджета независимо.</p>
+      <h2 data-reveal style="--d:60ms">Двадцать один виджет.<br>Каждый — отдельное глубоко кастомизируемое окно.</h2>
+      <p class="lead" data-reveal style="--d:110ms">Включайте только то, что нужно в текущей сессии. Настраивайте виджеты под себя.</p>
     </div>
 
     <div class="f-grid">
 
       <!-- 1 Standings -->
       <article class="panel brk fcard" data-reveal>
-        <div class="mv">
-          <table class="tbl">
-            <tbody>
-              <tr><td class="c-pos">1</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">R. Kaarna</td><td class="c-gp">1:47.20</td></tr>
-              <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">M. Sørensen</td><td class="c-gp">+2.41</td></tr>
-              <tr class="me"><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">Вы</td><td class="c-gp">+5.90</td></tr>
-              <tr><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-nm">L. Fábián</td><td class="c-gp">+9.34</td></tr>
-              <tr class="out"><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-4)"></i></td><td class="c-nm">K. Ferrand</td><td class="c-gp">PIT</td></tr>
-            </tbody>
-          </table>
+        <div class="mv mv-photo">
+          <img src="img/standings.png" alt="Standings overlay">
         </div>
         <div>
           <div class="ft"><h3>Standings</h3><span class="idx">01</span></div>
@@ -809,34 +794,19 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- 2 Relative -->
       <article class="panel brk fcard" data-reveal style="--d:50ms">
-        <div class="mv">
-          <table class="tbl">
-            <tbody>
-              <tr><td class="c-pos">2</td><td class="c-nm">M. Sørensen</td><td class="c-gp dl">−4.35</td></tr>
-              <tr><td class="c-pos">3</td><td class="c-nm">J. Almeida</td><td class="c-gp dl">−0.87</td></tr>
-              <tr class="me"><td class="c-pos">4</td><td class="c-nm">Вы</td><td class="c-gp">0.00</td></tr>
-              <tr><td class="c-pos">5</td><td class="c-nm">L. Fábián</td><td class="c-gp dl-w">+1.62</td></tr>
-              <tr><td class="c-pos">6</td><td class="c-nm">P. Novotný</td><td class="c-gp dl-w">+3.94</td></tr>
-            </tbody>
-          </table>
+        <div class="mv mv-photo">
+          <img src="img/relative.png" alt="Relative overlay">
         </div>
         <div>
           <div class="ft"><h3>Relative</h3><span class="idx">02</span></div>
-          <p>Соперники впереди и позади по времени, а не по позиции в протоколе. Видно, кто реально догоняет и через сколько кругов.</p>
+          <p>Относительное наложение используется для отображения того, какие гонщики находятся рядом с вами.</p>
         </div>
       </article>
 
       <!-- 3 Fuel -->
       <article class="panel brk fcard" data-reveal style="--d:100ms">
-        <div class="mv" style="display:flex;flex-direction:column;justify-content:center;gap:9px">
-          <div style="display:flex;align-items:flex-end;gap:14px">
-            <div class="ro"><span class="ro-k">Остаток</span><span class="ro-v">34.8<small>L</small></span></div>
-            <div class="ro"><span class="ro-k">Кругов</span><span class="ro-v">11.5<small>LAP</small></span></div>
-          </div>
-          <div class="bar brandbar"><i style="width:56%"></i></div>
-          <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:9.5px;color:var(--tx-4);font-variant-numeric:tabular-nums">
-            <span>3.02 L/LAP</span><span class="dl-w">ЗАЛИТЬ +2.1 L</span>
-          </div>
+        <div class="mv mv-photo">
+          <img src="img/fuel-calculator.png" alt="Fuel Calculator overlay">
         </div>
         <div>
           <div class="ft"><h3>Fuel Calculator</h3><span class="idx">03</span></div>
@@ -854,45 +824,25 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         </div>
         <div>
           <div class="ft"><h3>Race Control</h3><span class="idx">04</span></div>
-          <p>Флаги, пенальти и сообщения маршалов лентой, без пропусков. Каждое событие — с отметкой времени сессии.</p>
+          <p>Панель, позволяющая отслеживать происшествия в режиме реального времени и просматривать их после гонки в повторе.</p>
         </div>
       </article>
 
-      <!-- 5 Radar -->
+      <!-- 5 Weather -->
       <article class="panel brk fcard" data-reveal style="--d:30ms">
-        <div class="mv" style="display:grid;place-items:center">
-          <svg class="radar-svg" viewBox="0 0 190 92" style="width:100%;height:100%" aria-hidden="true">
-            <ellipse class="ring" cx="95" cy="46" rx="82" ry="40"/>
-            <ellipse class="ring" cx="95" cy="46" rx="54" ry="27"/>
-            <ellipse class="ring" cx="95" cy="46" rx="27" ry="14"/>
-            <line x1="13" y1="46" x2="177" y2="46" stroke="rgba(124,162,224,.12)"/>
-            <line x1="95" y1="6" x2="95" y2="86" stroke="rgba(124,162,224,.12)"/>
-            <rect class="ego" x="90" y="38" width="10" height="17" rx="3"/>
-            <rect class="car near" x="62" y="36" width="9" height="16" rx="3"/>
-            <rect class="car" x="114" y="18" width="9" height="16" rx="3"/>
-            <rect class="car" x="132" y="58" width="9" height="16" rx="3"/>
-            <path d="M84 30a26 26 0 0 0 0 32" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" opacity=".85"/>
-          </svg>
+        <div class="mv mv-photo">
+          <img src="img/weather.png" alt="Weather overlay">
         </div>
         <div>
-          <div class="ft"><h3>Radar</h3><span class="idx">05</span></div>
-          <p>Соседние машины в слепых зонах с индикацией дистанции. Предупреждение срабатывает раньше, чем вы посмотрите в зеркала.</p>
+          <div class="ft"><h3>Weather</h3><span class="idx">05</span></div>
+          <p>Температура трассы и воздуха, влажность. Видно, когда погода меняет темп заезда.</p>
         </div>
       </article>
 
       <!-- 6 Track Map -->
       <article class="panel brk fcard" data-reveal style="--d:80ms">
-        <div class="mv" style="display:grid;place-items:center">
-          <div class="trkbox">
-            <svg class="trk" viewBox="0 0 240 130" aria-hidden="true">
-              <path class="base" d="M30 95C10 75 20 40 50 32s60 13 90 6 35-26 60-20 32 31 15 48-50 8-65 23-50 23-80 17-22-4-40-11Z"/>
-              <path class="hi" d="M30 95C10 75 20 40 50 32" opacity=".6"/>
-            </svg>
-            <div class="tdot me" data-path="1" style="--t:.18"></div>
-            <div class="tdot" data-path="1" style="--t:.36"></div>
-            <div class="tdot" data-path="1" style="--t:.58"></div>
-            <div class="tdot" data-path="1" style="--t:.84"></div>
-          </div>
+        <div class="mv mv-photo">
+          <img src="img/track-map.png" alt="Track Map overlay">
         </div>
         <div>
           <div class="ft"><h3>Track Map</h3><span class="idx">06</span></div>
@@ -902,80 +852,23 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- 7 Inputs -->
       <article class="panel brk fcard" data-reveal style="--d:130ms">
-        <div class="mv" style="display:flex;gap:10px;align-items:center">
-          <div class="chans" style="height:76px">
-            <div class="chan thr"><i style="height:88%"></i></div>
-            <div class="chan brk"><i style="height:14%"></i></div>
-            <div class="chan clu"><i style="height:0%"></i></div>
-          </div>
-          <svg viewBox="0 0 160 76" preserveAspectRatio="none" style="flex:1;height:76px" aria-hidden="true">
-            <path d="M0 62 L14 20 L30 16 L38 60 L52 66 L62 24 L84 18 L92 62 L104 68 L116 26 L138 20 L148 58 L160 64" fill="none" stroke="var(--good)" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M0 74 L16 74 L24 40 L34 30 L44 72 L58 74 L66 74 L76 74 L88 44 L98 34 L108 74 L124 74 L140 74 L150 46 L160 40" fill="none" stroke="var(--brand)" stroke-width="1.5" stroke-linejoin="round" opacity=".9"/>
-          </svg>
+        <div class="mv mv-photo">
+          <img src="img/inputs.png" alt="Inputs overlay">
         </div>
         <div>
           <div class="ft"><h3>Inputs</h3><span class="idx">07</span></div>
-          <p>Газ, тормоз, сцепление и руль с историей последних секунд. Отлично читается на записи и в разборе круга.</p>
+          <p>Газ, тормоз, сцепление и руль с историей последних секунд.</p>
         </div>
       </article>
 
-      <!-- 8 Telemetry -->
+      <!-- 8 Flag -->
       <article class="panel brk fcard" data-reveal style="--d:170ms">
-        <div class="mv" style="display:flex;flex-direction:column;gap:8px;justify-content:center">
-          <div style="display:flex;align-items:flex-end;gap:12px">
-            <div class="ro"><span class="ro-k">Speed</span><span class="ro-v">228<small>KM/H</small></span></div>
-            <div class="ro" style="margin-left:auto;align-items:flex-end"><span class="ro-k">Gear</span><span class="ro-v" style="color:var(--data)">5</span></div>
-          </div>
-          <div class="gauge" style="height:9px">
-            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
-            <i class="on"></i><i class="on"></i><i class="hot"></i><i class="hot"></i><i></i><i></i>
-          </div>
-          <svg viewBox="0 0 160 34" preserveAspectRatio="none" style="height:34px" aria-hidden="true">
-            <path d="M0 28 L18 10 L34 8 L46 26 L60 30 L74 12 L92 6 L104 24 L118 28 L132 10 L148 8 L160 22" fill="none" stroke="var(--data)" stroke-width="1.4" stroke-linejoin="round"/>
-            <path d="M0 30 L20 22 L40 24 L60 32 L80 20 L100 18 L120 26 L140 20 L160 26" fill="none" stroke="rgba(124,162,224,.3)" stroke-width="1.2"/>
-          </svg>
+        <div class="mv mv-photo">
+          <img src="img/flag.png" alt="Flag overlay">
         </div>
         <div>
-          <div class="ft"><h3>Telemetry</h3><span class="idx">08</span></div>
-          <p>Скорость, обороты, передача и температуры покрышек в компактном приборе. Шкала оборотов с точкой переключения.</p>
-        </div>
-      </article>
-
-      <!-- 9 Driver Tags -->
-      <article class="panel brk fcard" data-reveal style="--d:60ms">
-        <div class="mv" style="position:relative;overflow:hidden">
-          <div style="position:absolute;inset:0;background:
-            radial-gradient(90% 120% at 50% 130%, rgba(90,130,190,.16), transparent 60%)"></div>
-          <div style="position:absolute;left:-14%;right:-14%;bottom:-30%;height:96%;
-            background:linear-gradient(180deg,rgba(90,130,190,.14),rgba(6,20,48,.9));
-            clip-path:polygon(38% 0,62% 0,110% 100%,-10% 100%)"></div>
-          <div style="position:absolute;left:12px;top:22px"><span class="dtag"><i style="background:var(--cls-2)"></i>#77 SØRENSEN <em>+2.4</em></span></div>
-          <div style="position:absolute;right:14px;top:52px"><span class="dtag"><i style="background:var(--cls-3)"></i>#88 FÁBIÁN <em>−0.9</em></span></div>
-          <div style="position:absolute;left:52px;bottom:12px"><span class="dtag" style="border-color:rgba(255,0,102,.45)"><i style="background:var(--brand)"></i>#04 ALMEIDA <em>+0.6</em></span></div>
-        </div>
-        <div>
-          <div class="ft"><h3>Driver Tags</h3><span class="idx">09</span></div>
-          <p>Имя, номер и гэп прямо над машиной соперника. Помогает в плотном трафике и на многоклассовых заездах.</p>
-        </div>
-      </article>
-
-      <!-- 10 Layouts -->
-      <article class="panel brk fcard" data-reveal style="--d:110ms">
-        <div class="mv" style="padding:0">
-          <div class="lay">
-            <div class="pnl" style="left:8px;top:8px;width:38%;height:44%"></div>
-            <div class="pnl sel" style="right:8px;top:8px;width:44%;height:60%"></div>
-            <div class="pnl" style="left:8px;bottom:8px;width:26%;height:38%"></div>
-            <div class="pnl" style="left:39%;bottom:8px;width:22%;height:26%"></div>
-            <div style="position:absolute;right:8px;bottom:8px;display:flex;gap:5px">
-              <span class="dtag" style="font-size:8.5px;padding:2px 6px">RACE</span>
-              <span class="dtag" style="font-size:8.5px;padding:2px 6px;border-color:rgba(255,0,102,.45);color:var(--brand-hi)">ENDURO</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="ft"><h3>Layouts</h3><span class="idx">10</span></div>
-          <p>Наборы расположений под квалификацию, спринт и эндуранс. Переключение — одной горячей клавишей, прямо в боксах.</p>
+          <div class="ft"><h3>Flag</h3><span class="idx">08</span></div>
+          <p>Клетчатый и другие флаги сессии крупно поверх экрана. Не пропустите финиш и смену состояния гонки.</p>
         </div>
       </article>
 
@@ -989,53 +882,46 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
       <span class="eyebrow" data-reveal>02 / Почему TU Overlays</span>
-      <h2 data-reveal style="--d:60ms">Показатели, а не обещания</h2>
-      <p class="lead" data-reveal style="--d:110ms">Замеры на референсной конфигурации: Ryzen 5 5600, RTX 3060, 1440p, все виджеты включены, 24 машины на трассе.</p>
+      <h2 data-reveal style="--d:60ms">Производительность в цифрах</h2>
+      <p class="lead" data-reveal style="--d:110ms">Замеры на референсной конфигурации: Ryzen 9 9800X3D, RTX 5070TI, 1440p, 30-60 машин на трассе.</p>
     </div>
 
-    <div class="why-grid">
+    <div class="panel brk stat-panel" data-reveal>
 
-      <article class="panel brk mcard" data-reveal>
+      <div class="stat-item">
         <span class="mk">Нагрузка CPU</span>
-        <div class="mv-num">1.8<small>%</small></div>
+        <div class="mv-num">~1.8<small>%</small></div>
         <div class="gauge"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <p>Средняя загрузка одного ядра при всех включённых виджетах и полном стартовом поле.</p>
-      </article>
+        <p>Одно ядро, полное стартовое поле.</p>
+      </div>
 
-      <article class="panel brk mcard" data-reveal style="--d:50ms">
+      <div class="stat-item">
         <span class="mk">Влияние на FPS</span>
-        <div class="mv-num">−0.4<small>FPS</small></div>
+        <div class="mv-num">−3.4<small>FPS</small></div>
         <div class="gauge"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <p>Медиана по 60 сессиям. Слой рисуется отдельными окнами и не встраивается в рендер симулятора.</p>
-      </article>
+        <p>Медиана по 60 сессиям, отдельный слой.</p>
+      </div>
 
-      <article class="panel brk mcard" data-reveal style="--d:100ms">
+      <div class="stat-item">
         <span class="mk">Совместимость с OBS</span>
-        <div class="mv-num" style="font-size:clamp(1.5rem,2.6vw,2rem)">Game + Window</div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap"><span class="pip">Capture OK</span><span class="pip d">Alpha OK</span></div>
-        <p>Каждый виджет захватывается отдельно и может быть скрыт от захвата, оставаясь видимым для вас.</p>
-      </article>
+        <div class="mv-num" style="font-size:clamp(1.15rem,1.9vw,1.5rem)">Game + Window</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pip">Capture OK</span><span class="pip d">Alpha OK</span></div>
+        <p>Каждый виджет захватывается отдельно.</p>
+      </div>
 
-      <article class="panel brk mcard" data-reveal style="--d:30ms">
+      <div class="stat-item">
         <span class="mk">Параметров настройки</span>
         <div class="mv-num"><u>40</u>+</div>
         <div class="gauge"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="hot"></i><i class="hot"></i><i class="hot"></i></div>
-        <p>Цвета, размеры, прозрачность, набор колонок и единицы измерения — у каждого виджета отдельно.</p>
-      </article>
+        <p>Настрой всё под себя.</p>
+      </div>
 
-      <article class="panel brk mcard" data-reveal style="--d:80ms">
-        <span class="mk">Интервал релизов</span>
-        <div class="mv-num">14<small>дней</small></div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap"><span class="pip">v2.4.1 · сегодня</span></div>
-        <p>Средний интервал обновлений за последние 12 месяцев. Патчи под сезонные билды iRacing — в день выхода.</p>
-      </article>
-
-      <article class="panel brk mcard" data-reveal style="--d:130ms">
+      <div class="stat-item">
         <span class="mk">Масштаб интерфейса</span>
         <div class="mv-num">50—300<small>%</small></div>
         <div class="bar" style="height:6px"><i style="width:100%;background:linear-gradient(90deg,var(--data),var(--brand))"></i></div>
-        <p>Векторная отрисовка и табличные цифры: одинаково резко и читаемо на 1080p и на 4K при любом масштабе.</p>
-      </article>
+        <p>Одинаково удобно на любом экране.</p>
+      </div>
 
     </div>
   </div>
@@ -1053,271 +939,25 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
     <div class="g-grid" id="gal">
 
-      <!-- SHOT 1 — full HUD -->
-      <button class="panel brk gcard" data-shot data-title="Полный HUD" data-sub="Spa · GT3 · 24 машины" data-reveal>
-        <div class="frame"><div class="shot">
-          <div class="scene"><div class="sky"></div><div class="horizon"></div><div class="road"></div><div class="lane"></div><div class="kerb l"></div><div class="kerb r"></div><div class="vig"></div></div>
-
-          <div class="w" style="left:26px;top:26px;width:252px">
-            <div class="w-hd"><span class="dot"></span><span class="t">Standings</span><span class="r">24/32</span></div>
-            <div class="w-bd" style="padding:5px 10px 7px">
-              <table class="tbl">
-                <tbody>
-                  <tr><td class="c-pos">1</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#12</td><td class="c-nm">R. Kaarna</td><td class="c-gp">1:47.2</td></tr>
-                  <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#77</td><td class="c-nm">M. Sørensen</td><td class="c-gp">+2.41</td></tr>
-                  <tr><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#04</td><td class="c-nm">J. Almeida</td><td class="c-gp">+5.90</td></tr>
-                  <tr class="me"><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-no">#31</td><td class="c-nm">Вы</td><td class="c-gp">+6.77</td></tr>
-                  <tr><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#88</td><td class="c-nm">L. Fábián</td><td class="c-gp">+9.34</td></tr>
-                  <tr><td class="c-pos">6</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-no">#23</td><td class="c-nm">P. Novotný</td><td class="c-gp">+13.1</td></tr>
-                  <tr class="out"><td class="c-pos">7</td><td class="c-cls"><i style="background:var(--cls-4)"></i></td><td class="c-no">#59</td><td class="c-nm">K. Ferrand</td><td class="c-gp">PIT</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="w" style="right:26px;top:26px;width:288px">
-            <div class="w-hd"><span class="dot"></span><span class="t">Relative</span><span class="r">GT3 · GT4</span></div>
-            <div class="w-bd" style="padding:5px 10px 7px">
-              <table class="tbl">
-                <tbody>
-                  <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">M. Sørensen</td><td class="c-gp dl">−4.35</td></tr>
-                  <tr><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">J. Almeida</td><td class="c-gp dl">−0.87</td></tr>
-                  <tr class="me"><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-2)"></i></td><td class="c-nm">Вы</td><td class="c-gp">0.00</td></tr>
-                  <tr><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-nm">L. Fábián</td><td class="c-gp dl-w">+1.62</td></tr>
-                  <tr><td class="c-pos">6</td><td class="c-cls"><i style="background:var(--cls-3)"></i></td><td class="c-nm">P. Novotný</td><td class="c-gp dl-w">+3.94</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="w" style="right:26px;top:240px;width:214px">
-            <div class="w-hd"><span class="dot" style="background:var(--warn);box-shadow:0 0 7px var(--warn)"></span><span class="t">Fuel</span></div>
-            <div class="w-bd" style="display:flex;flex-direction:column;gap:9px">
-              <div style="display:flex;gap:20px">
-                <div class="ro"><span class="ro-k">Остаток</span><span class="ro-v">34.8<small>L</small></span></div>
-                <div class="ro"><span class="ro-k">Кругов</span><span class="ro-v">11.5</span></div>
-              </div>
-              <div class="bar brandbar"><i style="width:56%"></i></div>
-            </div>
-          </div>
-
-          <div class="w" style="left:26px;bottom:26px;width:230px">
-            <div class="w-hd"><span class="dot"></span><span class="t">Inputs</span><span class="r">1:47.881</span></div>
-            <div class="w-bd" style="display:flex;gap:11px;align-items:center">
-              <div class="chans" style="height:56px">
-                <div class="chan thr"><i style="height:92%"></i></div>
-                <div class="chan brk"><i style="height:8%"></i></div>
-                <div class="chan clu"><i style="height:0%"></i></div>
-              </div>
-              <svg viewBox="0 0 160 56" preserveAspectRatio="none" style="flex:1;height:56px" aria-hidden="true">
-                <path d="M0 46 L14 12 L32 8 L40 44 L54 50 L64 14 L86 10 L94 46 L106 52 L118 16 L140 12 L150 42 L160 48" fill="none" stroke="var(--good)" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M0 54 L16 54 L24 28 L34 20 L44 52 L58 54 L76 54 L88 30 L98 22 L108 54 L128 54 L146 54 L152 32 L160 28" fill="none" stroke="var(--brand)" stroke-width="1.5" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="w" style="left:288px;bottom:26px;width:206px">
-            <div class="w-hd"><span class="dot"></span><span class="t">Radar</span></div>
-            <div class="w-bd" style="padding:6px 10px 8px">
-              <svg class="radar-svg" viewBox="0 0 190 84" style="width:100%" aria-hidden="true">
-                <ellipse class="ring" cx="95" cy="42" rx="84" ry="37"/>
-                <ellipse class="ring" cx="95" cy="42" rx="55" ry="25"/>
-                <ellipse class="ring" cx="95" cy="42" rx="27" ry="13"/>
-                <rect class="ego" x="90" y="34" width="10" height="17" rx="3"/>
-                <rect class="car near" x="62" y="32" width="9" height="16" rx="3"/>
-                <rect class="car" x="116" y="16" width="9" height="16" rx="3"/>
-                <path d="M84 26a26 26 0 0 0 0 32" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="w" style="right:26px;bottom:26px;width:250px">
-            <div class="w-hd"><span class="dot"></span><span class="t">Track Map</span><span class="r">Spa</span></div>
-            <div class="w-bd" style="padding:4px 10px 6px">
-              <div style="position:relative;width:100%;height:96px">
-                <svg class="trk" viewBox="0 0 240 130" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
-                  <path class="base" d="M30 95C10 75 20 40 50 32s60 13 90 6 35-26 60-20 32 31 15 48-50 8-65 23-50 23-80 17-22-4-40-11Z"/>
-                </svg>
-                <svg viewBox="0 0 240 130" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
-                  <circle cx="58.8" cy="30.4" r="4.5" fill="var(--brand)"/>
-                  <circle cx="117.5" cy="38.9" r="4" fill="rgba(200,220,255,.7)"/>
-                  <circle cx="224.1" cy="42" r="4" fill="rgba(200,220,255,.7)"/>
-                  <circle cx="126.7" cy="102.3" r="4" fill="rgba(200,220,255,.45)"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="w" style="left:50%;top:26px;transform:translateX(-50%);width:250px">
-            <div class="w-hd"><span class="dot" style="background:var(--good);box-shadow:0 0 7px var(--good)"></span><span class="t">Race Control</span></div>
-            <div class="w-bd" style="padding:7px 10px">
-              <div class="log"><time>13:02</time><span class="sq" style="background:var(--good)"></span><b>Green flag</b> · restart</div>
-              <div class="log"><time>18:47</time><span class="sq" style="background:var(--brand)"></span><b>#59</b> · drive-through</div>
-            </div>
-          </div>
-        </div></div>
-        <div class="gcap"><h3>Полный HUD</h3><span>Spa · GT3</span>
+      <!-- SHOT 1 -->
+      <div class="panel brk gcard" data-reveal>
+        <div class="frame"><img class="g-photo" src="img/example-1.jpg" alt="Пример оверлея"></div>
+        <div class="gcap"><h3>Пример оверлея</h3><span>В боксах</span>
           <span class="zoom">Открыть
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </span>
         </div>
-      </button>
+      </div>
 
-      <!-- SHOT 2 — standings close-up -->
-      <button class="panel brk gcard" data-shot data-title="Standings крупно" data-sub="Мультикласс · интервалы" data-reveal style="--d:60ms">
-        <div class="frame"><div class="shot">
-          <div class="scene"><div class="sky"></div><div class="horizon"></div><div class="road"></div><div class="lane"></div><div class="vig"></div></div>
-          <div class="w" style="left:50%;top:50%;transform:translate(-50%,-50%);width:600px">
-            <div class="w-hd" style="padding:11px 14px;font-size:11.5px"><span class="dot"></span><span class="t">Standings</span><span class="r">Race · Lap 24 / 32 · 24 cars</span></div>
-            <div class="w-bd" style="padding:6px 12px 12px">
-              <table class="tbl" style="font-size:13.5px">
-                <tbody>
-                  <tr><td class="c-pos">1</td><td class="c-cls"><i style="background:var(--cls-2);height:19px"></i></td><td class="c-no">#12</td><td class="c-nm" style="font-size:14px">Rasmus Kaarna</td><td class="c-gp">1:47.204</td><td class="c-gp" style="color:var(--tx-4)">—</td></tr>
-                  <tr><td class="c-pos">2</td><td class="c-cls"><i style="background:var(--cls-2);height:19px"></i></td><td class="c-no">#77</td><td class="c-nm" style="font-size:14px">Mikkel Sørensen</td><td class="c-gp">1:47.611</td><td class="c-gp">+2.418</td></tr>
-                  <tr><td class="c-pos">3</td><td class="c-cls"><i style="background:var(--cls-2);height:19px"></i></td><td class="c-no">#04</td><td class="c-nm" style="font-size:14px">João Almeida</td><td class="c-gp">1:47.740</td><td class="c-gp">+5.902</td></tr>
-                  <tr class="me"><td class="c-pos">4</td><td class="c-cls"><i style="background:var(--cls-2);height:19px"></i></td><td class="c-no">#31</td><td class="c-nm" style="font-size:14px">Вы</td><td class="c-gp">1:47.881</td><td class="c-gp">+6.771</td></tr>
-                  <tr><td class="c-pos">5</td><td class="c-cls"><i style="background:var(--cls-3);height:19px"></i></td><td class="c-no">#88</td><td class="c-nm" style="font-size:14px">László Fábián</td><td class="c-gp">1:48.022</td><td class="c-gp">+9.340</td></tr>
-                  <tr><td class="c-pos">6</td><td class="c-cls"><i style="background:var(--cls-3);height:19px"></i></td><td class="c-no">#23</td><td class="c-nm" style="font-size:14px">Petr Novotný</td><td class="c-gp">1:48.190</td><td class="c-gp">+13.106</td></tr>
-                  <tr class="out"><td class="c-pos">7</td><td class="c-cls"><i style="background:var(--cls-4);height:19px"></i></td><td class="c-no">#59</td><td class="c-nm" style="font-size:14px">Karim Ferrand</td><td class="c-gp">1:48.455</td><td class="c-gp dl-w">PIT</td></tr>
-                  <tr><td class="c-pos">8</td><td class="c-cls"><i style="background:var(--cls-4);height:19px"></i></td><td class="c-no">#41</td><td class="c-nm" style="font-size:14px">Dawid Ostrowski</td><td class="c-gp">1:48.512</td><td class="c-gp">+19.884</td></tr>
-                  <tr><td class="c-pos">9</td><td class="c-cls"><i style="background:var(--cls-5);height:19px"></i></td><td class="c-no">#06</td><td class="c-nm" style="font-size:14px">Ana Ruíz</td><td class="c-gp">1:48.903</td><td class="c-gp">+24.117</td></tr>
-                  <tr class="out"><td class="c-pos">10</td><td class="c-cls"><i style="background:var(--cls-5);height:19px"></i></td><td class="c-no">#18</td><td class="c-nm" style="font-size:14px">Tom Vaandrager</td><td class="c-gp">1:49.244</td><td class="c-gp">+1 LAP</td></tr>
-                </tbody>
-              </table>
-              <div style="display:flex;gap:20px;align-items:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)">
-                <span class="pip d">GT3 · 12</span><span class="pip b">GT4 · 8</span><span class="pip">TCR · 4</span>
-                <span class="mono" style="margin-left:auto;font-size:11px;color:var(--tx-4)">SOF 3140 · 01:12:44</span>
-              </div>
-            </div>
-          </div>
-        </div></div>
-        <div class="gcap"><h3>Standings крупно</h3><span>Мультикласс</span>
+      <!-- SHOT 2 -->
+      <div class="panel brk gcard" data-reveal style="--d:60ms">
+        <div class="frame"><img class="g-photo" src="img/example-2.jpg" alt="Пример со стрима Shelik https://www.twitch.tv/shelik"></div>
+        <div class="gcap"><h3>Пример со стрима Shelik</h3><span>На трассе</span>
           <span class="zoom">Открыть
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </span>
         </div>
-      </button>
-
-      <!-- SHOT 3 — radar + track map -->
-      <button class="panel brk gcard" data-shot data-title="Radar и Track Map" data-sub="Проксимити · позиции на круге" data-reveal style="--d:120ms">
-        <div class="frame"><div class="shot">
-          <div class="scene"><div class="sky"></div><div class="horizon"></div><div class="road"></div><div class="lane"></div><div class="kerb l"></div><div class="kerb r"></div><div class="vig"></div></div>
-
-          <div class="w" style="left:56px;top:50%;transform:translateY(-50%);width:372px">
-            <div class="w-hd" style="padding:10px 13px;font-size:11px"><span class="dot"></span><span class="t">Radar</span><span class="r">Range 22 m</span></div>
-            <div class="w-bd" style="padding:14px">
-              <svg class="radar-svg" viewBox="0 0 340 190" style="width:100%" aria-hidden="true">
-                <ellipse class="ring" cx="170" cy="95" rx="160" ry="86"/>
-                <ellipse class="ring" cx="170" cy="95" rx="108" ry="58"/>
-                <ellipse class="ring" cx="170" cy="95" rx="56" ry="30"/>
-                <line x1="10" y1="95" x2="330" y2="95" stroke="rgba(124,162,224,.1)"/>
-                <line x1="170" y1="9" x2="170" y2="181" stroke="rgba(124,162,224,.1)"/>
-                <rect class="ego" x="160" y="78" width="20" height="36" rx="6"/>
-                <rect class="car near" x="112" y="72" width="18" height="34" rx="6"/>
-                <rect class="car" x="204" y="30" width="18" height="34" rx="6"/>
-                <rect class="car" x="238" y="122" width="18" height="34" rx="6"/>
-                <rect class="car" x="88" y="132" width="18" height="34" rx="6" opacity=".45"/>
-                <path d="M152 62a42 42 0 0 0 0 66" fill="none" stroke="var(--brand)" stroke-width="3.5" stroke-linecap="round"/>
-              </svg>
-              <div style="display:flex;gap:18px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)">
-                <span class="pip b">Слева · 1.4 м</span><span class="pip d">Справа · чисто</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="w" style="right:56px;top:50%;transform:translateY(-50%);width:400px">
-            <div class="w-hd" style="padding:10px 13px;font-size:11px"><span class="dot"></span><span class="t">Track Map</span><span class="r">Spa-Francorchamps · 7.004 km</span></div>
-            <div class="w-bd" style="padding:16px 14px">
-              <div style="position:relative;width:100%;aspect-ratio:240/130">
-                <svg class="trk" viewBox="0 0 240 130" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
-                  <path class="base" style="stroke-width:5" d="M30 95C10 75 20 40 50 32s60 13 90 6 35-26 60-20 32 31 15 48-50 8-65 23-50 23-80 17-22-4-40-11Z"/>
-                  <path class="hi" style="stroke-width:5;opacity:.5" d="M30 95C10 75 20 40 50 32"/>
-                  <circle cx="58.8" cy="30.4" r="6.5" fill="var(--brand)"/>
-                  <circle cx="117.5" cy="38.9" r="6" fill="rgba(210,228,255,.85)"/>
-                  <circle cx="173.1" cy="22.4" r="6" fill="rgba(210,228,255,.85)"/>
-                  <circle cx="224.1" cy="42" r="6" fill="rgba(210,228,255,.5)"/>
-                  <circle cx="126.7" cy="102.3" r="6" fill="rgba(210,228,255,.5)"/>
-                  <circle cx="77.8" cy="107.2" r="6" fill="rgba(210,228,255,.35)"/>
-                </svg>
-              </div>
-              <div style="display:flex;gap:18px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)">
-                <span class="pip">S1 · 41.2</span><span class="pip d">S2 · 45.8</span><span class="pip w">S3 · 20.9</span>
-              </div>
-            </div>
-          </div>
-        </div></div>
-        <div class="gcap"><h3>Radar и Track Map</h3><span>Проксимити</span>
-          <span class="zoom">Открыть
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </span>
-        </div>
-      </button>
-
-      <!-- SHOT 4 — layouts editor -->
-      <button class="panel brk gcard" data-shot data-title="Редактор Layouts" data-sub="Пресеты и сетка привязки" data-reveal style="--d:180ms">
-        <div class="frame"><div class="shot">
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,#04143a,#010b20)"></div>
-          <div class="w" style="inset:24px;border-radius:14px;display:flex;flex-direction:column">
-            <div class="w-hd" style="padding:12px 16px;font-size:11px">
-              <span class="dot"></span><span class="t">TU Overlays — Layout Editor</span>
-              <span class="r">Пресет: ENDURO · сохранено</span>
-            </div>
-            <div style="display:flex;flex:1;min-height:0">
-              <!-- sidebar -->
-              <div style="width:172px;border-right:1px solid var(--line);padding:14px 12px;display:flex;flex-direction:column;gap:9px">
-                <div class="ro-k" style="margin-bottom:2px">Виджеты</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px"><i style="background:var(--cls-2)"></i>Standings</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px;border-color:rgba(255,0,102,.5);color:var(--brand-hi)"><i style="background:var(--brand)"></i>Relative</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px"><i style="background:var(--cls-4)"></i>Fuel</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px"><i style="background:var(--cls-3)"></i>Radar</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px"><i style="background:var(--cls-5)"></i>Track Map</div>
-                <div class="dtag" style="justify-content:flex-start;font-size:10.5px;padding:5px 8px;opacity:.5"><i style="background:var(--tx-4)"></i>Driver Tags</div>
-                <div style="margin-top:auto;display:flex;gap:6px">
-                  <span class="dtag" style="font-size:9.5px">QUALI</span>
-                  <span class="dtag" style="font-size:9.5px">RACE</span>
-                </div>
-              </div>
-              <!-- canvas -->
-              <div style="flex:1;position:relative;min-width:0;background-image:radial-gradient(rgba(124,162,224,.16) 1px,transparent 1px);background-size:22px 22px">
-                <div class="lay" style="position:absolute;inset:16px;background:none">
-                  <div class="pnl" style="left:0;top:0;width:40%;height:42%"><b>Standings</b></div>
-                  <div class="pnl sel" style="right:0;top:0;width:46%;height:56%"><b>Relative</b></div>
-                  <div class="pnl" style="left:0;bottom:0;width:30%;height:36%"><b>Inputs</b></div>
-                  <div class="pnl" style="left:34%;bottom:0;width:26%;height:26%"><b>Fuel</b></div>
-                  <div class="pnl" style="right:0;bottom:0;width:34%;height:30%"><b>Track Map</b></div>
-                  <div style="position:absolute;right:0;top:-1px;transform:translateY(-100%);padding-bottom:6px">
-                    <span class="dtag" style="border-color:rgba(255,0,102,.5);color:var(--brand-hi);font-size:9.5px">Relative · 288 × 176</span>
-                  </div>
-                </div>
-              </div>
-              <!-- inspector -->
-              <div style="width:186px;border-left:1px solid var(--line);padding:14px 13px;display:flex;flex-direction:column;gap:14px">
-                <div class="ro-k">Relative</div>
-                <div class="ro"><span class="ro-k">Прозрачность</span><span class="ro-v" style="font-size:16px">82<small>%</small></span>
-                  <div class="bar" style="margin-top:5px"><i style="width:82%"></i></div></div>
-                <div class="ro"><span class="ro-k">Масштаб</span><span class="ro-v" style="font-size:16px">1.15<small>×</small></span>
-                  <div class="bar" style="margin-top:5px"><i style="width:58%;background:var(--brand)"></i></div></div>
-                <div class="ro"><span class="ro-k">Строк</span><span class="ro-v" style="font-size:16px">6</span></div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap">
-                  <span class="pip d">Показать в OBS</span>
-                </div>
-                <div style="margin-top:auto;display:flex;gap:5px">
-                  <i style="width:15px;height:15px;border-radius:4px;background:var(--cls-1);display:block"></i>
-                  <i style="width:15px;height:15px;border-radius:4px;background:var(--cls-2);display:block;outline:1.5px solid var(--tx);outline-offset:2px"></i>
-                  <i style="width:15px;height:15px;border-radius:4px;background:var(--cls-3);display:block"></i>
-                  <i style="width:15px;height:15px;border-radius:4px;background:var(--cls-4);display:block"></i>
-                  <i style="width:15px;height:15px;border-radius:4px;background:var(--cls-5);display:block"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div></div>
-        <div class="gcap"><h3>Редактор Layouts</h3><span>Пресеты</span>
-          <span class="zoom">Открыть
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </span>
-        </div>
-      </button>
+      </div>
 
     </div>
   </div>
@@ -1328,37 +968,27 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>04 / Отзывы</span>
-      <h2 data-reveal style="--d:60ms">Что говорят пилоты</h2>
+      <span class="eyebrow" data-reveal>04 / Кому это нужно</span>
+      <h2 data-reveal style="--d:60ms">Кому пригодятся оверлеи</h2>
     </div>
 
     <div class="t-grid">
       <article class="panel brk tcard" data-reveal>
-        <p class="q">Radar и Relative закрыли почти все ситуации, где я раньше терял позиции в трафике. Настроил один раз перед сезоном — больше не трогал.</p>
+        <p class="q">Гонщикам, которым важна обстановка вокруг машины: Relative, Radar и Fuel дают нужные данные в поле зрения, не заслоняя трассу.</p>
         <div class="who">
-          <span class="av">АЛ</span>
-          <span><span class="n">Артём «kvrs» Л.</span><br><span class="rr">Сим-рейсер · GT3</span></span>
+          <span class="av">01</span>
+          <span><span class="n">Соревнующимся пилотам</span><br><span class="rr">Спринт · Эндуранс</span></span>
         </div>
       </article>
 
       <article class="panel brk tcard" data-reveal style="--d:60ms">
-        <p class="q">Первые оверлеи, которые не пришлось прятать на стриме. Захват чистый, зрителю видно гэпы без моих комментариев.</p>
+        <p class="q">Стримерам, которым нужен читаемый эфир: отдельные виджеты можно собрать в собственный layout и настроить под захват в OBS.</p>
         <div class="who">
-          <span class="av">DM</span>
-          <span><span class="n">Дэн «midpack»</span><br><span class="rr">Стример · 4.2k</span></span>
-        </div>
-      </article>
-
-      <article class="panel brk tcard" data-reveal style="--d:120ms">
-        <p class="q">Layouts под квалу и эндуранс — то, ради чего мы перешли всей командой. Пять пилотов, один пресет, ноль споров о расположении окон.</p>
-        <div class="who">
-          <span class="av">NV</span>
-          <span><span class="n">Ната «NV»</span><br><span class="rr">Капитан команды</span></span>
+          <span class="av">02</span>
+          <span><span class="n">Стримерам</span><br><span class="rr">OBS · Трансляции</span></span>
         </div>
       </article>
     </div>
-
-    <p class="mono" style="margin-top:18px;font-size:11px;color:var(--tx-4);letter-spacing:.06em">Отзывы вымышленные и приведены как пример оформления.</p>
   </div>
 </section>
 
@@ -1448,6 +1078,27 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     </p>
   </div>
 </footer>
+
+<!-- ══════════════════════════ PHOTO LIGHTBOX ══════════════════════════ -->
+<div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Просмотр скриншота">
+  <div class="plb-box">
+    <div class="plb-frame" id="plbFrame"><img id="plbImg" src="" alt=""></div>
+    <div class="lb-bar">
+      <h3 id="plbTitle">—</h3>
+      <div class="lb-nav" style="margin-left:auto">
+        <button id="plbPrev" aria-label="Предыдущий">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="plbNext" aria-label="Следующий">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <button class="lb-close" id="plbClose" aria-label="Закрыть">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Просмотр интерфейса">
@@ -1703,6 +1354,49 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
   lb.addEventListener('click', e => { if (e.target === lb) close(); });
   addEventListener('keydown', e => {
     if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') open(idx - 1);
+    if (e.key === 'ArrowRight') open(idx + 1);
+  });
+})();
+
+/* ---------- photo lightbox (hero + feature-card screenshots) ---------- */
+(() => {
+  const shots = $$('.w-shot, .mv-photo img, .g-photo');
+  if (!shots.length) return;
+  const plb = $('#plb'), plbImg = $('#plbImg'), plbTitle = $('#plbTitle');
+  let idx = 0, last = null;
+
+  function open(i) {
+    idx = (i + shots.length) % shots.length;
+    const img = shots[idx];
+    plbImg.src = img.currentSrc || img.src;
+    plbImg.alt = img.alt;
+    plbTitle.textContent = img.alt;
+    plb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    $('#plbClose').focus();
+  }
+  function close() {
+    plb.hidden = true;
+    document.body.style.overflow = '';
+    if (last) last.focus();
+  }
+
+  shots.forEach((s, i) => {
+    s.setAttribute('role', 'button');
+    s.setAttribute('tabindex', '0');
+    s.addEventListener('click', () => { last = s; open(i); });
+    s.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); last = s; open(i); }
+    });
+  });
+  $('#plbClose').addEventListener('click', close);
+  $('#plbPrev').addEventListener('click', () => open(idx - 1));
+  $('#plbNext').addEventListener('click', () => open(idx + 1));
+  plb.addEventListener('click', e => { if (e.target === plb) close(); });
+  addEventListener('keydown', e => {
+    if (plb.hidden) return;
     if (e.key === 'Escape') close();
     if (e.key === 'ArrowLeft') open(idx - 1);
     if (e.key === 'ArrowRight') open(idx + 1);
