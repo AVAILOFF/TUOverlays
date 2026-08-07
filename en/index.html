@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TU Overlays — телеметрические оверлеи для iRacing</title>
-<meta name="description" content="Десять независимых телеметрических виджетов поверх iRacing: Standings, Relative, Fuel Calculator, Radar, Track Map и другие. Windows, менее 2% CPU.">
+<title>TU Overlays — Telemetry Overlays for iRacing</title>
+<meta name="description" content="Ten independent telemetry widgets on top of iRacing: Standings, Relative, Fuel Calculator, Radar, Track Map, and more. Windows, under 2% CPU.">
 <meta name="theme-color" content="#02102c">
-<link rel="alternate" hreflang="ru" href="index.html">
-<link rel="alternate" hreflang="en" href="en/index.html">
-<link rel="alternate" hreflang="x-default" href="index.html">
-<link rel="icon" href="img/favicon.png">
+<link rel="alternate" hreflang="ru" href="../index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="x-default" href="../index.html">
+<link rel="icon" href="../img/favicon.png">
 
 <style>
 /* ============================================================
@@ -505,7 +505,7 @@ p{margin:0}
 
 /* radar */
 .radar-svg .ring{fill:none;stroke:rgba(124,162,224,.16)}
-.radar-svg .ego{fill:rgba(228,236,251,.95)}          /* своя машина — нейтральная */
+.radar-svg .ego{fill:rgba(228,236,251,.95)}          /* own car — neutral */
 .radar-svg .car{fill:rgba(140,170,220,.45)}
 .radar-svg .car.near{fill:var(--brand);filter:drop-shadow(0 0 5px rgba(255,0,102,.9))}
 
@@ -651,7 +651,7 @@ p{margin:0}
   align-items:center;justify-content:center;color:var(--tx-2);transition:.2s}
 .lb-nav button:hover{border-color:var(--line-3);color:var(--tx)}
 
-/* на узких экранах «крупно» должно реально увеличивать — кадр панорамируется */
+/* on narrow screens "enlarge" must really enlarge — the frame pans */
 @media (max-width:820px){
   .lb-frame{aspect-ratio:auto;height:min(58vh,440px);overflow:auto;overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch}
@@ -799,22 +799,22 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <!-- ══════════════════════════ HEADER ══════════════════════════ -->
 <header class="hdr" id="hdr">
   <div class="wrap hdr-in">
-    <a class="logo" href="#top" aria-label="TU Overlays — на главную">
-      <img class="logo-mk" src="img/logo.png" alt="" aria-hidden="true">
+    <a class="logo" href="#top" aria-label="TU Overlays — home">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
 
-    <nav class="nav" aria-label="Основная навигация">
-      <a href="#features">Возможности</a>
-      <a href="#why">Почему мы</a>
-      <a href="#gallery">Галерея</a>
-      <a href="#reviews">Кому нужно</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#why">Why us</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#reviews">Who it's for</a>
       <a href="#faq">FAQ</a>
     </nav>
 
-    <div class="lang-switch" aria-label="Язык">
-      <a class="on" href="index.html" aria-current="true">RU</a>
-      <a href="en/index.html">EN</a>
+    <div class="lang-switch" aria-label="Language">
+      <a href="../index.html">RU</a>
+      <a class="on" href="index.html" aria-current="true">EN</a>
     </div>
 
     <div class="hdr-cta">
@@ -828,22 +828,22 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       </a>
     </div>
 
-    <button class="burger" id="burger" aria-expanded="false" aria-controls="mnav" aria-label="Меню">
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="mnav" aria-label="Menu">
       <span></span>
     </button>
   </div>
 
   <div class="mnav" id="mnav">
     <ul>
-      <li><a href="#features">Возможности</a></li>
-      <li><a href="#why">Почему мы</a></li>
-      <li><a href="#gallery">Галерея</a></li>
-      <li><a href="#reviews">Кому нужно</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#why">Why us</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#reviews">Who it's for</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <div class="m-lang" aria-label="Язык">
-      <a class="on" href="index.html" aria-current="true">RU</a>
-      <a href="en/index.html">EN</a>
+    <div class="m-lang" aria-label="Language">
+      <a href="../index.html">RU</a>
+      <a class="on" href="index.html" aria-current="true">EN</a>
     </div>
     <div class="m-cta">
       <a class="btn btn-primary" href="#download" data-tip="SOON..."><span class="btn-content">Download</span></a>
@@ -867,16 +867,16 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   </div>
 
   <div class="wrap hero-in">
-    <span class="eyebrow">Windows · 21 виджет · &lt;2% CPU</span>
-    <h1>Вся телеметрия iRacing — в одном <span class="acc">приложении</span></h1>
-    <p class="lead">Полная свобода настройки каждого элемента — от внешнего вида до отображаемых данных.</p>
+    <span class="eyebrow">Windows · 21 widgets · &lt;2% CPU</span>
+    <h1>All of iRacing's telemetry — in one <span class="acc">app</span></h1>
+    <p class="lead">Full control over every element — from appearance to the data it shows.</p>
     <div class="hero-actions">
       <a class="btn btn-primary btn-lg" href="#download" data-tip="SOON...">
         <span class="btn-content">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Скачать для Windows
+          Download for Windows
         </span>
       </a>
     </div>
@@ -885,28 +885,28 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     </div>
   </div>
 
-  <!-- живая композиция виджетов -->
+  <!-- live widget composition -->
   <div class="wrap">
-    <div class="cluster" aria-label="Пример интерфейса оверлеев">
+    <div class="cluster" aria-label="Example overlay interface">
 
       <!-- RELATIVE -->
       <div class="w w-photo c-a">
-        <img class="w-shot" src="img/relative.png" alt="Relative overlay">
+        <img class="w-shot" src="../img/relative.png" alt="Relative overlay">
       </div>
 
       <!-- STANDINGS -->
       <div class="w w-photo c-b">
-        <img class="w-shot" src="img/standings.png" alt="Standings overlay">
+        <img class="w-shot" src="../img/standings.png" alt="Standings overlay">
       </div>
 
       <div class="c-c">
         <!-- INPUTS -->
         <div class="w w-photo">
-          <img class="w-shot" src="img/inputs.png" alt="Inputs overlay">
+          <img class="w-shot" src="../img/inputs.png" alt="Inputs overlay">
         </div>
         <!-- FUEL -->
         <div class="w w-photo">
-          <img class="w-shot" src="img/fuel-calculator.png" alt="Fuel Calculator overlay">
+          <img class="w-shot" src="../img/fuel-calculator.png" alt="Fuel Calculator overlay">
         </div>
       </div>
 
@@ -919,9 +919,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>01 / Возможности</span>
-      <h2 data-reveal style="--d:60ms">Двадцать один виджет.<br>Каждый — отдельное глубоко кастомизируемое окно.</h2>
-      <p class="lead" data-reveal style="--d:110ms">Включайте только то, что нужно в текущей сессии. Настраивайте виджеты под себя.</p>
+      <span class="eyebrow" data-reveal>01 / Features</span>
+      <h2 data-reveal style="--d:60ms">Twenty-one widgets.<br>Each one a separate, deeply customizable window.</h2>
+      <p class="lead" data-reveal style="--d:110ms">Turn on only what you need for the current session. Customize every widget to fit you.</p>
     </div>
 
     <div class="f-grid">
@@ -929,33 +929,33 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 1 Standings -->
       <article class="panel brk fcard" data-reveal>
         <div class="mv mv-photo">
-          <img src="img/standings.png" alt="Standings overlay">
+          <img src="../img/standings.png" alt="Standings overlay">
         </div>
         <div>
           <div class="ft"><h3>Standings</h3><span class="idx">01</span></div>
-          <p>Полная таблица заезда с разбивкой по классам, интервалами и лучшими кругами. Позиция в классе и в абсолюте — в одной строке.</p>
+          <p>Full running order broken down by class, with gaps and best laps. Class and overall position in a single row.</p>
         </div>
       </article>
 
       <!-- 2 Relative -->
       <article class="panel brk fcard" data-reveal style="--d:50ms">
         <div class="mv mv-photo">
-          <img src="img/relative.png" alt="Relative overlay">
+          <img src="../img/relative.png" alt="Relative overlay">
         </div>
         <div>
           <div class="ft"><h3>Relative</h3><span class="idx">02</span></div>
-          <p>Относительное наложение используется для отображения того, какие гонщики находятся рядом с вами.</p>
+          <p>The Relative overlay shows which drivers are close to you on track.</p>
         </div>
       </article>
 
       <!-- 3 Fuel -->
       <article class="panel brk fcard" data-reveal style="--d:100ms">
         <div class="mv mv-photo">
-          <img src="img/fuel-calculator.png" alt="Fuel Calculator overlay">
+          <img src="../img/fuel-calculator.png" alt="Fuel Calculator overlay">
         </div>
         <div>
           <div class="ft"><h3>Fuel Calculator</h3><span class="idx">03</span></div>
-          <p>Расход за круг, остаток и запас до финиша с учётом текущего темпа. Подсказывает, сколько заливать на пит-стопе.</p>
+          <p>Per-lap consumption, remaining fuel, and your margin to the finish at current pace. Tells you exactly how much to add at the pit stop.</p>
         </div>
       </article>
 
@@ -969,51 +969,51 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         </div>
         <div>
           <div class="ft"><h3>Race Control</h3><span class="idx">04</span></div>
-          <p>Панель, позволяющая отслеживать происшествия в режиме реального времени и просматривать их после гонки в повторе.</p>
+          <p>A panel for tracking incidents in real time and reviewing them after the race in replay.</p>
         </div>
       </article>
 
       <!-- 5 Weather -->
       <article class="panel brk fcard" data-reveal style="--d:30ms">
         <div class="mv mv-photo">
-          <img src="img/weather.png" alt="Weather overlay">
+          <img src="../img/weather.png" alt="Weather overlay">
         </div>
         <div>
           <div class="ft"><h3>Weather</h3><span class="idx">05</span></div>
-          <p>Температура трассы и воздуха, влажность. Видно, когда погода меняет темп заезда.</p>
+          <p>Track and air temperature, humidity. See when the weather is shifting your pace.</p>
         </div>
       </article>
 
       <!-- 6 Track Map -->
       <article class="panel brk fcard" data-reveal style="--d:80ms">
         <div class="mv mv-photo">
-          <img src="img/track-map.png" alt="Track Map overlay">
+          <img src="../img/track-map.png" alt="Track Map overlay">
         </div>
         <div>
           <div class="ft"><h3>Track Map</h3><span class="idx">06</span></div>
-          <p>Схема трассы с позициями всех машин в реальном времени. Трафик и разрывы видно до того, как вы выйдете из поворота.</p>
+          <p>A track map with every car's position in real time. Spot traffic and gaps before you're out of the corner.</p>
         </div>
       </article>
 
       <!-- 7 Inputs -->
       <article class="panel brk fcard" data-reveal style="--d:130ms">
         <div class="mv mv-photo">
-          <img src="img/inputs.png" alt="Inputs overlay">
+          <img src="../img/inputs.png" alt="Inputs overlay">
         </div>
         <div>
           <div class="ft"><h3>Inputs</h3><span class="idx">07</span></div>
-          <p>Газ, тормоз, сцепление и руль с историей последних секунд.</p>
+          <p>Throttle, brake, clutch, and steering with a trace of the last few seconds.</p>
         </div>
       </article>
 
       <!-- 8 Flag -->
       <article class="panel brk fcard" data-reveal style="--d:170ms">
         <div class="mv mv-photo">
-          <img src="img/flag.png" alt="Flag overlay">
+          <img src="../img/flag.png" alt="Flag overlay">
         </div>
         <div>
           <div class="ft"><h3>Flag</h3><span class="idx">08</span></div>
-          <p>Клетчатый и другие флаги сессии крупно поверх экрана. Не пропустите финиш и смену состояния гонки.</p>
+          <p>Checkered and other session flags, shown large on top of the screen. Never miss the finish or a change in race state.</p>
         </div>
       </article>
 
@@ -1026,46 +1026,46 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>02 / Почему TU Overlays</span>
-      <h2 data-reveal style="--d:60ms">Производительность в цифрах</h2>
-      <p class="lead" data-reveal style="--d:110ms">Замеры на референсной конфигурации: Ryzen 9 9800X3D, RTX 5070TI, 1440p, 30-60 машин на трассе.</p>
+      <span class="eyebrow" data-reveal>02 / Why TU Overlays</span>
+      <h2 data-reveal style="--d:60ms">Performance, in numbers</h2>
+      <p class="lead" data-reveal style="--d:110ms">Measured on a reference build: Ryzen 9 9800X3D, RTX 5070 Ti, 1440p, 30–60 cars on track.</p>
     </div>
 
     <div class="panel brk stat-panel" data-reveal>
 
       <div class="stat-item">
-        <span class="mk">Нагрузка CPU</span>
+        <span class="mk">CPU load</span>
         <div class="mv-num">~1.8<small>%</small></div>
         <div class="gauge"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <p>Одно ядро, полное стартовое поле.</p>
+        <p>One core, full starting grid.</p>
       </div>
 
       <div class="stat-item">
-        <span class="mk">Влияние на FPS</span>
+        <span class="mk">FPS impact</span>
         <div class="mv-num">−3.4<small>FPS</small></div>
         <div class="gauge"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <p>Медиана по 60 сессиям, отдельный слой.</p>
+        <p>Median across 60 sessions, rendered as a separate layer.</p>
       </div>
 
       <div class="stat-item">
-        <span class="mk">Совместимость с OBS</span>
+        <span class="mk">OBS compatibility</span>
         <div class="mv-num" style="font-size:clamp(1.15rem,1.9vw,1.5rem)">Game + Window</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pip">Capture OK</span><span class="pip d">Alpha OK</span></div>
-        <p>Каждый виджет захватывается отдельно.</p>
+        <p>Every widget is captured separately.</p>
       </div>
 
       <div class="stat-item">
-        <span class="mk">Параметров настройки</span>
+        <span class="mk">Configurable settings</span>
         <div class="mv-num"><u>40</u>+</div>
         <div class="gauge"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="hot"></i><i class="hot"></i><i class="hot"></i></div>
-        <p>Настрой всё под себя.</p>
+        <p>Tune everything to your liking.</p>
       </div>
 
       <div class="stat-item">
-        <span class="mk">Масштаб интерфейса</span>
+        <span class="mk">Interface scale</span>
         <div class="mv-num">50—300<small>%</small></div>
         <div class="bar" style="height:6px"><i style="width:100%;background:linear-gradient(90deg,var(--data),var(--brand))"></i></div>
-        <p>Одинаково удобно на любом экране.</p>
+        <p>Just as comfortable on any screen.</p>
       </div>
 
     </div>
@@ -1077,18 +1077,18 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>03 / Галерея</span>
-      <h2 data-reveal style="--d:60ms">Как это выглядит в заезде</h2>
-      <p class="lead" data-reveal style="--d:110ms">Нажмите на карточку, чтобы рассмотреть интерфейс крупно.</p>
+      <span class="eyebrow" data-reveal>03 / Gallery</span>
+      <h2 data-reveal style="--d:60ms">What it looks like on track</h2>
+      <p class="lead" data-reveal style="--d:110ms">Click a card to see the interface up close.</p>
     </div>
 
     <div class="g-grid" id="gal">
 
       <!-- SHOT 1 -->
       <div class="panel brk gcard" data-reveal>
-        <div class="frame"><img class="g-photo" src="img/example-1.jpg" alt="Пример оверлея"></div>
-        <div class="gcap"><h3>Пример оверлея</h3><span>В боксах</span>
-          <span class="zoom">Открыть
+        <div class="frame"><img class="g-photo" src="../img/example-1.jpg" alt="Overlay example"></div>
+        <div class="gcap"><h3>Overlay example</h3><span>In the pits</span>
+          <span class="zoom">Open
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </span>
         </div>
@@ -1096,9 +1096,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- SHOT 2 -->
       <div class="panel brk gcard" data-reveal style="--d:60ms">
-        <div class="frame"><img class="g-photo" src="img/example-2.jpg" alt="Пример со стрима Shelik https://www.twitch.tv/shelik"></div>
-        <div class="gcap"><h3>Пример со стрима Shelik</h3><span>На трассе</span>
-          <span class="zoom">Открыть
+        <div class="frame"><img class="g-photo" src="../img/example-2.jpg" alt="Example from Shelik's stream https://www.twitch.tv/shelik"></div>
+        <div class="gcap"><h3>Example from Shelik's stream</h3><span>On track</span>
+          <span class="zoom">Open
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </span>
         </div>
@@ -1113,24 +1113,24 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>04 / Кому это нужно</span>
-      <h2 data-reveal style="--d:60ms">Кому пригодятся оверлеи</h2>
+      <span class="eyebrow" data-reveal>04 / Who it's for</span>
+      <h2 data-reveal style="--d:60ms">Who overlays are for</h2>
     </div>
 
     <div class="t-grid">
       <article class="panel brk tcard" data-reveal>
-        <p class="q">Гонщикам, которым важна обстановка вокруг машины: Relative, Radar и Fuel дают нужные данные в поле зрения, не заслоняя трассу.</p>
+        <p class="q">Racers who care about what's happening around their car: Relative, Radar, and Fuel keep the data you need in view without blocking the track.</p>
         <div class="who">
           <span class="av">01</span>
-          <span><span class="n">Соревнующимся пилотам</span><br><span class="rr">Спринт · Эндуранс</span></span>
+          <span><span class="n">Competitive drivers</span><br><span class="rr">Sprint · Endurance</span></span>
         </div>
       </article>
 
       <article class="panel brk tcard" data-reveal style="--d:60ms">
-        <p class="q">Стримерам, которым нужен читаемый эфир: отдельные виджеты можно собрать в собственный layout и настроить под захват в OBS.</p>
+        <p class="q">Streamers who need a readable broadcast: individual widgets can be arranged into your own layout and tuned for OBS capture.</p>
         <div class="who">
           <span class="av">02</span>
-          <span><span class="n">Стримерам</span><br><span class="rr">OBS · Трансляции</span></span>
+          <span><span class="n">Streamers</span><br><span class="rr">OBS · Broadcasting</span></span>
         </div>
       </article>
     </div>
@@ -1143,33 +1143,33 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
       <span class="eyebrow" data-reveal>05 / FAQ</span>
-      <h2 data-reveal style="--d:60ms">Короткие ответы</h2>
+      <h2 data-reveal style="--d:60ms">Quick answers</h2>
     </div>
 
     <div class="faq" id="faqList" data-reveal>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">01</span>Сколько это стоит?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Приложение на данный момент абсолютно бесплатное.</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">01</span>How much does it cost?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>The app is currently completely free.</p></div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">02</span>Какие операционные системы поддерживаются?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Windows 10 и Windows 11, только 64-бит. Версий для macOS и Linux нет и не планируется: сам iRacing работает исключительно под Windows.</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">02</span>Which operating systems are supported?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>Windows 10 and Windows 11, 64-bit only. There's no macOS or Linux version, and none is planned — iRacing itself only runs on Windows.</p></div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">03</span>Насколько падает FPS?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>В наших замерах — в пределах погрешности: медиана −3.4 FPS. Оверлеи рисуются отдельными окнами поверх симулятора и не вмешиваются в его рендер-цикл.</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">03</span>How much does FPS drop?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>In our measurements, it's within the margin of error: a median of −3.4 FPS. Overlays render as separate windows on top of the simulator and don't touch its render loop.</p></div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">04</span>Работает ли это с OBS?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Да. Виджеты захватываются и через Game Capture, и через Window Capture. Любой виджет можно исключить из захвата по отдельности — он останется видимым на вашем мониторе, но не попадёт в трансляцию.</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">04</span>Does it work with OBS?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>Yes. Widgets are captured through both Game Capture and Window Capture. Any widget can be excluded from capture individually — it stays visible on your monitor but won't appear in the stream.</p></div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">05</span>Можно ли всё перекрасить и переставить?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Да: позиция, размер, масштаб, прозрачность, цвета классов, набор колонок, число строк и единицы измерения настраиваются отдельно у каждого виджета.</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">05</span>Can I recolor and rearrange everything?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>Yes: position, size, scale, opacity, class colors, column set, row count, and units are all configurable per widget.</p></div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">06</span>Нужен ли аккаунт?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Нет. Приложение читает телеметрию локально и ничего не отправляет наружу. Требуется только аккаунт iRacing с действующей подпиской</p></div></div>
+        <button class="qa-q" aria-expanded="false"><span class="qn">06</span>Do I need an account?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div><p>No. The app reads telemetry locally and sends nothing out. You just need an iRacing account with an active subscription.</p></div></div>
       </div>
     </div>
   </div>
@@ -1179,21 +1179,21 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <section class="sect" id="download" style="padding-top:clamp(20px,3vw,40px)">
   <div class="wrap">
     <div class="cta" data-reveal>
-      <span class="eyebrow" style="margin-bottom:20px">Готово к установке</span>
-      <h2>Поставьте оверлеи<br> прямо <span class="acc">сейчас</span></h2>
-      <p class="lead">Установка занимает минуту. Виджеты подхватывают телеметрию автоматически, как только вы выходите на трассу.</p>
+      <span class="eyebrow" style="margin-bottom:20px">Ready to install</span>
+      <h2>Set up overlays<br>right <span class="acc">now</span></h2>
+      <p class="lead">Installation takes a minute. Widgets pick up telemetry automatically as soon as you're out on track.</p>
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="#download" data-tip="SOON...">
           <span class="btn-content">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Скачать для Windows
+            Download for Windows
           </span>
         </a>
         </div>
       <div class="hero-meta" style="margin-top:24px">
-        <span>v2.4.1</span><i>/</i><span>18.4 МБ</span><i>/</i><span>Без аккаунта</span><i>/</i><span>Win 10 · 11 x64</span>
+        <span>v2.4.1</span><i>/</i><span>18.4 MB</span><i>/</i><span>No account</span><i>/</i><span>Win 10 · 11 x64</span>
       </div>
     </div>
   </div>
@@ -1205,45 +1205,45 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <footer class="ftr">
   <div class="wrap ftr-in">
     <a class="logo" href="#top">
-      <img class="logo-mk" src="img/logo.png" alt="" aria-hidden="true">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
-    <nav class="ftr-links" aria-label="Дополнительно">
-      <a href="#features">Возможности</a>
-      <a href="#gallery">Галерея</a>
+    <nav class="ftr-links" aria-label="More">
+      <a href="#features">Features</a>
+      <a href="#gallery">Gallery</a>
       <a href="#faq">Changelog</a>
       <a href="#download">Download</a>
     </nav>
     <p class="disc">
-      <b>TU Overlays — независимый проект.</b> Приложение не связано с iRacing.com Motorsport Simulations, LLC, не разрабатывается и не поддерживается этой компанией. «iRacing» и связанные обозначения принадлежат их правообладателям и используются исключительно для описания совместимости. Названия трасс, команд и пилотов на странице приведены как пример оформления интерфейса. © 2026 TU Overlays.
+      <b>TU Overlays is an independent project.</b> The app is not affiliated with, developed, or endorsed by iRacing.com Motorsport Simulations, LLC. "iRacing" and related marks belong to their respective owners and are used solely to describe compatibility. Track, team, and driver names shown on this page are illustrative examples of the interface. © 2026 TU Overlays.
     </p>
   </div>
 </footer>
 
 <!-- ══════════════════════════ SUPPORT FAB ══════════════════════════ -->
-<a class="support-fab" id="supportFab" href="support.html" aria-label="Поддержать проект">
+<a class="support-fab" id="supportFab" href="support.html" aria-label="Support the project">
   <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <path d="M8 13.8s-5.6-3.34-5.6-7.02A2.98 2.98 0 0 1 8 5.1a2.98 2.98 0 0 1 5.6 1.68C13.6 10.46 8 13.8 8 13.8Z"
       fill="currentColor" stroke="currentColor" stroke-width=".4" stroke-linejoin="round"/>
   </svg>
-  <span class="fab-txt">Поддержать проект</span>
+  <span class="fab-txt">Support the project</span>
 </a>
 
 <!-- ══════════════════════════ PHOTO LIGHTBOX ══════════════════════════ -->
-<div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Просмотр скриншота">
+<div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Screenshot viewer">
   <div class="plb-box">
     <div class="plb-frame" id="plbFrame"><img id="plbImg" src="" alt=""></div>
     <div class="lb-bar">
       <h3 id="plbTitle">—</h3>
       <div class="lb-nav" style="margin-left:auto">
-        <button id="plbPrev" aria-label="Предыдущий">
+        <button id="plbPrev" aria-label="Previous">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button id="plbNext" aria-label="Следующий">
+        <button id="plbNext" aria-label="Next">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-      <button class="lb-close" id="plbClose" aria-label="Закрыть">
+      <button class="lb-close" id="plbClose" aria-label="Close">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       </button>
     </div>
@@ -1251,7 +1251,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 </div>
 
 <!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Просмотр интерфейса">
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Interface viewer">
   <div class="lb-box">
     <div class="lb-frame" id="lbFrame"></div>
     <div class="lb-bar">
@@ -1259,17 +1259,17 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <span class="mono" id="lbSub">—</span>
       <span class="lb-hint">
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4 2 8l4 4M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Проведите по кадру
+        Swipe to pan
       </span>
       <div class="lb-nav" style="margin-left:auto">
-        <button id="lbPrev" aria-label="Предыдущий">
+        <button id="lbPrev" aria-label="Previous">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button id="lbNext" aria-label="Следующий">
+        <button id="lbNext" aria-label="Next">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-      <button class="lb-close" id="lbClose" aria-label="Закрыть">
+      <button class="lb-close" id="lbClose" aria-label="Close">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       </button>
     </div>
@@ -1299,10 +1299,10 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const variants = [
     { cls: 'v1', html: '<span class="q">“</span>BETA<span class="q">”</span>' },
     { cls: 'v2', html: 'BETA<span class="qm">?</span>' },
-    { cls: 'v3 stack', html: 'BETA<span class="sub">(но это не точно)</span>' },
+    { cls: 'v3 stack', html: 'BETA<span class="sub">(no promises)</span>' },
     { cls: 'v4', html: '<span class="inner">BETA</span>' },
     { cls: 'v5', html: '<span class="q">“</span>BETA<span class="q">”</span>' },
-    { cls: 'v6 stack', html: 'BETA<span class="sub">(наверное)</span>' },
+    { cls: 'v6 stack', html: 'BETA<span class="sub">(probably)</span>' },
   ];
   const pick = variants[Math.floor(Math.random() * variants.length)];
   $$('.logo').forEach(logo => {
