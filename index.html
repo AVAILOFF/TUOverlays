@@ -588,8 +588,9 @@ p{margin:0}
 /* ============================================================
    gallery
    ============================================================ */
-.g-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-@media (max-width:820px){.g-grid{grid-template-columns:1fr}}
+.g-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:1000px){.g-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.g-grid{grid-template-columns:1fr}}
 .gcard{padding:0;overflow:hidden;text-align:left;width:100%;display:block;
   transition:transform .3s cubic-bezier(.2,.7,.3,1),border-color .3s}
 .gcard:hover{transform:translateY(-3px);border-color:var(--line-2)}
@@ -1098,6 +1099,16 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <div class="panel brk gcard" data-reveal style="--d:60ms">
         <div class="frame"><img class="g-photo" src="img/example-2.jpg" alt="Пример со стрима Shelik https://www.twitch.tv/shelik"></div>
         <div class="gcap"><h3>Пример со стрима Shelik</h3><span>На трассе</span>
+          <span class="zoom">Открыть
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- SHOT 3 -->
+      <div class="panel brk gcard" data-reveal style="--d:120ms">
+        <div class="frame"><img class="g-photo" src="img/example-3.jpg" alt="Пример со стрима Shelik https://www.twitch.tv/shelik"></div>
+        <div class="gcap"><h3>Пример со стрима Shelik</h3><span>Ле-Ман</span>
           <span class="zoom">Открыть
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </span>
