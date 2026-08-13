@@ -7,6 +7,7 @@
 <meta name="description" content="Ways to support TU Overlays development: DALink with every option at once, Boosty and DonationAlerts for Russia, a TON wallet for the rest of the world. No sign-up, lowest possible fees.">
 <meta name="theme-color" content="#02102c">
 <script src="../scripts/site-lock.js"></script>
+<script src="../scripts/supporters.js"></script>
 <link rel="alternate" hreflang="ru" href="../support.html">
 <link rel="alternate" hreflang="en" href="support.html">
 <link rel="alternate" hreflang="x-default" href="../support.html">
@@ -227,6 +228,22 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 .copy-btn.copied{border-color:var(--good);color:var(--good)}
 .copy-wide{height:44px;padding-inline:18px;border-radius:10px;font-size:12px;justify-content:center;flex:1 1 160px}
 
+/* ---------- supporters ---------- */
+.sup-panel{padding:24px}
+.sup-grid{display:flex;flex-wrap:wrap;gap:10px}
+.sup-chip{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.025);
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:13.5px;color:var(--tx-2);
+  transition:border-color .2s,color .2s,background .2s,transform .18s;
+}
+a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(255,0,102,.08);transform:translateY(-1px)}
+.sup-chip .sup-tag{
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brand-hi);border:1px solid rgba(255,0,102,.35);border-radius:999px;padding:2px 7px;
+}
+.sup-empty{color:var(--tx-3);font-size:13.6px;padding:6px 2px}
+
 /* ---------- info strip ---------- */
 .note{display:flex;gap:12px;padding:18px 20px;align-items:flex-start}
 .note svg{flex:none;margin-top:2px;color:var(--data)}
@@ -436,6 +453,18 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
   </div>
 </section>
 
+<!-- ══════════════════════════ SUPPORTERS ══════════════════════════ -->
+<section class="wrap sec-hd">
+  <span class="eyebrow">03 / Thank you</span>
+  <h2>Who's already supported the project</h2>
+  <p class="lead">The people who chipped in money are what keeps development moving. Thank you, each of you.</p>
+</section>
+<section class="wrap" style="padding-block:0 12px">
+  <div class="panel brk sup-panel">
+    <div class="sup-grid" id="supportersList"></div>
+  </div>
+</section>
+
 <!-- ══════════════════════════ WHY SEPARATE ══════════════════════════ -->
 <section class="wrap" style="padding-block:20px 0">
   <div class="panel note">
@@ -447,7 +476,7 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 <!-- ══════════════════════════ FAQ ══════════════════════════ -->
 <!-- ══════════════════════════ FAQ ══════════════════════════ -->
 <section class="wrap sec-hd">
-  <span class="eyebrow">03 / Questions</span>
+  <span class="eyebrow">04 / Questions</span>
   <h2>Good to know</h2>
 </section>
 <section class="wrap" style="padding-block:0 clamp(40px,7vw,72px)">
@@ -470,7 +499,7 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 
     <details>
       <summary>I want to help, but not with money</summary>
-      <p class="ans">That helps too: mention the overlays to your team or on stream, share screenshots, and report any bugs you find <a href="https://github.com/AVAILOFF/TUOverlays/issues" target="_blank" rel="noopener">on GitHub</a>. A clear bug report saves more time than you'd think.</p>
+      <p class="ans">That helps too: mention the overlays to your team or on stream, share screenshots, and report any bugs you find <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">on Discord</a>. A clear bug report saves more time than you'd think.</p>
     </details>
 
   </div>
@@ -500,6 +529,9 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 <script>
 (() => {
   'use strict';
+  if (window.renderSupporters) {
+    renderSupporters('#supportersList', { emptyText: 'The list is empty right now — be the first!', dataUrl: '../scripts/supporters.json' });
+  }
   document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
     const label = btn.querySelector('.copy-label');
     const original = label ? label.textContent : '';

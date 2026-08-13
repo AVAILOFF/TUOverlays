@@ -7,6 +7,7 @@
 <meta name="description" content="Способы поддержать разработку TU Overlays: DALink со всеми вариантами сразу, Boosty и DonationAlerts для России, TON-кошелёк для остального мира. Без регистрации и с минимальной комиссией.">
 <meta name="theme-color" content="#02102c">
 <script src="scripts/site-lock.js"></script>
+<script src="scripts/supporters.js"></script>
 <link rel="alternate" hreflang="ru" href="support.html">
 <link rel="alternate" hreflang="en" href="en/support.html">
 <link rel="alternate" hreflang="x-default" href="support.html">
@@ -227,6 +228,22 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 .copy-btn.copied{border-color:var(--good);color:var(--good)}
 .copy-wide{height:44px;padding-inline:18px;border-radius:10px;font-size:12px;justify-content:center;flex:1 1 160px}
 
+/* ---------- supporters ---------- */
+.sup-panel{padding:24px}
+.sup-grid{display:flex;flex-wrap:wrap;gap:10px}
+.sup-chip{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.025);
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:13.5px;color:var(--tx-2);
+  transition:border-color .2s,color .2s,background .2s,transform .18s;
+}
+a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(255,0,102,.08);transform:translateY(-1px)}
+.sup-chip .sup-tag{
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brand-hi);border:1px solid rgba(255,0,102,.35);border-radius:999px;padding:2px 7px;
+}
+.sup-empty{color:var(--tx-3);font-size:13.6px;padding:6px 2px}
+
 /* ---------- info strip ---------- */
 .note{display:flex;gap:12px;padding:18px 20px;align-items:flex-start}
 .note svg{flex:none;margin-top:2px;color:var(--data)}
@@ -436,6 +453,18 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
   </div>
 </section>
 
+<!-- ══════════════════════════ SUPPORTERS ══════════════════════════ -->
+<section class="wrap sec-hd">
+  <span class="eyebrow">03 / Благодарности</span>
+  <h2>Кто уже поддержал проект</h2>
+  <p class="lead">Люди, которые помогли деньгами — двигают разработку вперёд. Спасибо каждому из вас.</p>
+</section>
+<section class="wrap" style="padding-block:0 12px">
+  <div class="panel brk sup-panel">
+    <div class="sup-grid" id="supportersList"></div>
+  </div>
+</section>
+
 <!-- ══════════════════════════ WHY SEPARATE ══════════════════════════ -->
 <section class="wrap" style="padding-block:20px 0">
   <div class="panel note">
@@ -446,7 +475,7 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 
 <!-- ══════════════════════════ FAQ ══════════════════════════ -->
 <section class="wrap sec-hd">
-  <span class="eyebrow">03 / Вопросы</span>
+  <span class="eyebrow">04 / Вопросы</span>
   <h2>Что стоит знать</h2>
 </section>
 <section class="wrap" style="padding-block:0 clamp(40px,7vw,72px)">
@@ -469,7 +498,7 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 
     <details>
       <summary>Хочу помочь, но не деньгами</summary>
-      <p class="ans">Это тоже помогает: расскажите об оверлеях в своей команде или на стриме, поделитесь скриншотами и сообщайте о найденных багах — <a href="https://github.com/AVAILOFF/TUOverlays/issues" target="_blank" rel="noopener">на GitHub</a>. Понятные баг-репорты экономят больше времени, чем кажется.</p>
+      <p class="ans">Это тоже помогает: расскажите об оверлеях в своей команде или на стриме, поделитесь скриншотами и сообщайте о найденных багах — <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">в Discord</a>. Понятные баг-репорты экономят больше времени, чем кажется.</p>
     </details>
 
   </div>
@@ -499,6 +528,9 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 <script>
 (() => {
   'use strict';
+  if (window.renderSupporters) {
+    renderSupporters('#supportersList', { emptyText: 'Список пока пуст — станьте первым!', dataUrl: 'scripts/supporters.json' });
+  }
   document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
     const label = btn.querySelector('.copy-label');
     const original = label ? label.textContent : '';
