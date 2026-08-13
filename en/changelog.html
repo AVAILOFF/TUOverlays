@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Changelog — TU Overlays</title>
+<meta name="description" content="TU Overlays version history: what changed in each release. Synced with GitHub Releases.">
+<meta name="theme-color" content="#02102c">
+<script src="../scripts/site-lock.js"></script>
+<link rel="alternate" hreflang="ru" href="../changelog.html">
+<link rel="alternate" hreflang="en" href="changelog.html">
+<link rel="alternate" hreflang="x-default" href="../changelog.html">
+<link rel="icon" href="../img/favicon.png">
+
+<style>
+:root{
+  --bg:        #02102c;
+  --bg-sub:    #010b1f;
+  --glass:     rgba(8, 30, 68, .58);
+
+  --line:      rgba(124,162,224,.13);
+  --line-2:    rgba(124,162,224,.24);
+  --line-3:    rgba(124,162,224,.40);
+
+  --tx:        #e4ecfb;
+  --tx-2:      #9fb2d4;
+  --tx-2d:     #8ea3c8;
+  --tx-3:      #64789e;
+  --tx-4:      #4a5f86;
+
+  --brand:     #ff0066;
+  --brand-lo:  #c8004f;
+  --brand-hi:  #ff5f96;
+  --data:      #3fd8e0;
+  --good:      #35e08d;
+  --warn:      #ffb02e;
+
+  --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
+  --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
+
+  --maxw: 820px;
+  --r-sm: 8px;
+  --r:    13px;
+  --r-lg: 20px;
+  --pad: clamp(20px, 5vw, 40px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;zoom:1.5}
+html,body{max-width:100%;overflow-x:clip}
+body{
+  margin:0;background:var(--bg);color:var(--tx);
+  font-family:var(--f-text);font-size:16px;line-height:1.62;letter-spacing:.005em;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:rgba(255,0,102,.32);color:#fff}
+:focus-visible{outline:2px solid var(--data);outline-offset:3px;border-radius:4px}
+
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+
+h1{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.024em;line-height:1.05;margin:0;
+  font-size:clamp(2.1rem,5.6vw,3.2rem);text-wrap:balance}
+h4{font-family:var(--f-display);font-stretch:92%;font-size:14px;letter-spacing:.01em;color:var(--tx-2);margin:14px 0 6px}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.acc{
+  color:var(--brand);
+  background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 46px rgba(255,0,102,.42);
+}
+.lead{color:var(--tx-2);font-size:clamp(1rem,1.5vw,1.1rem);max-width:60ch;text-wrap:pretty}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:11px;line-height:1;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);
+}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--brand);flex:none;box-shadow:0 0 9px rgba(255,0,102,.85)}
+
+/* ---------- buttons ---------- */
+.btn{
+  --bh:40px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  height:var(--bh);padding:0 18px;border-radius:10px;
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:14px;
+  letter-spacing:.005em;white-space:nowrap;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s;
+}
+.btn svg{flex:none}
+.btn-ghost{
+  color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.015);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{border-color:var(--line-3);background:rgba(255,255,255,.045);transform:translateY(-1px)}
+
+/* ---------- glass panel ---------- */
+.panel{
+  position:relative;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,0) 42%),var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 24px 50px -28px rgba(0,4,16,.95);
+}
+
+/* ---------- header ---------- */
+.hdr{padding-block:18px;border-bottom:1px solid var(--line)}
+.hdr-in{display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo-mk{width:26px;height:auto;display:block}
+.logo-tx{font-family:var(--f-display);font-stretch:86%;font-weight:600;font-size:16.5px}
+.logo-tx b{color:var(--tx)}
+.logo-tx span{color:var(--tx-3);font-weight:400}
+.hdr-back{margin-left:auto;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  transition:color .2s}
+.hdr-back:hover{color:var(--tx)}
+.lang-switch{display:flex;align-items:center;gap:2px;padding:3px;
+  border:1px solid var(--line-2);border-radius:8px;flex:none}
+.lang-switch a{padding:4px 9px;border-radius:6px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.06em;color:var(--tx-3);transition:color .18s,background .18s}
+.lang-switch a:hover{color:var(--tx)}
+.lang-switch a.on{color:var(--tx);background:rgba(255,255,255,.07)}
+
+/* ---------- hero ---------- */
+.stage{position:relative;overflow:hidden;padding-block:clamp(52px,8vw,84px) clamp(28px,4vw,40px)}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+.glow-a{width:min(900px,120vw);height:480px;left:50%;top:-220px;transform:translateX(-50%);
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
+.glow-b{width:min(600px,90vw);height:380px;right:-10%;top:60px;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(63,216,224,.14), rgba(63,216,224,0) 70%)}
+.stage-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;max-width:64ch}
+.stage-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* live sync status */
+.sync{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3)}
+.sync .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);flex:none;
+  animation:pulse 1.6s ease-in-out infinite}
+.sync.err .dot{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- changelog list ---------- */
+.cl-list{display:flex;flex-direction:column;gap:14px;padding-block:8px 60px}
+.cl-item{padding:22px 24px}
+.cl-hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cl-v{font-family:var(--f-display);font-stretch:90%;font-size:19px;font-weight:600;color:var(--tx);letter-spacing:.01em}
+.cl-tag{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brand-hi);border:1px solid rgba(255,0,102,.4);background:rgba(255,0,102,.08);
+  border-radius:999px;padding:3px 9px}
+.cl-d{margin-left:auto;font-family:var(--f-mono);font-size:11.5px;color:var(--tx-4);letter-spacing:.04em}
+.cl-body{margin-top:12px;font-size:14px;color:var(--tx-2d);line-height:1.65}
+.cl-body p{margin:8px 0}
+.cl-body p:first-child{margin-top:0}
+.cl-body ul{margin:6px 0;padding-left:20px}
+.cl-body li{margin:3px 0}
+.cl-body code{font-family:var(--f-mono);font-size:.92em;background:rgba(255,255,255,.06);
+  border:1px solid var(--line-2);border-radius:4px;padding:1px 5px}
+.cl-body h4:first-child{margin-top:0}
+
+.cl-empty{padding:28px 24px;text-align:center;color:var(--tx-3);font-size:13.6px}
+
+/* ---------- footer ---------- */
+.ftr{border-top:1px solid var(--line);margin-top:auto;padding-block:36px}
+.ftr-in{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:center}
+.ftr-links{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto}
+.ftr-links a{font-size:13px;color:var(--tx-3);transition:color .2s}
+.ftr-links a:hover{color:var(--tx)}
+.disc{width:100%;color:var(--tx-4);font-size:12px;line-height:1.6;max-width:74ch;
+  padding-top:22px;margin-top:4px;border-top:1px solid var(--line)}
+.disc b{color:var(--tx-3);font-weight:500}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="logo" href="index.html" aria-label="TU Overlays — home">
+      <img class="logo-mk" src="../img/logo.png" alt="">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <div class="lang-switch" aria-label="Language">
+      <a href="../changelog.html">RU</a>
+      <a class="on" href="changelog.html" aria-current="true">EN</a>
+    </div>
+    <a class="hdr-back" href="index.html">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back home
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="stage">
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+  <div class="wrap stage-in">
+    <span class="eyebrow">What's new</span>
+    <h1>Change<span class="acc">log</span></h1>
+    <p class="lead">TU Overlays' version history, release by release. The list syncs with GitHub Releases — almost nothing here needs manual updates.</p>
+    <div class="stage-actions">
+      <span class="sync" id="syncStatus"><i class="dot"></i><span id="syncText">Syncing with GitHub…</span></span>
+    </div>
+    <div class="stage-actions">
+      <a class="btn btn-ghost" href="download.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download latest version
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/AVAILOFF/TUOverlays/releases" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 0 0-2.05 12.67c.33.06.45-.14.45-.32v-1.13c-1.8.39-2.18-.87-2.18-.87-.3-.75-.72-.95-.72-.95-.6-.4.04-.4.04-.4.65.05 1 .67 1 .67.58.99 1.52.7 1.9.54.06-.42.23-.7.42-.87-1.44-.16-2.95-.72-2.95-3.2 0-.71.25-1.28.66-1.74-.07-.16-.29-.82.06-1.71 0 0 .54-.17 1.77.67a6.1 6.1 0 0 1 3.22 0c1.23-.84 1.77-.67 1.77-.67.35.89.13 1.55.06 1.71.41.46.66 1.03.66 1.74 0 2.49-1.51 3.04-2.96 3.2.24.2.44.6.44 1.2v1.78c0 .18.12.38.46.32A6.5 6.5 0 0 0 8 1.5Z" fill="currentColor"/></svg>
+        All releases on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ LIST ══════════════════════════ -->
+<section class="wrap">
+  <div class="cl-list" id="clList">
+    <!--
+      Static fallback — shown by default and whenever the GitHub API request
+      fails (no Releases configured yet, offline, rate-limited, etc). Once
+      real GitHub Releases exist in the repo, the script below replaces this
+      list with live API data automatically — no manual edits required.
+    -->
+    <div class="panel cl-item">
+      <div class="cl-hd">
+        <span class="cl-v">v2.4.1</span>
+        <span class="cl-tag">Current</span>
+        <span class="cl-d mono">2026-07-14</span>
+      </div>
+      <div class="cl-body">
+        <p>Sample entry — stabilized the Fuel Calculator, minor Standings visual fixes.</p>
+      </div>
+    </div>
+    <div class="panel cl-item">
+      <div class="cl-hd">
+        <span class="cl-v">v2.4.0</span>
+        <span class="cl-d mono">2026-06-02</span>
+      </div>
+      <div class="cl-body">
+        <p>Sample entry — added the Radar widget, minor fixes.</p>
+      </div>
+    </div>
+    <div class="panel cl-item">
+      <div class="cl-hd">
+        <span class="cl-v">v2.3.0</span>
+        <span class="cl-d mono">2026-04-18</span>
+      </div>
+      <div class="cl-body">
+        <p>Sample entry — reduced CPU overhead.</p>
+      </div>
+    </div>
+    <div class="panel cl-item">
+      <div class="cl-hd">
+        <span class="cl-v">v2.2.0</span>
+        <span class="cl-d mono">2026-02-27</span>
+      </div>
+      <div class="cl-body">
+        <p>Sample entry — first public beta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <a class="logo" href="index.html">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <nav class="ftr-links" aria-label="More">
+      <a href="index.html#features">Features</a>
+      <a href="download.html">Download</a>
+      <a href="support.html">Support the project</a>
+    </nav>
+    <p class="disc">
+      <b>TU Overlays is an independent project.</b> The app is not affiliated with, developed, or endorsed by iRacing.com Motorsport Simulations, LLC. AI-assisted tools were used in building the app and this site. © 2026 TU Overlays.
+    </p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const REPO = 'AVAILOFF/TUOverlays';
+  const list = document.getElementById('clList');
+  const syncEl = document.getElementById('syncStatus');
+  const syncText = document.getElementById('syncText');
+
+  const escapeHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  /* tiny markdown-lite: headings, bold, inline code, bullet lists, paragraphs */
+  function mdLite(src){
+    let t = escapeHtml(src || '').replace(/\r\n/g, '\n');
+    t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+    t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/^#{1,3}\s+(.*)$/gm, '<h4>$1</h4>');
+    t = t.replace(/(^|\n)[-*]\s+(.*)/g, (m, pre, item) => `${pre}<li>${item}</li>`);
+    t = t.replace(/(<li>.*?<\/li>\n?)+/gs, m => `<ul>${m.replace(/\n/g, '')}</ul>`);
+    const blocks = t.split(/\n{2,}/).map(b => {
+      if (/^<h4>|^<ul>/.test(b.trim())) return b;
+      const inner = b.trim();
+      return inner ? `<p>${inner.replace(/\n/g, '<br>')}</p>` : '';
+    });
+    return blocks.join('');
+  }
+
+  function fmtDate(iso){
+    try { return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
+    catch { return iso; }
+  }
+
+  function render(releases){
+    list.innerHTML = '';
+    releases.forEach((r, i) => {
+      const item = document.createElement('div');
+      item.className = 'panel cl-item';
+      const body = r.body && r.body.trim() ? mdLite(r.body) : '<p>No description.</p>';
+      item.innerHTML = `
+        <div class="cl-hd">
+          <span class="cl-v">${escapeHtml(r.tag_name || r.name || '—')}</span>
+          ${i === 0 ? '<span class="cl-tag">Current</span>' : ''}
+          <span class="cl-d mono">${fmtDate(r.published_at)}</span>
+        </div>
+        <div class="cl-body">${body}</div>`;
+      list.appendChild(item);
+    });
+  }
+
+  async function sync(){
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
+        headers: { Accept: 'application/vnd.github+json' },
+        signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const published = data.filter(r => !r.draft);
+      if (!published.length) throw new Error('no releases yet');
+      render(published);
+      syncText.textContent = 'Synced with GitHub Releases';
+      syncEl.classList.remove('err');
+    } catch (err) {
+      syncText.textContent = 'GitHub Releases unavailable — showing saved list';
+      syncEl.classList.add('err');
+    }
+  }
+
+  sync();
+})();
+</script>
+
+</body>
+</html>

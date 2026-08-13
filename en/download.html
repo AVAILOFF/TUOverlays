@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Download TU Overlays — installer and portable build for Windows</title>
+<meta name="description" content="Download TU Overlays straight from this site: exe installer or portable build for Windows 10/11 x64. Version archive and file checksums included.">
+<meta name="theme-color" content="#02102c">
+<script src="../scripts/site-lock.js"></script>
+<link rel="alternate" hreflang="ru" href="../download.html">
+<link rel="alternate" hreflang="en" href="download.html">
+<link rel="alternate" hreflang="x-default" href="../download.html">
+<link rel="icon" href="../img/favicon.png">
+
+<style>
+:root{
+  --bg:        #02102c;
+  --bg-sub:    #010b1f;
+  --glass:     rgba(8, 30, 68, .58);
+
+  --line:      rgba(124,162,224,.13);
+  --line-2:    rgba(124,162,224,.24);
+  --line-3:    rgba(124,162,224,.40);
+
+  --tx:        #e4ecfb;
+  --tx-2:      #9fb2d4;
+  --tx-2d:     #8ea3c8;
+  --tx-3:      #64789e;
+  --tx-4:      #4a5f86;
+
+  --brand:     #ff0066;
+  --brand-lo:  #c8004f;
+  --brand-hi:  #ff5f96;
+  --data:      #3fd8e0;
+  --good:      #35e08d;
+  --warn:      #ffb02e;
+
+  --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
+  --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
+
+  --maxw: 980px;
+  --r-sm: 8px;
+  --r:    13px;
+  --r-lg: 20px;
+  --pad: clamp(20px, 5vw, 40px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;zoom:1.5}
+html,body{max-width:100%;overflow-x:clip}
+body{
+  margin:0;background:var(--bg);color:var(--tx);
+  font-family:var(--f-text);font-size:16px;line-height:1.62;letter-spacing:.005em;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:rgba(255,0,102,.32);color:#fff}
+:focus-visible{outline:2px solid var(--data);outline-offset:3px;border-radius:4px}
+
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+
+h1,h2{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.02em;line-height:1.05;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.1rem,5.6vw,3.4rem);letter-spacing:-.024em}
+h2{font-size:1.3rem}
+h3{font-family:var(--f-display);font-size:17px;font-stretch:92%;letter-spacing:.004em;margin:0;color:var(--tx)}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.acc{
+  color:var(--brand);
+  background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 46px rgba(255,0,102,.42);
+}
+.lead{color:var(--tx-2);font-size:clamp(1rem,1.5vw,1.1rem);max-width:60ch;text-wrap:pretty}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:11px;line-height:1;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);
+}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--brand);flex:none;box-shadow:0 0 9px rgba(255,0,102,.85)}
+
+.rule{position:relative;height:1px;background:var(--line);overflow:hidden}
+.rule::after{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(90deg,var(--line-3) 1px,transparent 1px);
+  background-size:56px 1px;opacity:.55;
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  --bh:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  height:var(--bh);padding:0 20px;border-radius:10px;
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
+  letter-spacing:.005em;white-space:nowrap;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s, box-shadow .28s;
+}
+.btn svg{flex:none}
+.btn-primary{
+  color:#fff;background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo));
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 6px 24px -8px rgba(255,0,102,.7);
+}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{
+  color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.015);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{border-color:var(--line-3);background:rgba(255,255,255,.045);transform:translateY(-1px)}
+.btn-lg{--bh:52px;padding:0 26px;font-size:16px;width:100%}
+.btn-sm{--bh:34px;padding:0 14px;font-size:13px}
+
+/* ---------- glass panel + corner brackets ---------- */
+.panel{
+  position:relative;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,0) 42%),var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 24px 50px -28px rgba(0,4,16,.95);
+}
+.brk::before,.brk::after{
+  content:'';position:absolute;width:11px;height:11px;pointer-events:none;
+  border-color:var(--line-3);border-style:solid;border-width:0;
+  transition:width .3s cubic-bezier(.2,.7,.3,1),height .3s cubic-bezier(.2,.7,.3,1),border-color .3s;
+}
+.brk::before{top:-1px;left:-1px;border-top-width:1px;border-left-width:1px;border-radius:var(--r) 0 0 0}
+.brk::after{bottom:-1px;right:-1px;border-bottom-width:1px;border-right-width:1px;border-radius:0 0 var(--r) 0}
+.brk:hover::before,.brk:hover::after{width:26px;height:26px;border-color:var(--brand)}
+
+/* ---------- header ---------- */
+.hdr{padding-block:18px;border-bottom:1px solid var(--line)}
+.hdr-in{display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo-mk{width:26px;height:auto;display:block}
+.logo-tx{font-family:var(--f-display);font-stretch:86%;font-weight:600;font-size:16.5px}
+.logo-tx b{color:var(--tx)}
+.logo-tx span{color:var(--tx-3);font-weight:400}
+.hdr-back{margin-left:auto;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  transition:color .2s}
+.hdr-back:hover{color:var(--tx)}
+.lang-switch{display:flex;align-items:center;gap:2px;padding:3px;
+  border:1px solid var(--line-2);border-radius:8px;flex:none}
+.lang-switch a{padding:4px 9px;border-radius:6px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.06em;color:var(--tx-3);transition:color .18s,background .18s}
+.lang-switch a:hover{color:var(--tx)}
+.lang-switch a.on{color:var(--tx);background:rgba(255,255,255,.07)}
+
+/* ---------- hero ---------- */
+.stage{position:relative;overflow:hidden;padding-block:clamp(52px,8vw,88px) clamp(36px,5vw,56px)}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+.glow-a{width:min(900px,120vw);height:480px;left:50%;top:-220px;transform:translateX(-50%);
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
+.glow-b{width:min(600px,90vw);height:380px;right:-10%;top:60px;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(63,216,224,.14), rgba(63,216,224,0) 70%)}
+.stage-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;max-width:64ch}
+
+.meta-row{display:flex;gap:8px 20px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11.5px;
+  letter-spacing:.09em;color:var(--tx-3);text-transform:uppercase;margin-top:4px}
+.meta-row i{font-style:normal;color:var(--tx-4)}
+.meta-row .good{color:var(--good)}
+
+/* live sync status */
+.sync{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin-top:10px}
+.sync .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);flex:none;
+  animation:pulse 1.6s ease-in-out infinite}
+.sync.err .dot{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.btn.is-loading{opacity:.55;pointer-events:none}
+
+/* ---------- download cards ---------- */
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:700px){.dl-grid{grid-template-columns:1fr}}
+.dlcard{padding:24px;display:flex;flex-direction:column;gap:16px}
+.dlcard .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid var(--line-2);color:var(--data);flex:none}
+.dlcard .hd{display:flex;align-items:center;gap:12px}
+.dlcard .hd .tag{margin-left:auto;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tx-4);border:1px solid var(--line-2);border-radius:999px;padding:3px 8px}
+.dlcard p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
+.dlcard .filemeta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11px;
+  color:var(--tx-3);letter-spacing:.04em}
+.dlcard .filemeta b{color:var(--tx-2);font-weight:400}
+
+/* checksum strip */
+.chk{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line-2);
+  display:flex;flex-direction:column;gap:3px}
+.chk .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-4)}
+.chk .v{font-family:var(--f-mono);font-size:10.5px;color:var(--tx-3);word-break:break-all}
+
+/* ---------- info strip ---------- */
+.note{display:flex;gap:12px;padding:16px 18px;align-items:flex-start}
+.note svg{flex:none;margin-top:2px;color:var(--data)}
+.note p{font-size:13.4px;color:var(--tx-2d);line-height:1.55}
+.note b{color:var(--tx-2);font-weight:600}
+
+/* ---------- archive accordion ---------- */
+.arc-toggle{
+  width:100%;display:flex;align-items:center;gap:12px;padding:18px 20px;
+  font-family:var(--f-display);font-stretch:92%;font-size:15px;font-weight:600;color:var(--tx);
+  transition:color .2s;
+}
+.arc-toggle:hover{color:var(--brand-hi)}
+.arc-toggle .cnt{font-family:var(--f-mono);font-size:11px;color:var(--tx-4);letter-spacing:.06em;font-weight:400}
+.arc-toggle .qi{margin-left:auto;flex:none;width:18px;height:18px;position:relative}
+.arc-toggle .qi::before,.arc-toggle .qi::after{content:'';position:absolute;background:var(--tx-3);border-radius:2px;transition:transform .3s cubic-bezier(.2,.7,.3,1),background .2s}
+.arc-toggle .qi::before{left:0;right:0;top:8.25px;height:1.5px}
+.arc-toggle .qi::after{top:0;bottom:0;left:8.25px;width:1.5px}
+.arc.on .qi::after{transform:scaleY(0)}
+.arc.on .qi::before{background:var(--brand)}
+.arc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .34s cubic-bezier(.2,.7,.3,1)}
+.arc.on .arc-body{grid-template-rows:1fr}
+.arc-body>div{overflow:hidden}
+
+.vrow{display:flex;align-items:center;gap:14px;padding:16px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.vrow .v{font-family:var(--f-mono);font-size:13px;color:var(--tx);letter-spacing:.02em;flex:none}
+.vrow .d{font-family:var(--f-mono);font-size:11px;color:var(--tx-4);flex:none}
+.vrow .note-txt{flex:1 1 220px;font-size:12.8px;color:var(--tx-2d);min-width:160px}
+.vrow .links{display:flex;gap:8px;flex:none;margin-left:auto}
+.vrow .links a{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:7px;
+  border:1px solid var(--line-2);font-family:var(--f-mono);font-size:11px;letter-spacing:.04em;
+  color:var(--tx-2);transition:border-color .2s,color .2s,background .2s;
+}
+.vrow .links a:hover{border-color:var(--line-3);color:var(--tx);background:rgba(255,255,255,.04)}
+
+/* ---------- footer ---------- */
+.ftr{border-top:1px solid var(--line);margin-top:clamp(56px,8vw,90px);padding-block:36px}
+.ftr-in{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:center}
+.ftr-links{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto}
+.ftr-links a{font-size:13px;color:var(--tx-3);transition:color .2s}
+.ftr-links a:hover{color:var(--tx)}
+.disc{width:100%;color:var(--tx-4);font-size:12px;line-height:1.6;max-width:74ch;
+  padding-top:22px;margin-top:4px;border-top:1px solid var(--line)}
+.disc b{color:var(--tx-3);font-weight:500}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="logo" href="index.html" aria-label="TU Overlays — home">
+      <img class="logo-mk" src="../img/logo.png" alt="">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <div class="lang-switch" aria-label="Language">
+      <a href="../download.html">RU</a>
+      <a class="on" href="download.html" aria-current="true">EN</a>
+    </div>
+    <a class="hdr-back" href="index.html">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back home
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="stage">
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+  <div class="wrap stage-in">
+    <span class="eyebrow">Download</span>
+    <h1>Download <span class="acc">TU Overlays</span></h1>
+    <p class="lead">Files are served through GitHub Releases — no third-party file hosts. Install takes a minute, no account required.</p>
+    <div class="meta-row">
+      <span>Latest version <b class="mono" id="verBadge">…</b></span><i>/</i>
+      <span>Win 10 · 11 x64</span><i>/</i>
+      <span class="good">No account</span>
+    </div>
+    <span class="sync" id="syncStatus"><i class="dot"></i><span id="syncText">Syncing with GitHub…</span></span>
+  </div>
+</section>
+
+<!-- ══════════════════════════ DOWNLOAD CARDS ══════════════════════════ -->
+<section class="wrap" style="padding-block:8px 32px">
+  <div class="dl-grid">
+
+    <!-- EXE installer -->
+    <div class="panel brk dlcard">
+      <div class="hd">
+        <span class="ic">
+          <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2h7l3 3v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v3h3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Installer (.exe)</h3>
+        <span class="tag">Recommended</span>
+      </div>
+      <p class="desc">Regular install with shortcuts and auto-update. Best for most users.</p>
+      <a class="btn btn-primary btn-lg is-loading" id="exeBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-exe">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download installer
+      </a>
+      <div class="filemeta">
+        <span>Version <b class="mono" id="exeVer">—</b></span>
+        <span>Size <b class="mono" id="exeSize">—</b></span>
+      </div>
+      <div class="chk">
+        <span class="k">SHA-256</span>
+        <span class="v mono" id="exeSha">loading…</span>
+      </div>
+    </div>
+
+    <!-- Portable -->
+    <div class="panel brk dlcard">
+      <div class="hd">
+        <span class="ic">
+          <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </span>
+        <h3>Portable (.zip)</h3>
+        <span class="tag">No install</span>
+      </div>
+      <p class="desc">Unzip and run the exe. Doesn't touch the registry — fine to run off a USB stick.</p>
+      <a class="btn btn-ghost btn-lg is-loading" id="zipBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-zip">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download portable
+      </a>
+      <div class="filemeta">
+        <span>Version <b class="mono" id="zipVer">—</b></span>
+        <span>Size <b class="mono" id="zipSize">—</b></span>
+      </div>
+      <div class="chk">
+        <span class="k">SHA-256</span>
+        <span class="v mono" id="zipSha">loading…</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel note" style="margin-top:16px">
+    <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.3" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4M8 5.1v.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <p><b>Windows SmartScreen.</b> The build isn't signed with a paid EV certificate yet, so Windows may show an "Unknown publisher" warning on first run. Click "More info" → "Run anyway". Files are served through this project's GitHub Releases — no third-party file hosts.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ ARCHIVE ══════════════════════════ -->
+<section class="wrap" style="padding-block:8px 60px">
+  <div class="panel arc" id="archive" style="display:none">
+    <button class="arc-toggle" id="arcToggle" aria-expanded="false" aria-controls="arcBody">
+      Version archive <span class="cnt" id="arcCount">(0)</span>
+      <span class="qi" aria-hidden="true"></span>
+    </button>
+    <div class="arc-body" id="arcBody">
+      <div id="arcList"><!-- populated by the script below from GitHub Releases --></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <a class="logo" href="index.html">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <nav class="ftr-links" aria-label="More">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="support.html">Support the project</a>
+    </nav>
+    <p class="disc">
+      <b>TU Overlays is an independent project.</b> The app is not affiliated with, developed, or endorsed by iRacing.com Motorsport Simulations, LLC. All files on this page are served through the project's GitHub Releases (github.com/AVAILOFF/TUOverlays), no redirects to third-party file hosts. AI-assisted tools were used in building the app and this site. © 2026 TU Overlays.
+    </p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const REPO = 'AVAILOFF/TUOverlays';
+
+  const toggle = document.getElementById('arcToggle');
+  const arcWrap = document.getElementById('archive');
+  if (toggle && arcWrap) {
+    toggle.addEventListener('click', () => {
+      const open = arcWrap.classList.toggle('on');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+  const escapeHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const fmtSize = bytes => (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  const fmtDate = iso => { try { return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); } catch { return iso; } };
+  const firstLine = body => (body || '').split(/\n---\n?/)[0].trim().split('\n')[0] || 'No description.';
+  const findAsset = (rel, ext) => rel.assets.find(a => a.name.toLowerCase().endsWith(ext));
+  const sha256 = asset => asset && asset.digest && asset.digest.startsWith('sha256:') ? asset.digest.slice(7) : 'unavailable';
+
+  function fillCard(prefix, rel, ext){
+    const asset = findAsset(rel, ext);
+    const btn = document.getElementById(prefix + 'Btn');
+    const ver = document.getElementById(prefix + 'Ver');
+    const size = document.getElementById(prefix + 'Size');
+    const sha = document.getElementById(prefix + 'Sha');
+    if (!asset) { if (sha) sha.textContent = 'file not found in release'; return; }
+    if (btn) { btn.href = asset.browser_download_url; btn.classList.remove('is-loading'); }
+    if (ver) ver.textContent = rel.tag_name.replace(/^v/i, '');
+    if (size) size.textContent = fmtSize(asset.size);
+    if (sha) sha.textContent = sha256(asset);
+  }
+
+  function renderArchive(releases){
+    const list = document.getElementById('arcList');
+    const count = document.getElementById('arcCount');
+    if (!list || !count) return;
+    if (!releases.length) { arcWrap.style.display = 'none'; return; }
+    arcWrap.style.display = '';
+    count.textContent = `(${releases.length})`;
+    list.innerHTML = releases.map(rel => {
+      const exe = findAsset(rel, '.exe');
+      const zip = findAsset(rel, '.zip');
+      return `
+        <div class="vrow">
+          <span class="v">${escapeHtml(rel.tag_name)}</span>
+          <span class="d mono">${fmtDate(rel.published_at)}</span>
+          <span class="note-txt">${escapeHtml(firstLine(rel.body))}</span>
+          <span class="links">
+            ${exe ? `<a href="${exe.browser_download_url}" download>.exe</a>` : ''}
+            ${zip ? `<a href="${zip.browser_download_url}" download>.zip</a>` : ''}
+          </span>
+        </div>`;
+    }).join('');
+  }
+
+  async function sync(){
+    const syncEl = document.getElementById('syncStatus');
+    const syncText = document.getElementById('syncText');
+    const verBadge = document.getElementById('verBadge');
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
+        headers: { Accept: 'application/vnd.github+json' },
+        signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const published = data.filter(r => !r.draft);
+      if (!published.length) throw new Error('no releases yet');
+
+      const [latest, ...archive] = published;
+      if (verBadge) verBadge.textContent = latest.tag_name;
+      fillCard('exe', latest, '.exe');
+      fillCard('zip', latest, '.zip');
+      renderArchive(archive);
+
+      if (syncText) syncText.textContent = 'Synced with GitHub Releases';
+      if (syncEl) syncEl.classList.remove('err');
+    } catch (err) {
+      if (syncText) syncText.textContent = 'GitHub Releases unavailable — try refreshing the page';
+      if (syncEl) syncEl.classList.add('err');
+      if (verBadge) verBadge.textContent = '—';
+      document.querySelectorAll('.is-loading').forEach(el => {
+        el.href = `https://github.com/${REPO}/releases`;
+        el.classList.remove('is-loading');
+      });
+    }
+  }
+
+  sync();
+})();
+</script>
+
+<!--
+  Hidden download counter (GoatCounter, private dashboard, not visible to visitors).
+  Dashboard: https://tuoverlays.goatcounter.com — click events on the .exe/.zip
+  buttons above are tagged with data-goatcounter-click.
+-->
+<script data-goatcounter="https://tuoverlays.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>

@@ -6,6 +6,7 @@
 <title>TU Overlays — Telemetry Overlays for iRacing</title>
 <meta name="description" content="Ten independent telemetry widgets on top of iRacing: Standings, Relative, Fuel Calculator, Radar, Track Map, and more. Windows, under 2% CPU.">
 <meta name="theme-color" content="#02102c">
+<script src="../scripts/site-lock.js"></script>
 <link rel="alternate" hreflang="ru" href="../index.html">
 <link rel="alternate" hreflang="en" href="index.html">
 <link rel="alternate" hreflang="x-default" href="../index.html">
@@ -143,21 +144,42 @@ p{margin:0}
   height:var(--bh);padding:0 20px;border-radius:10px;
   font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
   letter-spacing:.005em;white-space:nowrap;
-  transition:transform .18s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s, box-shadow .28s;
+  transition:transform .42s cubic-bezier(.16,1,.3,1), background .2s, border-color .2s, box-shadow .5s cubic-bezier(.16,1,.3,1);
   position:relative;
 }
-.btn svg{flex:none}
+.btn svg{flex:none;transition:transform .42s cubic-bezier(.16,1,.3,1)}
+.btn:hover svg{transform:translateY(1px)}
+.btn:active{transition-duration:.1s}
 .btn-primary{
+  position:relative;overflow:hidden;
   color:#fff;
   background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo));
   box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 6px 24px -8px rgba(255,0,102,.7);
 }
-.btn-primary:active{transform:translateY(0)}
+/* diagonal sheen — sweeps once on entry, resets instantly (off-screen) on exit */
+.btn-primary::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.4) 48%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.4) 52%,transparent 75%);
+  transform:translateX(-140%);
+}
+.btn-primary:hover::before{
+  transform:translateX(140%);
+  transition:transform .85s cubic-bezier(.16,1,.3,1);
+}
+.btn-primary:hover{
+  transform:translateY(-1.5px);
+  box-shadow:0 1px 0 rgba(255,255,255,.3) inset, 0 16px 38px -14px rgba(255,0,102,.9), 0 0 0 1px rgba(255,255,255,.06);
+}
+.btn-primary:active{
+  transform:translateY(0) scale(.985);
+  box-shadow:0 1px 0 rgba(255,255,255,.16) inset, 0 4px 14px -8px rgba(255,0,102,.55);
+}
+
+.btn-content{display:inline-flex;align-items:center;gap:9px}
 
 /* "SOON..." on hover/focus — button dims, label swaps */
 .btn[data-tip]{position:relative;overflow:hidden}
-.btn[data-tip] .btn-content{display:inline-flex;align-items:center;gap:9px;
-  transition:opacity .2s cubic-bezier(.2,.7,.3,1)}
+.btn[data-tip] .btn-content{transition:opacity .2s cubic-bezier(.2,.7,.3,1)}
 .btn[data-tip]::after{
   content:attr(data-tip);
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -371,6 +393,17 @@ p{margin:0}
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   text-shadow:0 0 46px rgba(255,0,102,.42);
 }
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* rotating word in the hero H1 */
+.cyc{position:relative;display:inline-grid;overflow:hidden;vertical-align:bottom;height:1.04em;line-height:1.04}
+.cyc-w{
+  grid-area:1/1;align-self:start;white-space:nowrap;
+  opacity:0;transform:translateY(.5em);
+  transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .4s ease;
+}
+.cyc-w.is-on{opacity:1;transform:translateY(0)}
+.cyc-w.is-out{opacity:0;transform:translateY(-.5em);transition:transform .45s cubic-bezier(.4,0,1,1),opacity .3s ease}
 .hero .lead{max-width:56ch;font-size:clamp(1.02rem,1.6vw,1.19rem)}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .hero-meta{display:flex;gap:8px 22px;flex-wrap:wrap;justify-content:center;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.09em;color:var(--tx-3);text-transform:uppercase}
@@ -713,6 +746,12 @@ p{margin:0}
 .qa-a>div{overflow:hidden}
 .qa-a p{padding:0 46px 24px 34px;color:var(--tx-2);font-size:15px;max-width:78ch}
 @media (max-width:600px){.qa-a p{padding-left:0;padding-right:0}}
+.qa-a .wlist{margin:0 46px 24px 34px;padding:0;list-style:none;max-width:78ch;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:6px 24px}
+.qa-a .wlist li{color:var(--tx-2);font-size:14.5px;line-height:1.5}
+.qa-a .wlist b{color:var(--tx);font-weight:600}
+@media (max-width:700px){.qa-a .wlist{grid-template-columns:1fr;margin-left:0;margin-right:0}}
+@media (min-width:601px) and (max-width:700px){.qa-a .wlist{margin-left:34px;margin-right:46px}}
 
 /* ============================================================
    support fab — appears once "Ready to install" is in view
@@ -819,7 +858,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     </div>
 
     <div class="hdr-cta">
-      <a class="btn btn-primary" href="#download" data-tip="SOON...">
+      <a class="btn btn-primary" href="download.html">
         <span class="btn-content">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -847,7 +886,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <a class="on" href="index.html" aria-current="true">EN</a>
     </div>
     <div class="m-cta">
-      <a class="btn btn-primary" href="#download" data-tip="SOON..."><span class="btn-content">Download</span></a>
+      <a class="btn btn-primary" href="download.html"><span class="btn-content">Download</span></a>
     </div>
   </div>
 </header>
@@ -868,11 +907,11 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   </div>
 
   <div class="wrap hero-in">
-    <span class="eyebrow">Windows · 21 widgets · &lt;2% CPU</span>
-    <h1>All of iRacing's telemetry — in one <span class="acc">app</span></h1>
+    <span class="eyebrow">Windows · 23 widgets · &lt;2% CPU</span>
+    <h1>iRacing — now shows your <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">position</span><span class="cyc-w acc">fuel</span><span class="cyc-w acc">traffic</span><span class="cyc-w acc">weather</span><span class="cyc-w acc">incidents</span></span><span class="sr-only">position</span></h1>
     <p class="lead">Full control over every element — from appearance to the data it shows.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="#download" data-tip="SOON...">
+      <a class="btn btn-primary btn-lg" href="#download">
         <span class="btn-content">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -882,7 +921,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       </a>
     </div>
     <div class="hero-meta">
-      <span>v2.4.1</span><i>/</i><span>Win 10 · 11 x64</span><i>/</i><span>OBS-ready</span>
+      <span class="js-version">v2.4.1</span><i>/</i><span>Win 10 · 11 x64</span><i>/</i><span>OBS-ready</span>
     </div>
   </div>
 
@@ -921,7 +960,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
       <span class="eyebrow" data-reveal>01 / Features</span>
-      <h2 data-reveal style="--d:60ms">Twenty-one widgets.<br>Each one a separate, deeply customizable window.</h2>
+      <h2 data-reveal style="--d:60ms">Twenty-three widgets.<br>Each one a separate, deeply customizable window.</h2>
       <p class="lead" data-reveal style="--d:110ms">Turn on only what you need for the current session. Customize every widget to fit you.</p>
     </div>
 
@@ -1182,6 +1221,38 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         <button class="qa-q" aria-expanded="false"><span class="qn">06</span>Do I need an account?<span class="qi" aria-hidden="true"></span></button>
         <div class="qa-a"><div><p>No. The app reads telemetry locally and sends nothing out. You just need an iRacing account with an active subscription.</p></div></div>
       </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">07</span>What widgets does the app include?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>23 independent widgets in total — each can be toggled, dragged, resized and configured on its own:</p>
+          <ul class="wlist">
+            <li><b>Standings</b> — full-field standings: position, gap, best laps, pit status and class tags.</li>
+            <li><b>Relative</b> — drivers around you with live delta timing.</li>
+            <li><b>Track Map</b> — live car positions on a track-shaped layout.</li>
+            <li><b>Flat Track Map</b> — a simplified, horizontal-line version of Track Map.</li>
+            <li><b>Weather</b> — track and air temperature, humidity, track state.</li>
+            <li><b>Wind</b> — wind direction and speed.</li>
+            <li><b>Faster Cars From Behind</b> — a warning when a faster car is closing in from behind.</li>
+            <li><b>Fuel Calculator</b> — consumption, fuel remaining, pit-window timing, consumption history.</li>
+            <li><b>Blind Spot Monitor</b> — visual indicators for cars in your left or right blind spot.</li>
+            <li><b>Garage Cover</b> — a custom overlay while you're in the garage (for stream privacy).</li>
+            <li><b>Rejoin Indicator</b> — a color-coded safety indicator for rejoining the track.</li>
+            <li><b>Pitlane Helper</b> — speed delta, pitbox position and warnings on pit entry.</li>
+            <li><b>Tachometer</b> — RPM gauge with shift points, oil and water temperature.</li>
+            <li><b>Flag</b> — the session's current flag, large, on top of your screen.</li>
+            <li><b>Twitch Chat</b> — a live Twitch chat overlay, no OAuth required.</li>
+            <li><b>Lap Timer</b> — current, best and last lap plus lap history.</li>
+            <li><b>Information Bar</b> — flag status, lap count and session time in one bar.</li>
+            <li><b>Slow Car Ahead</b> — a warning for a slower car ahead on track.</li>
+            <li><b>Sector Delta</b> — per-sector delta against your best lap.</li>
+            <li><b>Heart Rate</b> — your live heart rate via HypeRate.</li>
+            <li><b>Corner Names</b> — the current corner or track section name and progress through it.</li>
+            <li><b>Input Traces</b> — throttle, brake, clutch, steering, gear and speed.</li>
+            <li><b>Telemetry Inspector</b> — a debug widget showing raw session telemetry.</li>
+          </ul>
+          <p>Separately from these 23 widgets, the app also has <b>Race Control</b> — a live incident log for the session: crashes, off-track moments and lost-control events are logged automatically, can be flagged, and replayed with a double-click.</p>
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1194,7 +1265,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <h2>Set up overlays<br>right <span class="acc">now</span></h2>
       <p class="lead">Installation takes a minute. Widgets pick up telemetry automatically as soon as you're out on track.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="#download" data-tip="SOON...">
+        <a class="btn btn-primary btn-lg" href="download.html">
           <span class="btn-content">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1204,7 +1275,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         </a>
         </div>
       <div class="hero-meta" style="margin-top:24px">
-        <span>v2.4.1</span><i>/</i><span>18.4 MB</span><i>/</i><span>No account</span><i>/</i><span>Win 10 · 11 x64</span>
+        <span class="js-version">v2.4.1</span><i>/</i><span>No account</span><i>/</i><span>Win 10 · 11 x64</span>
       </div>
     </div>
   </div>
@@ -1222,8 +1293,8 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
     <nav class="ftr-links" aria-label="More">
       <a href="#features">Features</a>
       <a href="#gallery">Gallery</a>
-      <a href="#faq">Changelog</a>
-      <a href="#download">Download</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="download.html">Download</a>
     </nav>
     <p class="disc">
       <b>TU Overlays is an independent project.</b> The app is not affiliated with, developed, or endorsed by iRacing.com Motorsport Simulations, LLC. "iRacing" and related marks belong to their respective owners and are used solely to describe compatibility. Track, team, and driver names shown on this page are illustrative examples of the interface. AI-based tools were used in developing the app and this site. © 2026 TU Overlays.
@@ -1294,15 +1365,29 @@ const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---------- support fab: reveal once #download is in view ---------- */
+/* ---------- support fab: always shown, shortly after page load ---------- */
 (() => {
   const fab = $('#supportFab');
-  const target = $('#download');
-  if (!fab || !target) return;
-  const io = new IntersectionObserver(es => {
-    es.forEach(e => fab.classList.toggle('show', e.isIntersecting));
-  }, { threshold: 0.15 });
-  io.observe(target);
+  if (!fab) return;
+  setTimeout(() => fab.classList.add('show'), reduced ? 0 : 500);
+})();
+
+/* ---------- hero H1: rotating word ---------- */
+(() => {
+  const cyc = $('.hero h1 .cyc');
+  if (!cyc || reduced) return;
+  const words = $$('.cyc-w', cyc);
+  if (words.length < 2) return;
+  let i = 0;
+  setInterval(() => {
+    const cur = words[i];
+    i = (i + 1) % words.length;
+    const next = words[i];
+    cur.classList.remove('is-on');
+    cur.classList.add('is-out');
+    next.classList.add('is-on');
+    setTimeout(() => cur.classList.remove('is-out'), 480);
+  }, 2400);
 })();
 
 /* ---------- BETA sticker: random pick every load ---------- */
@@ -1595,6 +1680,21 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
   });
 })();
 
+})();
+</script>
+
+<script>
+(() => {
+  'use strict';
+  fetch('https://api.github.com/repos/AVAILOFF/TUOverlays/releases/latest', {
+    headers: { Accept: 'application/vnd.github+json' },
+  })
+    .then(res => res.ok ? res.json() : Promise.reject(res.status))
+    .then(rel => {
+      if (!rel.tag_name) return;
+      document.querySelectorAll('.js-version').forEach(el => { el.textContent = rel.tag_name; });
+    })
+    .catch(() => {});
 })();
 </script>
 </body>
