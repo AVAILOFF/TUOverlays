@@ -4,10 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Support the project — TU Overlays</title>
-<meta name="description" content="Ways to support TU Overlays development. Page coming soon.">
+<meta name="description" content="Ways to support TU Overlays development: DALink with every option at once, Boosty and DonationAlerts for Russia, a TON wallet for the rest of the world. No sign-up, lowest possible fees.">
 <meta name="theme-color" content="#02102c">
-<meta name="robots" content="noindex">
 <script src="../scripts/site-lock.js"></script>
+<link rel="alternate" hreflang="ru" href="../support.html">
+<link rel="alternate" hreflang="en" href="support.html">
+<link rel="alternate" hreflang="x-default" href="../support.html">
 <link rel="icon" href="../img/favicon.png">
 
 <style>
@@ -22,6 +24,7 @@
 
   --tx:        #e4ecfb;
   --tx-2:      #9fb2d4;
+  --tx-2d:     #8ea3c8;
   --tx-3:      #64789e;
   --tx-4:      #4a5f86;
 
@@ -29,54 +32,97 @@
   --brand-lo:  #c8004f;
   --brand-hi:  #ff5f96;
   --data:      #3fd8e0;
+  --good:      #35e08d;
+  --warn:      #ffb02e;
 
   --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
   --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
 
-  --maxw: 1180px;
+  --maxw: 980px;
+  --r-sm: 8px;
   --r:    13px;
   --r-lg: 20px;
   --pad: clamp(20px, 5vw, 40px);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;zoom:1.5}
-html,body{max-width:100%;overflow-x:clip;height:100%}
+html,body{max-width:100%;overflow-x:clip}
 body{
-  margin:0;min-height:100%;
-  background:var(--bg);color:var(--tx);
+  margin:0;background:var(--bg);color:var(--tx);
   font-family:var(--f-text);font-size:16px;line-height:1.62;letter-spacing:.005em;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-  display:flex;flex-direction:column;
 }
 img,svg{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 ::selection{background:rgba(255,0,102,.32);color:#fff}
 :focus-visible{outline:2px solid var(--data);outline-offset:3px;border-radius:4px}
 
 .wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
 
-h1{
-  font-family:var(--f-display);font-weight:600;font-stretch:88%;
-  letter-spacing:-.026em;line-height:1.02;margin:0;
-  font-size:clamp(2.6rem,8vw,4.6rem);
-}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.02em;line-height:1.05;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.1rem,5.6vw,3.4rem);letter-spacing:-.024em}
+h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+h3{font-size:17px;font-stretch:92%;letter-spacing:.004em;color:var(--tx)}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 .acc{
   color:var(--brand);
   background:linear-gradient(180deg,var(--brand-hi),var(--brand));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   text-shadow:0 0 46px rgba(255,0,102,.42);
 }
-.lead{color:var(--tx-2);font-size:clamp(1rem,1.6vw,1.15rem);max-width:52ch;margin:0 auto}
+.lead{color:var(--tx-2);font-size:clamp(1rem,1.5vw,1.1rem);max-width:60ch;text-wrap:pretty}
 
 .eyebrow{
   display:inline-flex;align-items:center;gap:10px;
-  font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);
+  font-family:var(--f-mono);font-size:11px;line-height:1;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);
 }
-.eyebrow::before{content:'';width:22px;height:1px;background:var(--brand);box-shadow:0 0 9px rgba(255,0,102,.85)}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--brand);flex:none;box-shadow:0 0 9px rgba(255,0,102,.85)}
 
-/* header */
-.hdr{padding-block:18px;border-bottom:1px solid transparent}
+/* ---------- buttons ---------- */
+.btn{
+  --bh:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  height:var(--bh);padding:0 20px;border-radius:10px;
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
+  letter-spacing:.005em;white-space:nowrap;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s, box-shadow .28s;
+}
+.btn svg{flex:none}
+.btn-primary{
+  color:#fff;background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo));
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 6px 24px -8px rgba(255,0,102,.7);
+}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{
+  color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.015);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{border-color:var(--line-3);background:rgba(255,255,255,.045);transform:translateY(-1px)}
+.btn-lg{--bh:50px;padding:0 24px;font-size:15.5px;width:100%}
+@media (max-width:430px){.btn{white-space:normal;text-align:center;line-height:1.2}}
+
+/* ---------- glass panel + corner brackets ---------- */
+.panel{
+  position:relative;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,0) 42%),var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 24px 50px -28px rgba(0,4,16,.95);
+}
+.brk::before,.brk::after{
+  content:'';position:absolute;width:11px;height:11px;pointer-events:none;
+  border-color:var(--line-3);border-style:solid;border-width:0;
+  transition:width .3s cubic-bezier(.2,.7,.3,1),height .3s cubic-bezier(.2,.7,.3,1),border-color .3s;
+}
+.brk::before{top:-1px;left:-1px;border-top-width:1px;border-left-width:1px;border-radius:var(--r) 0 0 0}
+.brk::after{bottom:-1px;right:-1px;border-bottom-width:1px;border-right-width:1px;border-radius:0 0 var(--r) 0}
+.brk:hover::before,.brk:hover::after{width:26px;height:26px;border-color:var(--brand)}
+
+/* ---------- header ---------- */
+.hdr{padding-block:18px;border-bottom:1px solid var(--line)}
 .hdr-in{display:flex;align-items:center;gap:14px}
 .logo{display:flex;align-items:center;gap:11px}
 .logo-mk{width:26px;height:auto;display:block}
@@ -87,77 +133,386 @@ h1{
   font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
   transition:color .2s}
 .hdr-back:hover{color:var(--tx)}
+.lang-switch{display:flex;align-items:center;gap:2px;padding:3px;
+  border:1px solid var(--line-2);border-radius:8px;flex:none}
+.lang-switch a{padding:4px 9px;border-radius:6px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.06em;color:var(--tx-3);transition:color .18s,background .18s}
+.lang-switch a:hover{color:var(--tx)}
+.lang-switch a.on{color:var(--tx);background:rgba(255,255,255,.07)}
 
-/* hero-ish center stage */
-.stage{
-  position:relative;flex:1;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;padding-block:60px;
-}
+/* ---------- hero ---------- */
+.stage{position:relative;overflow:hidden;padding-block:clamp(52px,8vw,88px) clamp(26px,4vw,38px)}
 .glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
-.glow-a{width:min(900px,120vw);height:480px;left:50%;top:-140px;transform:translateX(-50%);
+.glow-a{width:min(900px,120vw);height:480px;left:50%;top:-220px;transform:translateX(-50%);
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
-.glow-b{width:min(600px,90vw);height:380px;left:12%;bottom:-160px;
+.glow-b{width:min(600px,90vw);height:380px;right:-10%;top:60px;
   background:radial-gradient(50% 50% at 50% 50%, rgba(63,216,224,.14), rgba(63,216,224,0) 70%)}
+.stage-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;max-width:64ch}
 
-.stage-in{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 0;padding:0;list-style:none}
+.fact{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.02);
+  font-size:12.5px;line-height:1.3;color:var(--tx-2d)}
+.fact svg{flex:none;color:var(--good)}
 
-.wip{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:8px 16px;border-radius:999px;margin-top:4px;
-  background:rgba(8,30,68,.7);border:1px solid var(--line-2);
-  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-2);
+/* ---------- section headers ---------- */
+.sec-hd{padding-block:clamp(30px,5vw,44px) 20px}
+.sec-hd h2{margin-top:10px}
+.sec-hd .lead{margin-top:10px}
+
+/* ---------- hub (DALink) ---------- */
+.hub{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(20px,3.4vw,36px);
+  align-items:center;padding:clamp(20px,3vw,28px);border-color:rgba(255,0,102,.3)}
+@media (max-width:760px){.hub{grid-template-columns:1fr}}
+.hub-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.hub-act{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px}
+.hub-act .btn{flex:1 1 190px}
+.ticks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ticks li{display:flex;gap:10px;align-items:flex-start;font-size:13.4px;line-height:1.5;color:var(--tx-2d)}
+.ticks svg{flex:none;margin-top:4px;color:var(--good)}
+
+/* ---------- QR ---------- */
+.qr-fig{margin:0;flex:none;display:flex;flex-direction:column;align-items:center;gap:10px}
+.qr-box{padding:10px;border-radius:12px;background:#fff;line-height:0;
+  box-shadow:0 16px 36px -18px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.08)}
+.qr-box img{width:var(--qr,152px);height:var(--qr,152px)}
+.qr-cap{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--tx-4);text-align:center;line-height:1.6;max-width:22ch}
+.qr-cap b{display:block;color:var(--tx-3);font-weight:400;letter-spacing:.1em}
+
+/* ---------- method cards ---------- */
+.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sp-grid>*{min-width:0}
+@media (max-width:700px){.sp-grid{grid-template-columns:1fr}}
+.spcard{padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid var(--line-2);color:var(--data);flex:none}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
+.hd h2,.hd h3{min-width:0;overflow-wrap:anywhere}
+.hd .tag{margin-left:auto;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tx-4);border:1px solid var(--line-2);border-radius:999px;padding:3px 8px;white-space:nowrap}
+p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
+.spcard .btn{margin-top:auto}
+.hub h2{font-size:clamp(1.35rem,2.6vw,1.7rem)}
+.hub .ic{background:rgba(255,0,102,.08)}
+
+.spcard-hi{border-color:rgba(255,0,102,.32)}
+.spcard-hi .ic,.hub .ic{color:var(--brand-hi);border-color:rgba(255,0,102,.32)}
+.spcard-hi .hd .tag,.hub .hd .tag{color:var(--brand-hi);border-color:rgba(255,0,102,.4);background:rgba(255,0,102,.08)}
+
+/* meta rows inside a card */
+.meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 16px;margin:0;
+  padding-top:14px;border-top:1px solid var(--line)}
+.meta dt{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--tx-4);padding-top:3px;white-space:nowrap}
+.meta dd{margin:0;font-size:13px;line-height:1.45;color:var(--tx-2d)}
+@media (max-width:430px){
+  .meta{grid-template-columns:1fr;gap:2px 0}
+  .meta dt{padding-top:8px}
+  .meta dt:first-child{padding-top:0}
+  .hd .tag{margin-left:0}
 }
-.wip i{width:6px;height:6px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn);flex:none;
-  animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 
-.btn{
-  --bh:46px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  height:var(--bh);padding:0 22px;border-radius:10px;margin-top:10px;
+/* ---------- crypto address ---------- */
+.crypto-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.crypto-col{flex:1 1 260px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.addr-box{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:9px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.03)}
+.addr-box .addr-txt{flex:1;font-family:var(--f-mono);font-size:11.5px;line-height:1.4;color:var(--tx-2);word-break:break-all}
+.copy-btn{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:7px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.02);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.03em;color:var(--tx-2);
+  transition:border-color .2s,color .2s,background .2s}
+.copy-btn:hover{border-color:var(--line-3);color:var(--tx);background:rgba(255,255,255,.05)}
+.copy-btn.copied{border-color:var(--good);color:var(--good)}
+.copy-wide{height:44px;padding-inline:18px;border-radius:10px;font-size:12px;justify-content:center;flex:1 1 160px}
+
+/* ---------- info strip ---------- */
+.note{display:flex;gap:12px;padding:18px 20px;align-items:flex-start}
+.note svg{flex:none;margin-top:2px;color:var(--data)}
+.note p{font-size:13.4px;color:var(--tx-2d);line-height:1.6}
+.note b{color:var(--tx-2);font-weight:600}
+
+/* ---------- FAQ ---------- */
+.faq{display:flex;flex-direction:column;gap:10px}
+.faq details{border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(255,255,255,.014)}
+.faq details[open]{border-color:var(--line-2)}
+.faq summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:14px;
   font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
-  color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.02);
-  backdrop-filter:blur(8px);transition:transform .18s,border-color .2s,background .2s;
-}
-.btn:hover{border-color:var(--line-3);background:rgba(255,255,255,.05);transform:translateY(-1px)}
-.btn svg{flex:none}
+  letter-spacing:.004em;transition:color .2s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'';margin-left:auto;flex:none;width:7px;height:7px;
+  border-right:1.6px solid var(--tx-3);border-bottom:1.6px solid var(--tx-3);
+  transform:translateY(-2px) rotate(45deg);transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .2s}
+.faq details[open] summary::after{transform:translateY(1px) rotate(-135deg);border-color:var(--brand)}
+.faq summary:hover{color:var(--brand-hi)}
+.faq .ans{padding:0 18px 16px;font-size:13.4px;line-height:1.62;color:var(--tx-2d)}
+.faq .ans a{color:var(--data);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.faq .ans a:hover{color:var(--tx)}
 
-.ftr{border-top:1px solid var(--line);padding-block:22px}
-.ftr p{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--tx-4);text-align:center;margin:0}
+/* ---------- footer ---------- */
+.ftr{border-top:1px solid var(--line);margin-top:clamp(56px,8vw,90px);padding-block:36px}
+.ftr-in{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:center}
+.ftr-links{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto}
+.ftr-links a{font-size:13px;color:var(--tx-3);transition:color .2s}
+.ftr-links a:hover{color:var(--tx)}
+.disc{width:100%;color:var(--tx-4);font-size:12px;line-height:1.6;max-width:74ch;
+  padding-top:22px;margin-top:4px;border-top:1px solid var(--line)}
+.disc b{color:var(--tx-3);font-weight:500}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
 </style>
 </head>
 <body>
 
 <header class="hdr">
   <div class="wrap hdr-in">
-    <a class="logo" href="index.html" aria-label="TU Overlays — home">
+    <a class="logo" href="../index.html" aria-label="TU Overlays — home">
       <img class="logo-mk" src="../img/logo.png" alt="">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
-    <a class="hdr-back" href="index.html">
+    <div class="lang-switch" aria-label="Language">
+      <a href="../support.html">RU</a>
+      <a class="on" href="support.html" aria-current="true">EN</a>
+    </div>
+    <a class="hdr-back" href="../index.html">
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Home
     </a>
   </div>
 </header>
 
-<main class="stage">
+<main>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="stage">
   <div class="glow glow-a" aria-hidden="true"></div>
   <div class="glow glow-b" aria-hidden="true"></div>
   <div class="wrap stage-in">
     <span class="eyebrow">Support the project</span>
-    <h1>Page <span class="acc">in progress</span></h1>
-    <p class="lead">We're putting together ways to support TU Overlays development. Check back soon — everything you need will be here shortly.</p>
-    <span class="wip"><i></i>Work in progress</span>
-    <a class="btn" href="index.html">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Back to home
+    <h1>Support the <span class="acc">development</span></h1>
+    <p class="lead">TU Overlays is free and will stay free. If the overlays have been useful on track, support helps speed up new widgets. Fully optional, no subscription, no strings attached.</p>
+    <ul class="facts" aria-label="Support at a glance">
+      <li class="fact"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every feature is free for everyone</li>
+      <li class="fact"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>One-time payment or membership — your call</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════ HUB: DALINK ══════════════════════════ -->
+<section class="wrap" style="padding-block:0 6px" aria-labelledby="dalink-h">
+  <article class="panel brk hub">
+    <div class="hub-main">
+      <div class="hd">
+        <span class="ic">
+          <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5 9.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M7.5 4.5 8.7 3.3a2.3 2.3 0 1 1 3.25 3.25L10.7 7.75M8.5 11.5l-1.2 1.2a2.3 2.3 0 1 1-3.25-3.25L5.3 8.25" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h2 id="dalink-h">DALink</h2>
+        <span class="tag">Easiest way</span>
+      </div>
+      <p class="desc">Don't want to pick a method by hand? DALink is a single page that gathers every support option in one place. Works on desktop and on your phone.</p>
+      <ul class="ticks">
+        <li><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Every support option in one place</li>
+        <li><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Nothing to install</li>
+        <li><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>On mobile — just point your camera at the QR code</li>
+      </ul>
+      <div class="hub-act">
+        <a class="btn btn-primary" href="https://dalink.to/avail" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.2 3.5h6.3v6.3M12.5 3.5 4 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open DALink
+        </a>
+        <button type="button" class="copy-btn copy-wide" data-copy="https://dalink.to/avail">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 10.5V3.5A1.5 1.5 0 0 1 4.5 2h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="copy-label">Copy link</span>
+        </button>
+      </div>
+    </div>
+
+    <figure class="qr-fig">
+      <div class="qr-box">
+        <img src="../img/qr-dalink.svg" width="152" height="152" alt="QR code linking to the DALink support page">
+      </div>
+      <figcaption class="qr-cap"><b>Point your camera</b>dalink.to/avail</figcaption>
+    </figure>
+  </article>
+</section>
+
+<!-- ══════════════════════════ RUSSIA ══════════════════════════ -->
+<section class="wrap sec-hd">
+  <span class="eyebrow">01 / If you're in Russia</span>
+  <h2>Familiar payment rails</h2>
+  <p class="lead">Both options work directly inside Russia, with no intermediaries or currency conversion.</p>
+</section>
+<section class="wrap sp-grid" style="padding-block:0 12px">
+
+  <!-- Boosty -->
+  <div class="panel brk spcard">
+    <div class="hd">
+      <span class="ic">
+        <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13.8s-5.6-3.34-5.6-7.02A2.98 2.98 0 0 1 8 5.1a2.98 2.98 0 0 1 5.6 1.68C13.6 10.46 8 13.8 8 13.8Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>Boosty</h3>
+      <span class="tag">Donation &amp; membership</span>
+    </div>
+    <p class="desc">A one-time donation or a monthly membership with perks — no sign-up on third-party sites.</p>
+    <dl class="meta">
+      <dt>Format</dt><dd>One-time donation or membership</dd>
+      <dt>Fee</dt><dd>~11.7% on the platform side</dd>
+      <dt>Cancel</dt><dd>Anytime from your Boosty account</dd>
+    </dl>
+    <a class="btn btn-primary btn-lg" href="https://boosty.to/tuoverlays" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Support on Boosty
     </a>
   </div>
+
+  <!-- DonationAlerts -->
+  <div class="panel brk spcard">
+    <div class="hd">
+      <span class="ic">
+        <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5 9.55 5.9l3.7.4-2.75 2.5.75 3.65L8 10.6l-3.25 1.85.75-3.65L2.75 6.3l3.7-.4L8 2.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </span>
+      <h3>DonationAlerts</h3>
+      <span class="tag">Quick donation</span>
+    </div>
+    <p class="desc">A single payment, no sign-up or membership — for when you just want to drop a coin right now.</p>
+    <dl class="meta">
+      <dt>Format</dt><dd>One-time payment</dd>
+      <dt>Fee</dt><dd>Per the platform's own rates</dd>
+      <dt>Sign-up</dt><dd>Not required</dd>
+    </dl>
+    <a class="btn btn-ghost btn-lg" href="https://www.donationalerts.com/r/avail" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Donate
+    </a>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════ INTERNATIONAL ══════════════════════════ -->
+<section class="wrap sec-hd">
+  <span class="eyebrow">02 / If you're outside Russia</span>
+  <h2>TON wallet — no verification</h2>
+  <p class="lead">Mainstream services either don't pay out to Russia or require a verified foreign account. A wallet skips that — the donation arrives directly, and the only fee is the network fee, a few cents.</p>
+</section>
+<section class="wrap" style="padding-block:0 12px">
+  <div class="panel brk spcard spcard-hi">
+    <div class="hd">
+      <span class="ic">
+        <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="4" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M2 6.6h12" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="9.8" r="1" fill="currentColor"/></svg>
+      </span>
+      <h3>TON Wallet</h3>
+      <span class="tag">Recommended · worldwide</span>
+    </div>
+    <p class="desc">Send TON or USDT — from an exchange or any wallet, including from Tron, Ethereum, BSC and other networks (auto-converted). No verification needed.</p>
+    <div class="crypto-row">
+      <div class="crypto-col">
+        <div class="addr-box">
+          <span class="addr-txt">UQBTQfoGrJLCJ894injq9BKsw-mQQT_NHbT1fbZ-Oj6d628Q</span>
+          <button type="button" class="copy-btn" data-copy="UQBTQfoGrJLCJ894injq9BKsw-mQQT_NHbT1fbZ-Oj6d628Q" aria-label="Copy the wallet address">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 10.5V3.5A1.5 1.5 0 0 1 4.5 2h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <dl class="meta" style="border-top:0;padding-top:0">
+          <dt>Network</dt><dd>TON — the TON coin or USDT</dd>
+          <dt>Fee</dt><dd>Network only, a few cents</dd>
+          <dt>Verification</dt><dd>Not required</dd>
+        </dl>
+        <a class="btn btn-primary btn-lg" href="ton://transfer/UQBTQfoGrJLCJ894injq9BKsw-mQQT_NHbT1fbZ-Oj6d628Q">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open in wallet app
+        </a>
+      </div>
+      <figure class="qr-fig">
+        <div class="qr-box">
+          <img src="../img/qr-ton.svg" width="152" height="152" alt="QR code for the TON donation address">
+        </div>
+        <figcaption class="qr-cap"><b>Scan in your wallet</b>the address fills itself in</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ WHY SEPARATE ══════════════════════════ -->
+<section class="wrap" style="padding-block:20px 0">
+  <div class="panel note">
+    <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.3" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4M8 5.1v.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <p><b>Why not just one option for everyone?</b> International sanctions mean most mainstream services (Patreon, PayPal, Stripe) can't pay out to Russia, while payments from Russia don't work on most foreign platforms. A crypto wallet sidesteps that with no intermediaries. So there are separate options for Russia and for the rest of the world — each with the lowest fee available in your country.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<section class="wrap sec-hd">
+  <span class="eyebrow">03 / Questions</span>
+  <h2>Good to know</h2>
+</section>
+<section class="wrap" style="padding-block:0 clamp(40px,7vw,72px)">
+  <div class="faq">
+
+    <details>
+      <summary>Does supporting unlock any paid features?</summary>
+      <p class="ans">No. TU Overlays has no paid features and no "pro" tier: everything in the app is free for everyone. Support is a thank-you to the author, not a purchase.</p>
+    </details>
+
+    <details>
+      <summary>Can I cancel a monthly membership?</summary>
+      <p class="ans">Yes, at any time, from your Boosty account. Nothing needs doing on the TU Overlays side, and the app keeps working exactly as before.</p>
+    </details>
+
+    <details>
+      <summary>Which option is best for the author?</summary>
+      <p class="ans">A TON transfer loses the least — you only pay the network fee. The difference is small though, so pick whatever is easiest for you: every option reaches the author.</p>
+    </details>
+
+    <details>
+      <summary>I want to help, but not with money</summary>
+      <p class="ans">That helps too: mention the overlays to your team or on stream, share screenshots, and report any bugs you find <a href="https://github.com/AVAILOFF/TUOverlays/issues" target="_blank" rel="noopener">on GitHub</a>. A clear bug report saves more time than you'd think.</p>
+    </details>
+
+  </div>
+</section>
+
 </main>
 
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
 <footer class="ftr">
-  <p>TU Overlays — independent project · © 2026</p>
+  <div class="wrap ftr-in">
+    <a class="logo" href="../index.html">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <nav class="ftr-links" aria-label="More">
+      <a href="../index.html#features">Features</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="download.html">Download</a>
+    </nav>
+    <p class="disc">
+      <b>TU Overlays is an independent project.</b> The app is not affiliated with, endorsed by, or supported by iRacing.com Motorsport Simulations, LLC. Support is optional and does not unlock any paid features — every feature of the app is free for everyone. AI-assisted tools were used in developing the app and this website. © 2026 TU Overlays.
+    </p>
+  </div>
 </footer>
+
+<script>
+(() => {
+  'use strict';
+  document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
+    const label = btn.querySelector('.copy-label');
+    const original = label ? label.textContent : '';
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.getAttribute('data-copy'));
+        btn.classList.add('copied');
+        if (label) label.textContent = 'Copied';
+        setTimeout(() => { btn.classList.remove('copied'); if (label) label.textContent = original; }, 1800);
+      } catch (err) { /* clipboard unavailable — address stays selectable as text */ }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
