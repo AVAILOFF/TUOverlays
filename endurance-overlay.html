@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Endurance OBS Overlay</title>
+  <style>
+    html {
+      color-scheme: light !important;
+    }
+
+    /* Transparent all the way down: OBS composites the Browser Source over the
+       game capture, so any opaque background here would black out the scene. */
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+    }
+
+    #root {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script type="module" crossorigin src="/endurance-assets/endurance-overlay-BiScyvdj.js"></script>
+  <link rel="modulepreload" crossorigin href="/endurance-assets/jsx-runtime-B7yUOGDw.js">
+  <link rel="modulepreload" crossorigin href="/endurance-assets/endurance-iPSSVurg.js">
+  <link rel="stylesheet" crossorigin href="/endurance-assets/jsx-runtime-CkGi4UkF.css">
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>
