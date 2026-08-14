@@ -1,1 +1,0 @@
-var e={fuelTankL:100,fuelPerLapL:3,lapTimeSec:100,pitStopDurationSec:50,minStintDurationSec:1200,maxStintDurationSec:3900},t={layout:"timeline",bgOpacity:.8,showBestLap:!0,showScheduleDelta:!0,showNextDriver:!0};export{e as n,t};
