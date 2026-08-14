@@ -1,0 +1,1 @@
+var a={backgroundColor:"#1e293b",backgroundImage:"linear-gradient(45deg, #0f172a 25%, transparent 25%), linear-gradient(-45deg, #0f172a 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #0f172a 75%), linear-gradient(-45deg, transparent 75%, #0f172a 75%)",backgroundSize:"24px 24px",backgroundPosition:"0 0, 0 12px, 12px -12px, -12px 0px"};export{a as t};
