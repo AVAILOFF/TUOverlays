@@ -104,10 +104,10 @@ input:focus{border-color:var(--brand)}
 .item .link{color:var(--tx-3);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
 .item .meta{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .item .del{
-  margin-left:auto;flex:none;width:26px;height:26px;border-radius:7px;border:1px solid var(--line-2);
-  background:none;color:var(--tx-3);display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;
+  margin-left:auto;flex:none;padding:6px 12px;border-radius:7px;border:1px solid var(--line-2);
+  background:none;color:var(--tx-3);font-size:12.5px;font-weight:600;line-height:1;transition:border-color .2s,color .2s,background .2s;
 }
-.item .del:hover{border-color:var(--bad);color:var(--bad)}
+.item .del:hover{border-color:var(--bad);color:var(--bad);background:rgba(255,85,119,.08)}
 
 .publish-row{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
 
@@ -302,7 +302,7 @@ input:focus{border-color:var(--brand)}
         const link = e.link ? '<span class="link">' + escapeHtml(e.link) + '</span>' : '';
         return '<div class="item" data-i="' + i + '">' +
           '<div class="meta"><span class="name">' + escapeHtml(e.name) + '</span>' + tier + link + '</div>' +
-          '<button type="button" class="del" data-i="' + i + '" title="Удалить из списка" aria-label="Удалить">×</button>' +
+          '<button type="button" class="del" data-i="' + i + '" title="Удалить из списка" aria-label="Удалить ' + escapeHtml(e.name) + '">Удалить</button>' +
           '</div>';
       }).join('');
     }
@@ -314,7 +314,10 @@ input:focus{border-color:var(--brand)}
     listArea.addEventListener('click', e => {
       const btn = e.target.closest('.del');
       if (!btn) return;
-      list.splice(Number(btn.dataset.i), 1);
+      const i = Number(btn.dataset.i);
+      const entry = list[i];
+      if (!entry || !confirm('Удалить «' + entry.name + '» из списка? Публикация всё ещё отдельным шагом.')) return;
+      list.splice(i, 1);
       renderList();
     });
 
