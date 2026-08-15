@@ -1,0 +1,1 @@
+function t(t,n){const e=[...t?.stints??[]].sort((t,n)=>t.startOffsetSec-n.startOffsetSec),r=n.completedStints.length+(n.currentStint?1:0);return e.slice(r)}function n(t){return t.completedStints.length>0||null!=t.currentStint}function e(t,n,e){return n?t.startOffsetSec+t.plannedDurationSec+(e??0):t.startOffsetSec}export{t as n,e as r,n as t};
