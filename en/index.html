@@ -801,6 +801,28 @@ p{margin:0}
   .support-fab .fab-txt{display:none}
 }
 
+/* discord fab — mirrors support-fab, opposite corner */
+.discord-fab{
+  position:fixed;left:22px;bottom:22px;z-index:50;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 20px;border-radius:999px;
+  background:rgba(8,30,68,.78);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);
+  border:1px solid var(--line-2);
+  color:var(--tx);font-family:var(--f-display);font-stretch:90%;font-weight:600;font-size:14px;letter-spacing:.004em;
+  box-shadow:0 20px 44px -20px rgba(0,0,0,.75);
+  opacity:0;transform:translateY(16px) scale(.94);pointer-events:none;
+  transition:opacity .38s cubic-bezier(.2,.7,.3,1),transform .38s cubic-bezier(.2,.7,.3,1),
+             border-color .2s,background .2s,box-shadow .2s;
+}
+.discord-fab.show{opacity:1;transform:none;pointer-events:auto}
+.discord-fab:hover{border-color:rgba(88,101,242,.55);background:rgba(10,34,74,.88);
+  box-shadow:0 24px 50px -20px rgba(88,101,242,.4), 0 20px 44px -20px rgba(0,0,0,.75)}
+.discord-fab svg{flex:none;color:#5865F2}
+@media (max-width:640px){
+  .discord-fab{left:14px;bottom:14px;padding:11px 16px;font-size:13px}
+  .discord-fab .fab-txt{display:none}
+}
+
 /* ============================================================
    final CTA + footer
    ============================================================ */
@@ -1330,6 +1352,14 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <span class="fab-txt">Support the project</span>
 </a>
 
+<!-- ══════════════════════════ DISCORD FAB ══════════════════════════ -->
+<a class="discord-fab" id="discordFab" href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener" aria-label="Join our Discord server">
+  <svg width="17" height="17" viewBox="0 0 127.14 96.36" fill="currentColor" aria-hidden="true">
+    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+  </svg>
+  <span class="fab-txt">Join our Discord</span>
+</a>
+
 <!-- ══════════════════════════ PHOTO LIGHTBOX ══════════════════════════ -->
 <div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Screenshot viewer">
   <div class="plb-box">
@@ -1389,6 +1419,13 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fab = $('#supportFab');
   if (!fab) return;
   setTimeout(() => fab.classList.add('show'), reduced ? 0 : 500);
+})();
+
+/* ---------- discord fab: always shown, shortly after page load ---------- */
+(() => {
+  const fab = $('#discordFab');
+  if (!fab) return;
+  setTimeout(() => fab.classList.add('show'), reduced ? 0 : 700);
 })();
 
 /* ---------- hero H1: rotating word ---------- */
