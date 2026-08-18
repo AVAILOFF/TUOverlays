@@ -1,0 +1,7 @@
+# Internal docs and build tooling — not part of the public site.
+*.md
+downloads/README.md
+scripts/release.ps1
+
+# Banner source/working files (large, not linked from the site).
+Banners/

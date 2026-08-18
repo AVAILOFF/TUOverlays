@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>404 — страница не найдена · TU Overlays</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#02102c">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<style>
+:root{
+  --bg:#02102c; --elev:#051a3f;
+  --line:rgba(124,162,224,.18); --line-2:rgba(124,162,224,.32);
+  --tx:#e4ecfb; --tx-2:#9fb2d4; --tx-3:#64789e;
+  --brand:#ff0066; --brand-hi:#ff5f96; --data:#3fd8e0;
+  --f-display:'Bahnschrift','DIN Alternate','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
+  --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  --f-mono:'Cascadia Mono','SFMono-Regular','JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--tx);font-family:var(--f-text);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;padding:32px;text-align:center;
+  background-image:radial-gradient(60% 60% at 50% 0%,rgba(255,0,102,.14),transparent 70%);
+}
+.wrap{max-width:560px}
+.code{font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-size:clamp(4.5rem,20vw,9rem);line-height:1;font-weight:600;letter-spacing:-.03em;
+  background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
+h1{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.01em;
+  font-size:clamp(1.5rem,4vw,2.1rem);margin:14px 0 0;text-wrap:balance}
+p{color:var(--tx-2);margin:14px auto 0;max-width:44ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:12px;
+  font-weight:600;font-size:15px;text-decoration:none;transition:transform .2s,border-color .2s,background .2s}
+.btn-primary{color:#fff;background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  box-shadow:0 10px 30px -12px rgba(255,0,102,.6)}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-ghost{color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{border-color:var(--data);background:rgba(255,255,255,.05)}
+.en{margin-top:26px;font-size:13px;color:var(--tx-3)}
+.en a{color:var(--data);text-decoration:none}
+.en a:hover{text-decoration:underline}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--data);outline-offset:3px;border-radius:6px}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="code">404</p>
+    <h1>Такой страницы нет</h1>
+    <p>Похоже, ссылка устарела или в адресе опечатка. Вернитесь на главную или сразу перейдите к загрузке.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/">На главную</a>
+      <a class="btn btn-ghost" href="/download">Скачать</a>
+    </div>
+    <p class="en">Page not found — <a href="/en/">go to the English homepage</a>.</p>
+  </main>
+</body>
+</html>

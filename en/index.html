@@ -7,6 +7,7 @@
 <meta name="description" content="TU Overlays is a free Windows app for iRacing. It overlays real-time telemetry on top of the game: standings, fuel, track map, weather, and more. 23 independent widgets, under 2% CPU.">
 <meta name="theme-color" content="#02102c">
 <script src="/scripts/analytics.js" defer></script>
+<script data-goatcounter="https://tuoverlays.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TU Overlays">
@@ -879,15 +880,94 @@ p{margin:0}
   .hero-in>*,.c-a,.c-b,.c-c{animation:none}
 }
 html{scroll-behavior:smooth;scroll-padding-top:86px}
+
+/* ============================================================
+   release gate — locked download button, ribbon, countdown
+   ============================================================ */
+/* locked (pre-release) state — same dimmed look as [data-tip]:hover, but always on */
+.btn.is-locked{
+  cursor:not-allowed;
+  filter:saturate(.4) brightness(.72);
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 6px 18px -10px rgba(255,0,102,.4);
+}
+.btn.is-locked:hover,.btn.is-locked:focus-visible{transform:none}
+.btn.is-locked .btn-content{opacity:0}
+.btn.is-locked::after{opacity:1}
+@keyframes btnUnlock{0%{box-shadow:0 0 0 0 rgba(255,0,102,.55)}100%{box-shadow:0 0 0 18px rgba(255,0,102,0)}}
+.btn.just-unlocked{animation:btnUnlock .75s ease-out}
+
+/* release ribbon — top announcement bar */
+.relribbon{position:relative;overflow:hidden;background:linear-gradient(90deg,var(--brand-lo),var(--brand) 45%,var(--brand-hi));color:#fff}
+.relribbon[hidden]{display:none}
+.relribbon-in{position:relative;z-index:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:9px;min-height:22px}
+.relribbon-flag{font-size:14px;flex:none;line-height:1}
+.relribbon-tx{font-size:13px;font-weight:600;letter-spacing:.005em}
+.relribbon-tx b{font-weight:700}
+.relribbon-cd{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;background:rgba(0,0,0,.18);
+  padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
+.relribbon-cta{display:none;align-items:center;gap:6px;margin-left:2px;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:rgba(0,0,0,.22);padding:5px 11px;border-radius:999px;transition:background .2s}
+.relribbon-cta:hover{background:rgba(0,0,0,.34)}
+.relribbon.is-live .relribbon-cd{display:none}
+.relribbon.is-live .relribbon-cta{display:inline-flex}
+.relribbon-close{margin-left:auto;flex:none;width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);transition:background .2s}
+.relribbon-close:hover{background:rgba(0,0,0,.18)}
+.relribbon-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.relribbon-confetti span{position:absolute;top:-12%;width:5px;height:9px;border-radius:1px;opacity:0;
+  animation-name:confettiFall;animation-iteration-count:infinite;animation-timing-function:linear}
+.relribbon-confetti span:nth-child(1){left:8%;background:#fff;animation-duration:2.4s;animation-delay:0s}
+.relribbon-confetti span:nth-child(2){left:22%;background:var(--data);animation-duration:3.1s;animation-delay:.6s}
+.relribbon-confetti span:nth-child(3){left:38%;background:var(--warn);animation-duration:2.7s;animation-delay:1.1s}
+.relribbon-confetti span:nth-child(4){left:61%;background:#fff;animation-duration:3.4s;animation-delay:.3s}
+.relribbon-confetti span:nth-child(5){left:78%;background:var(--good);animation-duration:2.9s;animation-delay:1.6s}
+.relribbon-confetti span:nth-child(6){left:91%;background:var(--data);animation-duration:2.5s;animation-delay:.9s}
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:0}12%{opacity:.85}100%{transform:translateY(48px) rotate(220deg);opacity:0}}
+@media (max-width:640px){.relribbon-tx{font-size:12px}.relribbon-in{padding-block:8px}}
+@media (prefers-reduced-motion: reduce){.relribbon-confetti{display:none}}
+
+/* countdown panel — release gate for the download CTA */
+.cddown{position:relative;overflow:hidden;padding:22px 26px;margin:6px auto 30px;max-width:440px;
+  display:flex;flex-direction:column;align-items:center;gap:4px}
+.cddown-grid{display:flex;align-items:baseline;gap:6px}
+.cddown-cell{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:44px}
+.cddown-num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:clamp(1.7rem,4vw,2.3rem);
+  font-weight:600;line-height:1;color:var(--tx);letter-spacing:-.02em}
+.cddown-lbl{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-4)}
+.cddown-sep{font-family:var(--f-mono);font-size:clamp(1.3rem,3vw,1.8rem);color:var(--tx-4);transform:translateY(-6px)}
+.cddown-live{display:none;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-block:6px}
+.cddown-live-big{font-size:26px;line-height:1}
+.cddown-live p{font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:17px;color:var(--tx)}
+.cddown.is-live .cddown-grid{display:none}
+.cddown.is-live .cddown-live{display:flex}
+.cddown-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.cddown-confetti span{position:absolute;top:-8%;width:6px;height:11px;border-radius:1px;opacity:0;
+  animation-name:confettiBurst;animation-timing-function:cubic-bezier(.2,.7,.3,1);animation-fill-mode:forwards}
+@keyframes confettiBurst{0%{transform:translateY(-10px) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translateY(220px) rotate(360deg);opacity:0}}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════ RELEASE RIBBON ══════════════════════════ -->
+<div class="relribbon" id="relRibbon" role="status" aria-live="off">
+  <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+  <div class="relribbon-in wrap">
+    <span class="relribbon-flag" aria-hidden="true">🏁</span>
+    <span class="relribbon-tx"><b>TU Overlays</b> release — August 21, 21:00 MSK</span>
+    <span class="relribbon-cd" id="ribbonCd" aria-hidden="true">…</span>
+    <a class="relribbon-cta" href="download.html">🎉 Available now</a>
+    <button class="relribbon-close" id="ribbonClose" aria-label="Hide banner">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
 
 <!-- ══════════════════════════ HEADER ══════════════════════════ -->
 <header class="hdr" id="hdr">
   <div class="wrap hdr-in">
     <a class="logo" href="#top" aria-label="TU Overlays — home">
-      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true" width="26" height="28" decoding="async">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
 
@@ -978,22 +1058,22 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- RELATIVE -->
       <div class="w w-photo c-a">
-        <img class="w-shot" src="../img/relative.png" alt="Relative overlay">
+        <img class="w-shot" src="../img/relative.png" alt="Relative overlay" width="584" height="307" decoding="async">
       </div>
 
       <!-- STANDINGS -->
       <div class="w w-photo c-b">
-        <img class="w-shot" src="../img/standings.png" alt="Standings overlay">
+        <img class="w-shot" src="../img/standings.png" alt="Standings overlay" width="845" height="418" decoding="async">
       </div>
 
       <div class="c-c">
         <!-- INPUTS -->
         <div class="w w-photo">
-          <img class="w-shot" src="../img/inputs.png" alt="Inputs overlay">
+          <img class="w-shot" src="../img/inputs.png" alt="Inputs overlay" width="453" height="102" decoding="async">
         </div>
         <!-- FUEL -->
         <div class="w w-photo">
-          <img class="w-shot" src="../img/fuel-calculator.png" alt="Fuel Calculator overlay">
+          <img class="w-shot" src="../img/fuel-calculator.png" alt="Fuel Calculator overlay" width="423" height="234" decoding="async">
         </div>
       </div>
 
@@ -1016,7 +1096,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 1 Standings -->
       <article class="panel brk fcard" data-reveal>
         <div class="mv mv-photo">
-          <img src="../img/standings.png" alt="Standings overlay">
+          <img src="../img/standings.png" alt="Standings overlay" width="845" height="418" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Standings</h3><span class="idx">01</span></div>
@@ -1027,7 +1107,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 2 Relative -->
       <article class="panel brk fcard" data-reveal style="--d:50ms">
         <div class="mv mv-photo">
-          <img src="../img/relative.png" alt="Relative overlay">
+          <img src="../img/relative.png" alt="Relative overlay" width="584" height="307" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Relative</h3><span class="idx">02</span></div>
@@ -1038,7 +1118,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 3 Fuel -->
       <article class="panel brk fcard" data-reveal style="--d:100ms">
         <div class="mv mv-photo">
-          <img src="../img/fuel-calculator.png" alt="Fuel Calculator overlay">
+          <img src="../img/fuel-calculator.png" alt="Fuel Calculator overlay" width="423" height="234" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Fuel Calculator</h3><span class="idx">03</span></div>
@@ -1063,7 +1143,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 5 Weather -->
       <article class="panel brk fcard" data-reveal style="--d:30ms">
         <div class="mv mv-photo">
-          <img src="../img/weather.png" alt="Weather overlay">
+          <img src="../img/weather.png" alt="Weather overlay" width="232" height="295" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Weather</h3><span class="idx">05</span></div>
@@ -1074,7 +1154,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 6 Track Map -->
       <article class="panel brk fcard" data-reveal style="--d:80ms">
         <div class="mv mv-photo">
-          <img src="../img/track-map.png" alt="Track Map overlay">
+          <img src="../img/track-map.png" alt="Track Map overlay" width="1536" height="1024" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Track Map</h3><span class="idx">06</span></div>
@@ -1085,7 +1165,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 7 Inputs -->
       <article class="panel brk fcard" data-reveal style="--d:130ms">
         <div class="mv mv-photo">
-          <img src="../img/inputs.png" alt="Inputs overlay">
+          <img src="../img/inputs.png" alt="Inputs overlay" width="453" height="102" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Inputs</h3><span class="idx">07</span></div>
@@ -1096,7 +1176,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 8 Flag -->
       <article class="panel brk fcard" data-reveal style="--d:170ms">
         <div class="mv mv-photo">
-          <img src="../img/flag.png" alt="Flag overlay">
+          <img src="../img/flag.png" alt="Flag overlay" width="274" height="277" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Flag</h3><span class="idx">08</span></div>
@@ -1173,7 +1253,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- SHOT 2 -->
       <div class="panel brk gcard" data-reveal style="--d:60ms">
-        <div class="frame"><img class="g-photo" src="../img/example-2.jpg" alt="Example from Shelik's stream https://www.twitch.tv/shelik"></div>
+        <div class="frame"><img class="g-photo" src="../img/example-2.jpg" alt="TU Overlays widgets on Shelik's stream — trackside view" width="1799" height="1012" loading="lazy" decoding="async"></div>
         <div class="gcap"><h3>Example from Shelik's stream</h3><span>On track</span>
           <span class="zoom">Open
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1183,7 +1263,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
       <!-- SHOT 3 -->
       <div class="panel brk gcard" data-reveal style="--d:120ms">
-        <div class="frame"><img class="g-photo" src="../img/example-3.jpg" alt="Example from Shelik's stream https://www.twitch.tv/shelik"></div>
+        <div class="frame"><img class="g-photo" src="../img/example-3.jpg" alt="TU Overlays widgets on Shelik's stream — Le Mans" width="1800" height="1013" loading="lazy" decoding="async"></div>
         <div class="gcap"><h3>Example from Shelik's stream</h3><span>Rain · Le Mans</span>
           <span class="zoom">Open
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1302,9 +1382,28 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <section class="sect" id="download" style="padding-top:clamp(20px,3vw,40px)">
   <div class="wrap">
     <div class="cta" data-reveal>
-      <span class="eyebrow" style="margin-bottom:20px">Ready to install</span>
-      <h2>Set up overlays<br>right <span class="acc">now</span></h2>
-      <p class="lead">Installation takes a minute. Widgets pick up telemetry automatically as soon as you're out on track.</p>
+      <span class="eyebrow" id="dlEyebrow" style="margin-bottom:20px">🏁 Release August 21 · 21:00 MSK</span>
+      <h2 id="dlHeading">Coming soon — <span class="acc">overlays for iRacing</span></h2>
+      <p class="lead" id="dlLead">Installation takes a minute. The Download button unlocks automatically at release — no need to refresh the page.</p>
+
+      <div class="panel brk cddown" id="dlCountdown" data-target="2026-08-21T21:00:00+03:00">
+        <span class="cddown-confetti" aria-hidden="true"></span>
+        <div class="cddown-grid" aria-hidden="true">
+          <div class="cddown-cell"><span class="cddown-num" id="cdDays">00</span><span class="cddown-lbl">days</span></div>
+          <div class="cddown-sep">:</div>
+          <div class="cddown-cell"><span class="cddown-num" id="cdHours">00</span><span class="cddown-lbl">hours</span></div>
+          <div class="cddown-sep">:</div>
+          <div class="cddown-cell"><span class="cddown-num" id="cdMins">00</span><span class="cddown-lbl">mins</span></div>
+          <div class="cddown-sep">:</div>
+          <div class="cddown-cell"><span class="cddown-num" id="cdSecs">00</span><span class="cddown-lbl">secs</span></div>
+        </div>
+        <div class="cddown-live">
+          <span class="cddown-live-big" aria-hidden="true">🎉</span>
+          <p>TU Overlays is ready to download!</p>
+        </div>
+        <span class="sr-only" role="status" aria-live="polite" id="cdSr"></span>
+      </div>
+
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="download.html">
           <span class="btn-content">
@@ -1316,7 +1415,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         </a>
         </div>
       <div class="hero-meta" style="margin-top:24px">
-        <span class="js-version">v2.4.1</span><i>/</i><span>No account</span><i>/</i><span>Win 10 · 11 x64</span>
+        <span class="js-version">v0.1</span><i>/</i><span>No account</span><i>/</i><span>Win 10 · 11 x64</span>
       </div>
     </div>
   </div>
@@ -1328,7 +1427,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <footer class="ftr">
   <div class="wrap ftr-in">
     <a class="logo" href="#top">
-      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true" width="26" height="28" loading="lazy" decoding="async">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
     <nav class="ftr-links" aria-label="More">
@@ -1752,6 +1851,106 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
       document.querySelectorAll('.js-version').forEach(el => { el.textContent = rel.tag_name; });
     })
     .catch(() => {});
+})();
+</script>
+
+<!-- ══════════════════════════ RELEASE COUNTDOWN ══════════════════════════ -->
+<script>
+(() => {
+  'use strict';
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad2 = n => String(n).padStart(2, '0');
+
+  const cdPanel = $('#dlCountdown');
+  const TARGET = new Date((cdPanel && cdPanel.dataset.target) || '2026-08-21T21:00:00+03:00').getTime();
+
+  const gated = $$('a.btn[href="download.html"]');
+  const ribbon = $('#relRibbon');
+  const ribbonCd = $('#ribbonCd');
+  const cdSr = $('#cdSr');
+  const cdD = $('#cdDays'), cdH = $('#cdHours'), cdM = $('#cdMins'), cdS = $('#cdSecs');
+
+  function parts(ms) {
+    const s = Math.floor(ms / 1000);
+    return { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
+  }
+
+  function lockBtn(btn, p) {
+    btn.classList.add('is-locked');
+    btn.setAttribute('aria-disabled', 'true');
+    btn.setAttribute('data-tip', p.d > 0
+      ? `In ${p.d}d ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`
+      : `In ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`);
+  }
+
+  function spawnConfetti(container, count) {
+    if (reduced || !container) return;
+    const colors = ['#ff5f96', '#3fd8e0', '#ffb02e', '#35e08d', '#ffffff'];
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.style.left = (Math.random() * 100).toFixed(1) + '%';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDuration = (1.5 + Math.random() * 1.3).toFixed(2) + 's';
+      p.style.animationDelay = (Math.random() * 1).toFixed(2) + 's';
+      container.appendChild(p);
+    }
+  }
+
+  let unlocked = false;
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+
+    gated.forEach(btn => {
+      btn.classList.remove('is-locked');
+      btn.removeAttribute('aria-disabled');
+      btn.removeAttribute('data-tip');
+      if (!reduced) {
+        btn.classList.add('just-unlocked');
+        setTimeout(() => btn.classList.remove('just-unlocked'), 750);
+      }
+    });
+
+    if (cdPanel) { cdPanel.classList.add('is-live'); spawnConfetti($('.cddown-confetti', cdPanel), 24); }
+    if (ribbon) ribbon.classList.add('is-live');
+
+    const eyebrow = $('#dlEyebrow'), heading = $('#dlHeading'), lead = $('#dlLead');
+    if (eyebrow) eyebrow.textContent = 'Ready to install';
+    if (heading) heading.innerHTML = 'Set up overlays<br> right <span class="acc">now</span>';
+    if (lead) lead.textContent = 'Installation takes a minute. Widgets pick up telemetry automatically as soon as you\'re out on track.';
+    if (cdSr) cdSr.textContent = 'TU Overlays is ready to download.';
+  }
+
+  gated.forEach(btn => {
+    btn.addEventListener('click', e => { if (btn.classList.contains('is-locked')) e.preventDefault(); });
+  });
+
+  function tick() {
+    const ms = TARGET - Date.now();
+    if (ms <= 0) { unlock(); return; }
+    const p = parts(ms);
+    if (cdD) cdD.textContent = pad2(p.d);
+    if (cdH) cdH.textContent = pad2(p.h);
+    if (cdM) cdM.textContent = pad2(p.m);
+    if (cdS) cdS.textContent = pad2(p.s);
+    if (ribbonCd) ribbonCd.textContent = (p.d > 0 ? p.d + 'd ' : '') + pad2(p.h) + ':' + pad2(p.m) + ':' + pad2(p.s);
+    gated.forEach(btn => lockBtn(btn, p));
+  }
+
+  tick();
+  setInterval(tick, 1000);
+
+  /* ---------- ribbon dismiss (persists for this browser session) ---------- */
+  const ribbonClose = $('#ribbonClose');
+  if (ribbon && sessionStorage.getItem('tu-ribbon-dismissed') === '1') ribbon.hidden = true;
+  if (ribbonClose) {
+    ribbonClose.addEventListener('click', () => {
+      ribbon.hidden = true;
+      try { sessionStorage.setItem('tu-ribbon-dismissed', '1'); } catch (_) {}
+    });
+  }
 })();
 </script>
 </body>

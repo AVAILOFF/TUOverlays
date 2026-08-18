@@ -7,10 +7,10 @@
 <meta name="description" content="Download TU Overlays straight from this site: exe installer or portable build for Windows 10/11 x64. Version archive and file checksums included.">
 <meta name="theme-color" content="#02102c">
 <script src="/scripts/analytics.js" defer></script>
-<link rel="canonical" href="https://tuoverlays.xyz/en/download.html">
-<link rel="alternate" hreflang="ru" href="https://tuoverlays.xyz/download.html">
-<link rel="alternate" hreflang="en" href="https://tuoverlays.xyz/en/download.html">
-<link rel="alternate" hreflang="x-default" href="https://tuoverlays.xyz/download.html">
+<link rel="canonical" href="https://tuoverlays.xyz/en/download">
+<link rel="alternate" hreflang="ru" href="https://tuoverlays.xyz/download">
+<link rel="alternate" hreflang="en" href="https://tuoverlays.xyz/en/download">
+<link rel="alternate" hreflang="x-default" href="https://tuoverlays.xyz/download">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
@@ -451,7 +451,9 @@ p{margin:0}
       const published = data.filter(r => !r.draft);
       if (!published.length) throw new Error('no releases yet');
 
-      const [latest, ...archive] = published;
+      // Prefer the newest stable release for the main cards; keep pre-releases in the archive.
+      const latest = published.find(r => !r.prerelease) || published[0];
+      const archive = published.filter(r => r !== latest);
       if (verBadge) verBadge.textContent = latest.tag_name;
       fillCard('exe', latest, '.exe');
       fillCard('zip', latest, '.zip');
