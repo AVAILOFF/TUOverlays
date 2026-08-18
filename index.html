@@ -231,15 +231,17 @@ p{margin:0}
 .btn[data-tip]:hover .btn-content,.btn[data-tip]:focus-visible .btn-content{opacity:0}
 .btn[data-tip]:hover::after,.btn[data-tip]:focus-visible::after{opacity:1}
 
-/* locked (pre-release) state — same dimmed look as [data-tip]:hover, but always on */
+/* locked (pre-release) state — label swaps to a live countdown, button grows to fit it */
 .btn.is-locked{
   cursor:not-allowed;
-  filter:saturate(.4) brightness(.72);
+  filter:saturate(.5) brightness(.8);
   box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 6px 18px -10px rgba(255,0,102,.4);
 }
 .btn.is-locked:hover,.btn.is-locked:focus-visible{transform:none}
-.btn.is-locked .btn-content{opacity:0}
-.btn.is-locked::after{opacity:1}
+.btn.is-locked .btn-label{
+  font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  font-size:.88em;letter-spacing:.01em;
+}
 @keyframes btnUnlock{0%{box-shadow:0 0 0 0 rgba(255,0,102,.55)}100%{box-shadow:0 0 0 18px rgba(255,0,102,0)}}
 .btn.just-unlocked{animation:btnUnlock .75s ease-out}
 .btn-ghost{
@@ -1010,7 +1012,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Скачать
+          <span class="btn-label">Скачать</span>
         </span>
       </a>
     </div>
@@ -1033,7 +1035,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <a href="en/index.html">EN</a>
     </div>
     <div class="m-cta">
-      <a class="btn btn-primary" href="download.html"><span class="btn-content">Скачать</span></a>
+      <a class="btn btn-primary" href="download.html"><span class="btn-content"><span class="btn-label">Скачать</span></span></a>
     </div>
   </div>
 </header>
@@ -1431,7 +1433,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Скачать
+            <span class="btn-label">Скачать</span>
           </span>
         </a>
         </div>
@@ -1901,9 +1903,13 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
   function lockBtn(btn, p) {
     btn.classList.add('is-locked');
     btn.setAttribute('aria-disabled', 'true');
-    btn.setAttribute('data-tip', p.d > 0
-      ? `Через ${p.d}д ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`
-      : `Через ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`);
+    const label = $('.btn-label', btn);
+    if (label) label.textContent = p.d > 0
+      ? `${p.d}д ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`
+      : `${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`;
+    btn.setAttribute('aria-label', p.d > 0
+      ? `Скачивание откроется через ${p.d} дн. ${p.h} ч. ${p.m} мин.`
+      : `Скачивание откроется через ${p.h} ч. ${p.m} мин. ${p.s} сек.`);
   }
 
   function spawnConfetti(container, count) {
@@ -1927,7 +1933,9 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
     gated.forEach(btn => {
       btn.classList.remove('is-locked');
       btn.removeAttribute('aria-disabled');
-      btn.removeAttribute('data-tip');
+      btn.removeAttribute('aria-label');
+      const label = $('.btn-label', btn);
+      if (label) label.textContent = 'Скачать';
       if (!reduced) {
         btn.classList.add('just-unlocked');
         setTimeout(() => btn.classList.remove('just-unlocked'), 750);
