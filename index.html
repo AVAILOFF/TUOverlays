@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TU Overlays — телеметрические оверлеи для iRacing</title>
-<meta name="description" content="TU Overlays превращает телеметрию iRacing в 23 настраиваемых виджета — от Relative до Race Control.">
+<meta name="description" content="TU Overlays — глубокая кастомизация оверлеев iRacing: 23 виджета, каждый настраивается под себя, и Race Control — живой журнал инцидентов сессии.">
 <meta name="theme-color" content="#02102c">
 <script src="/scripts/analytics.js" defer></script>
 
@@ -14,14 +14,14 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:title" content="TU Overlays — телеметрические оверлеи для iRacing">
-<meta property="og:description" content="TU Overlays превращает телеметрию iRacing в 23 настраиваемых виджета — от Relative до Race Control.">
+<meta property="og:description" content="TU Overlays — глубокая кастомизация оверлеев iRacing: 23 виджета, каждый настраивается под себя, и Race Control — живой журнал инцидентов сессии.">
 <meta property="og:image" content="https://tuoverlays.xyz/img/example-1.jpg">
 <meta property="og:image:width" content="1799">
 <meta property="og:image:height" content="963">
 <meta property="og:image:alt" content="Виджеты TU Overlays поверх кокпита в заезде iRacing: расстановка, карта трассы, погода и приборы">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="TU Overlays — телеметрические оверлеи для iRacing">
-<meta name="twitter:description" content="TU Overlays превращает телеметрию iRacing в 23 настраиваемых виджета — от Relative до Race Control.">
+<meta name="twitter:description" content="TU Overlays — глубокая кастомизация оверлеев iRacing: 23 виджета, каждый настраивается под себя, и Race Control — живой журнал инцидентов сессии.">
 <meta name="twitter:image" content="https://tuoverlays.xyz/img/example-1.jpg">
 
 <link rel="canonical" href="https://tuoverlays.xyz/">
@@ -275,7 +275,6 @@ p{margin:0}
 .relribbon{position:relative;overflow:hidden;background:linear-gradient(90deg,var(--brand-lo),var(--brand) 45%,var(--brand-hi));color:#fff}
 .relribbon[hidden]{display:none}
 .relribbon-in{position:relative;z-index:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:9px;min-height:22px}
-.relribbon-flag{font-size:14px;flex:none;line-height:1}
 .relribbon-tx{font-size:13px;font-weight:600;letter-spacing:.005em}
 .relribbon-tx b{font-weight:700}
 .relribbon-cd{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;background:rgba(0,0,0,.18);
@@ -470,12 +469,13 @@ p{margin:0}
 .hero-track .t-hot{stroke:rgba(255,0,102,.5);stroke-width:1.6;stroke-dasharray:120 1560;filter:drop-shadow(0 0 5px rgba(255,0,102,.75))}
 
 .rel-badge{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;gap:9px;
   font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--tx);padding:6px 14px 6px 11px;border-radius:999px;
-  background:linear-gradient(90deg,rgba(255,0,102,.2),rgba(63,216,224,.12));
+  color:var(--tx);padding:6px 14px 6px 12px;border-radius:999px;
+  background:var(--glass-2);
   border:1px solid var(--line-2);
 }
+.rel-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--brand-hi);box-shadow:0 0 6px rgba(255,95,150,.55);flex:none}
 .rel-badge b{color:var(--brand-hi);font-weight:700}
 
 .hero-in{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px}
@@ -564,7 +564,7 @@ p{margin:0}
 
 /* bars */
 .bar{height:4px;border-radius:3px;background:rgba(124,162,224,.14);overflow:hidden;position:relative}
-.bar>i{display:block;height:100%;border-radius:3px;background:var(--data);transition:width .2s linear}
+.bar>i{display:block;height:100%;width:100%;border-radius:3px;background:var(--data);transform-origin:left;transition:transform .2s linear}
 .bar.brandbar>i{background:linear-gradient(90deg,var(--brand-lo),var(--brand-hi))}
 
 /* readouts */
@@ -572,14 +572,6 @@ p{margin:0}
 .ro-k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-4)}
 .ro-v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:19px;line-height:1;color:var(--tx);letter-spacing:-.01em}
 .ro-v small{font-size:10px;color:var(--tx-3);margin-left:3px;letter-spacing:.06em}
-
-/* input channel bars (vertical) */
-.chans{display:flex;gap:6px;align-items:flex-end;height:52px}
-.chan{width:9px;height:100%;border-radius:3px;background:rgba(124,162,224,.13);position:relative;overflow:hidden}
-.chan i{position:absolute;left:0;right:0;bottom:0;border-radius:3px;transition:height .06s linear}
-.chan.thr i{background:linear-gradient(180deg,var(--good),rgba(53,224,141,.45))}
-.chan.brk i{background:linear-gradient(180deg,var(--brand-hi),var(--brand-lo))}
-.chan.clu i{background:linear-gradient(180deg,var(--data),rgba(63,216,224,.4))}
 
 /* status pips */
 .pip{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3)}
@@ -905,7 +897,7 @@ p{margin:0}
 .cddown-lbl{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-4)}
 .cddown-sep{font-family:var(--f-mono);font-size:clamp(1.3rem,3vw,1.8rem);color:var(--tx-4);transform:translateY(-6px)}
 .cddown-live{display:none;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-block:6px}
-.cddown-live-big{font-size:26px;line-height:1}
+.cddown-live-big{width:26px;height:26px}
 .cddown-live p{font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:17px;color:var(--tx)}
 .cddown.is-live .cddown-grid{display:none}
 .cddown.is-live .cddown-live{display:flex}
@@ -975,10 +967,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <div class="relribbon" id="relRibbon" role="status" aria-live="off">
   <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
   <div class="relribbon-in wrap">
-    <span class="relribbon-flag" aria-hidden="true">🏁</span>
-    <span class="relribbon-tx">Релиз <b>TU Overlays</b> — 21 августа, 21:00 МСК</span>
+    <span class="relribbon-tx">Релиз <b>TU Overlays</b> — 22 августа, 22:00 МСК</span>
     <span class="relribbon-cd" id="ribbonCd" aria-hidden="true">…</span>
-    <a class="relribbon-cta" href="download.html">🎉 Уже можно скачать</a>
+    <a class="relribbon-cta" href="download.html">Уже можно скачать</a>
     <button class="relribbon-close" id="ribbonClose" aria-label="Скрыть баннер">
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -995,6 +986,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 
     <nav class="nav" aria-label="Основная навигация">
       <a href="#features">Возможности</a>
+      <a href="#race-control">Race Control</a>
       <a href="#why">Почему мы</a>
       <a href="#gallery">Галерея</a>
       <a href="#reviews">Кому нужно</a>
@@ -1025,6 +1017,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="mnav" id="mnav">
     <ul>
       <li><a href="#features">Возможности</a></li>
+      <li><a href="#race-control">Race Control</a></li>
       <li><a href="#why">Почему мы</a></li>
       <li><a href="#gallery">Галерея</a></li>
       <li><a href="#reviews">Кому нужно</a></li>
@@ -1056,10 +1049,10 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   </div>
 
   <div class="wrap hero-in">
-    <span class="rel-badge">🏁 Релиз <b>21 августа</b></span>
-    <span class="eyebrow">Windows · 23 виджета · &lt;2% CPU</span>
+    <span class="rel-badge"><i class="rel-badge-dot" aria-hidden="true"></i>Релиз <b>22 августа</b></span>
+    <span class="eyebrow">Windows · Глубокая кастомизация · Race Control</span>
     <h1>iRacing — теперь показывает <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">позицию</span><span class="cyc-w acc">топливо</span><span class="cyc-w acc">трафик</span><span class="cyc-w acc">погоду</span><span class="cyc-w acc">инциденты</span></span><span class="sr-only">позицию</span></h1>
-    <p class="lead">TU Overlays превращает телеметрию iRacing в 23 настраиваемых виджета — от Relative до Race Control. Настройки сохраняются в профиль, которым можно поделиться.</p>
+    <p class="lead">Каждый оверлей — отдельное окно, настраиваемое под вас: позиция, размер, цвета, набор данных. А Race Control ведёт живой журнал инцидентов сессии, чтобы вы не пропустили ни один инцидент. Настройки сохраняются в профиль, которым можно поделиться.</p>
     <div class="hero-actions">
       <a class="btn btn-primary btn-lg" href="#download">
         <span class="btn-content">
@@ -1149,17 +1142,14 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
         </div>
       </article>
 
-      <!-- 4 Race Control -->
+      <!-- 4 ABS -->
       <article class="panel brk fcard" data-reveal style="--d:150ms">
-        <div class="mv" style="display:flex;flex-direction:column;justify-content:center">
-          <div class="log"><time>12:04</time><span class="sq" style="background:var(--warn)"></span><b>Yellow</b> · S3</div>
-          <div class="log"><time>12:31</time><span class="sq" style="background:var(--data)"></span><b>SC IN</b> · lap 19</div>
-          <div class="log"><time>13:02</time><span class="sq" style="background:var(--good)"></span><b>Green</b> · restart</div>
-          <div class="log"><time>18:47</time><span class="sq" style="background:var(--brand)"></span><b>#59</b> · drive-thru</div>
+        <div class="mv mv-photo">
+          <img src="img/abs-icon.svg" alt="ABS" width="150" height="105" loading="lazy" decoding="async">
         </div>
         <div>
-          <div class="ft"><h3>Не пропусти ни одного жёлтого флага.</h3><span class="idx">04</span></div>
-          <p>Лента происшествий сессии в реальном времени — сейфти-кары, пенальти, рестарты — с возможностью пересмотреть всё после гонки.</p>
+          <div class="ft"><h3>ABS</h3><span class="idx">04</span></div>
+          <p>Показывает срабатывание ABS в реальном времени.</p>
         </div>
       </article>
 
@@ -1177,7 +1167,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <!-- 6 Track Map -->
       <article class="panel brk fcard" data-reveal style="--d:80ms">
         <div class="mv mv-photo">
-          <img src="img/track-map.png" alt="Track Map overlay" width="1536" height="1024" loading="lazy" decoding="async">
+          <img src="img/track-map.png" alt="Track Map overlay" width="480" height="320" loading="lazy" decoding="async">
         </div>
         <div>
           <div class="ft"><h3>Увидь трафик до того, как влетишь в него.</h3><span class="idx">06</span></div>
@@ -1211,12 +1201,53 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   </div>
 </section>
 
+<!-- ══════════════════════════ RACE CONTROL ══════════════════════════ -->
+<section class="sect" id="race-control" style="padding-top:clamp(20px,3vw,40px)">
+  <div class="wrap">
+    <div class="rule" data-reveal></div>
+    <div class="sect-hd" style="margin-top:34px">
+      <span class="eyebrow" data-reveal>02 / Race Control</span>
+      <h2 data-reveal style="--d:60ms">Race Control — свой стюард прямо в оверлее.</h2>
+      <p class="lead" data-reveal style="--d:110ms">Пока другие смотрят гонку, вы её разбираете. Race Control сам ловит инциденты в реальном времени — вам остаётся щёлкнуть по строке и увидеть повтор.</p>
+    </div>
+
+    <div class="f-grid">
+
+      <article class="panel brk fcard" data-reveal>
+        <div class="ft"><h3>Авто-детектор инцидентов</h3><span class="idx">01</span></div>
+        <p>Съезды с трассы, потеря контроля, аварии и лёгкие касания — всё ловится автоматически по телеметрии, без ручного протоколирования.</p>
+      </article>
+
+      <article class="panel brk fcard" data-reveal style="--d:50ms">
+        <div class="ft"><h3>Мгновенный переход к повтору</h3><span class="idx">02</span></div>
+        <p>Клик по строке — и реплей сам перематывается к нужному моменту, а камера переключается на нужную машину.</p>
+      </article>
+
+      <article class="panel brk fcard" data-reveal style="--d:100ms">
+        <div class="ft"><h3>Журнал по каждому пилоту</h3><span class="idx">03</span></div>
+        <p>Открой карточку водителя — увидишь всю его историю инцидентов за сессию и сумму штрафных очков.</p>
+      </article>
+
+      <article class="panel brk fcard" data-reveal style="--d:150ms">
+        <div class="ft"><h3>Отметки «просмотрено» и «в закладки»</h3><span class="idx">04</span></div>
+        <p>Просмотренные инциденты гаснут сами, важные — отмечаешь флагом и возвращаешься к ним одним кликом.</p>
+      </article>
+
+      <article class="panel brk fcard" data-reveal style="--d:30ms">
+        <div class="ft"><h3>Отдельное окно</h3><span class="idx">05</span></div>
+        <p>Вынеси Race Control на второй монитор — удобно для стриминга и совместной работы с со-комментатором.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════════════════ WHY ══════════════════════════ -->
 <section class="sect" id="why" style="padding-top:clamp(20px,3vw,40px)">
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>02 / Почему TU Overlays</span>
+      <span class="eyebrow" data-reveal>03 / Почему TU Overlays</span>
       <h2 data-reveal style="--d:60ms">Производительность в цифрах</h2>
       <p class="lead" data-reveal style="--d:110ms">Замеры на референсной конфигурации: Ryzen 9 9800X3D, RTX 5070TI, 1440p, 30-60 машин на трассе.</p>
     </div>
@@ -1267,7 +1298,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>03 / Галерея</span>
+      <span class="eyebrow" data-reveal>04 / Галерея</span>
       <h2 data-reveal style="--d:60ms">Как это выглядит в заезде</h2>
       <p class="lead" data-reveal style="--d:110ms">Нажмите на карточку, чтобы рассмотреть интерфейс крупно.</p>
     </div>
@@ -1303,13 +1334,13 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>04 / Кому это нужно</span>
+      <span class="eyebrow" data-reveal>05 / Кому это нужно</span>
       <h2 data-reveal style="--d:60ms">Кому пригодятся оверлеи</h2>
     </div>
 
     <div class="t-grid">
       <article class="panel brk tcard" data-reveal>
-        <p class="q">Гонщикам, которым важна обстановка вокруг машины: Relative, Radar и Fuel дают нужные данные в поле зрения, не заслоняя трассу.</p>
+        <p class="q">Гонщикам, которым важна обстановка вокруг машины: Relative и Fuel дают нужные данные в поле зрения, а Race Control сохраняет каждый инцидент для разбора и протеста после гонки.</p>
         <div class="who">
           <span class="av">01</span>
           <span><span class="n">Соревнующимся пилотам</span><br><span class="rr">Спринт · Эндуранс</span></span>
@@ -1332,7 +1363,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
   <div class="wrap">
     <div class="rule" data-reveal></div>
     <div class="sect-hd" style="margin-top:34px">
-      <span class="eyebrow" data-reveal>05 / FAQ</span>
+      <span class="eyebrow" data-reveal>06 / FAQ</span>
       <h2 data-reveal style="--d:60ms">Короткие ответы</h2>
     </div>
 
@@ -1405,11 +1436,11 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 <section class="sect" id="download" style="padding-top:clamp(20px,3vw,40px)">
   <div class="wrap">
     <div class="cta" data-reveal>
-      <span class="eyebrow" id="dlEyebrow" style="margin-bottom:20px">🏁 Релиз 21 августа · 21:00 МСК</span>
+      <span class="eyebrow" id="dlEyebrow" style="margin-bottom:20px">Релиз 22 августа · 22:00 МСК</span>
       <h2 id="dlHeading">Совсем скоро — <span class="acc">оверлеи для iRacing</span></h2>
       <p class="lead" id="dlLead">Установка займёт минуту. Кнопка «Скачать» разблокируется автоматически в момент релиза — обновлять страницу не нужно.</p>
 
-      <div class="panel brk cddown" id="dlCountdown" data-target="2026-08-21T21:00:00+03:00">
+      <div class="panel brk cddown" id="dlCountdown" data-target="2026-08-22T22:00:00+03:00">
         <span class="cddown-confetti" aria-hidden="true"></span>
         <div class="cddown-grid" aria-hidden="true">
           <div class="cddown-cell"><span class="cddown-num" id="cdDays">00</span><span class="cddown-lbl">дней</span></div>
@@ -1421,7 +1452,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
           <div class="cddown-cell"><span class="cddown-num" id="cdSecs">00</span><span class="cddown-lbl">секунд</span></div>
         </div>
         <div class="cddown-live">
-          <span class="cddown-live-big" aria-hidden="true">🎉</span>
+          <svg class="cddown-live-big" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.25" fill="none" stroke="var(--good)" stroke-width="1.5"/><path d="M7.5 12.4l2.9 2.9L16.7 9" fill="none" stroke="var(--good)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <p>TU Overlays уже можно скачать!</p>
         </div>
         <span class="sr-only" role="status" aria-live="polite" id="cdSr"></span>
@@ -1887,7 +1918,7 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
   const pad2 = n => String(n).padStart(2, '0');
 
   const cdPanel = $('#dlCountdown');
-  const TARGET = new Date((cdPanel && cdPanel.dataset.target) || '2026-08-21T21:00:00+03:00').getTime();
+  const TARGET = new Date((cdPanel && cdPanel.dataset.target) || '2026-08-22T22:00:00+03:00').getTime();
 
   const gated = $$('a.btn[href="download.html"]');
   const ribbon = $('#relRibbon');

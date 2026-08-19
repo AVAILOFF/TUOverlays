@@ -172,10 +172,8 @@ p{margin:0}
 /* live sync status */
 .sync{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;
   letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin-top:10px}
-.sync .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);flex:none;
-  animation:pulse 1.6s ease-in-out infinite}
-.sync.err .dot{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sync .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);flex:none}
+.sync.err .dot{background:var(--warn);box-shadow:0 0 8px var(--warn)}
 .btn.is-loading{opacity:.55;pointer-events:none}
 
 /* ---------- download cards ---------- */
@@ -250,7 +248,7 @@ p{margin:0}
 <header class="hdr">
   <div class="wrap hdr-in">
     <a class="logo" href="index.html" aria-label="TU Overlays — на главную">
-      <img class="logo-mk" src="img/logo.png" alt="">
+      <img class="logo-mk" src="img/logo.png" alt="" width="26" height="28" decoding="async">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
     <div class="lang-switch" aria-label="Язык">
@@ -362,7 +360,7 @@ p{margin:0}
 <footer class="ftr">
   <div class="wrap ftr-in">
     <a class="logo" href="index.html">
-      <img class="logo-mk" src="img/logo.png" alt="" aria-hidden="true">
+      <img class="logo-mk" src="img/logo.png" alt="" aria-hidden="true" width="26" height="28" loading="lazy" decoding="async">
       <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
     </a>
     <nav class="ftr-links" aria-label="Дополнительно">
