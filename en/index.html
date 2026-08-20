@@ -176,30 +176,26 @@ p{margin:0}
 .btn svg{flex:none;transition:transform .42s cubic-bezier(.16,1,.3,1)}
 .btn:hover svg{transform:translateY(1px)}
 .btn:active{transition-duration:.1s}
+/* interactive hover button — label slides out, arrow slides in, fill sweeps to brand */
 .btn-primary{
   position:relative;overflow:hidden;
-  color:#fff;
-  background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo));
-  box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 6px 24px -8px rgba(255,0,102,.7);
+  border-radius:999px;
+  color:var(--tx);
+  background:var(--elev-1);
+  border:1px solid var(--line-2);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset;
+  transition:border-color .35s, background .35s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1);
 }
-/* diagonal sheen — sweeps once on entry, resets instantly (off-screen) on exit */
-.btn-primary::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.4) 48%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.4) 52%,transparent 75%);
-  transform:translateX(-140%);
+.btn-primary .btn-content{position:relative;z-index:1;transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .3s cubic-bezier(.16,1,.3,1)}
+.btn-primary:hover .btn-content{transform:translateX(16px);opacity:0}
+.btn-primary .btn-arrow{
+  position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;
+  color:#fff;opacity:0;transform:translateX(16px);pointer-events:none;
+  transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .3s cubic-bezier(.16,1,.3,1);
 }
-.btn-primary:hover::before{
-  transform:translateX(140%);
-  transition:transform .85s cubic-bezier(.16,1,.3,1);
-}
-.btn-primary:hover{
-  transform:translateY(-1.5px);
-  box-shadow:0 1px 0 rgba(255,255,255,.3) inset, 0 16px 38px -14px rgba(255,0,102,.9), 0 0 0 1px rgba(255,255,255,.06);
-}
-.btn-primary:active{
-  transform:translateY(0) scale(.985);
-  box-shadow:0 1px 0 rgba(255,255,255,.16) inset, 0 4px 14px -8px rgba(255,0,102,.55);
-}
+.btn-primary:hover .btn-arrow{opacity:1;transform:translateX(0)}
+.btn-primary:hover{background:var(--brand);border-color:var(--brand)}
+.btn-primary:active{transform:scale(.98)}
 
 .btn-content{display:inline-flex;align-items:center;gap:9px}
 
@@ -870,6 +866,7 @@ p{margin:0}
     transition-duration:.001ms!important;scroll-behavior:auto!important}
   [data-reveal]{opacity:1;transform:none}
   .hero-in>*,.c-a,.c-b,.c-c{animation:none}
+  .boot-wordmark,.boot-hair,.boot-load,.boot-track .t-hot,.boot-load-fill{animation:none}
 }
 html{scroll-behavior:smooth;scroll-padding-top:86px}
 
@@ -885,6 +882,10 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 .btn.is-locked:hover,.btn.is-locked:focus-visible{transform:none}
 .btn.is-locked .btn-content{opacity:0}
 .btn.is-locked::after{opacity:1}
+/* pre-release lock keeps the interactive-hover-button interaction inert */
+.btn-primary.is-locked:hover{background:var(--elev-1);border-color:var(--line-2)}
+.btn-primary.is-locked:hover .btn-content{transform:none;opacity:0}
+.btn-primary.is-locked:hover .btn-arrow{opacity:0;transform:translateX(16px)}
 @keyframes btnUnlock{0%{box-shadow:0 0 0 0 rgba(255,0,102,.55)}100%{box-shadow:0 0 0 18px rgba(255,0,102,0)}}
 .btn.just-unlocked{animation:btnUnlock .75s ease-out}
 
@@ -936,9 +937,156 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
 .cddown-confetti span{position:absolute;top:-8%;width:6px;height:11px;border-radius:1px;opacity:0;
   animation-name:confettiBurst;animation-timing-function:cubic-bezier(.2,.7,.3,1);animation-fill-mode:forwards}
 @keyframes confettiBurst{0%{transform:translateY(-10px) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translateY(220px) rotate(360deg);opacity:0}}
+
+/* ============================================================
+   boot loader — full-screen intro, mirrors the hero's backdrop
+   ============================================================ */
+.boot{position:fixed;inset:0;z-index:200;background:var(--bg);overflow:hidden;transition:opacity .5s ease}
+.boot.is-done{opacity:0;pointer-events:none}
+body.is-booting{overflow:hidden}
+.boot-bg{position:absolute;inset:-10% -20% auto;height:1150px;pointer-events:none;z-index:0}
+.boot-glow{position:absolute;border-radius:50%;filter:blur(90px)}
+.boot-glow-a{width:min(1000px,120vw);height:520px;left:50%;top:-160px;transform:translateX(-50%);opacity:.30;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.42), rgba(255,0,102,0) 70%)}
+.boot-glow-b{width:min(700px,90vw);height:420px;left:12%;top:300px;opacity:.16;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(63,216,224,.15), rgba(63,216,224,0) 70%)}
+.boot-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:76px 76px;
+  -webkit-mask-image:radial-gradient(120% 68% at 50% 42%,#000 8%,transparent 72%);
+  mask-image:radial-gradient(120% 68% at 50% 42%,#000 8%,transparent 72%);
+  opacity:.4;
+}
+.boot-track{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:min(1400px,145vw);opacity:.28}
+.boot-track path{fill:none;stroke:rgba(150,190,250,.16);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
+.boot-track .t-hot{stroke:rgba(255,0,102,.55);stroke-width:1.6;stroke-dasharray:120 1560;filter:drop-shadow(0 0 5px rgba(255,0,102,.75));animation:dash 9s linear infinite}
+.boot-vignette{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(60% 55% at 50% 46%, transparent 0%, rgba(2,16,44,.55) 78%, var(--bg) 100%)}
+
+.boot-center{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:0 24px}
+.boot-wordmark{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.022em;line-height:1;margin:0;
+  font-size:clamp(2.1rem,7.6vw,3.1rem);color:var(--tx);
+  animation:heroUp .9s cubic-bezier(.2,.75,.25,1) .1s backwards}
+.boot-wordmark .boot-acc{
+  color:var(--brand);background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 46px rgba(255,0,102,.35)}
+.boot-hair{width:0;height:1px;background:var(--line-2);margin-top:2px;animation:bootHair .5s ease .34s forwards}
+@keyframes bootHair{to{width:30px}}
+
+.boot-load{position:absolute;left:50%;bottom:clamp(34px,7vh,64px);transform:translateX(-50%);z-index:1;width:min(460px,78vw);
+  animation:bootLoadIn .9s cubic-bezier(.2,.75,.25,1) .5s backwards}
+@keyframes bootLoadIn{from{opacity:0;transform:translateX(-50%) translateY(22px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.boot-load-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px;
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.boot-load-status{color:var(--tx-3)}
+.boot-load-pct{color:var(--tx);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.boot-load-track{position:relative;height:7px;border-radius:999px;overflow:hidden;background:rgba(124,162,224,.09);
+  border:1px solid var(--line-2);box-shadow:inset 0 1px 3px rgba(0,3,14,.6)}
+.boot-load-fill{position:absolute;inset:0;width:0%;border-radius:999px;overflow:hidden;
+  background-image:repeating-linear-gradient(45deg, var(--brand) 0 6px, var(--brand-lo) 6px 12px);
+  box-shadow:0 0 16px rgba(255,0,102,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  animation:bootStripe .6s linear infinite;transition:width .2s linear}
+.boot-load-head{position:absolute;top:0;bottom:0;width:26px;left:0%;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,180,208,.85));filter:blur(2px);transition:left .2s linear}
+@keyframes bootStripe{from{background-position:0 0}to{background-position:17px 0}}
 </style>
 </head>
 <body>
+<noscript><style>.boot{display:none}</style></noscript>
+
+<!-- ══════════════════════════ BOOT LOADER ══════════════════════════ -->
+<div class="boot" id="boot" role="presentation" aria-hidden="true">
+  <div class="boot-bg" aria-hidden="true">
+    <div class="boot-grid"></div>
+    <div class="boot-glow boot-glow-a"></div>
+    <div class="boot-glow boot-glow-b"></div>
+    <svg class="boot-track" viewBox="0 0 1200 900" aria-hidden="true">
+      <path d="M460.0,858.0 C460.0,860.3 484.2,868.7 485.0,864.0 C485.8,859.3 475.8,835.2 465.0,830.0 C454.2,824.8 440.8,831.7 420.0,833.0 C399.2,834.3 360.0,836.0 340.0,838.0 C320.0,840.0 315.0,842.7 300.0,845.0 C285.0,847.3 266.7,851.2 250.0,852.0 C233.3,852.8 214.2,860.3 200.0,850.0 C185.8,839.7 174.2,810.8 165.0,790.0 C155.8,769.2 142.5,734.2 145.0,725.0 C147.5,715.8 162.5,731.2 180.0,735.0 C197.5,738.8 240.3,753.8 250.0,748.0 C259.7,742.2 240.8,718.8 238.0,700.0 C235.2,681.2 234.3,653.3 233.0,635.0 C231.7,616.7 230.8,603.3 230.0,590.0 C229.2,576.7 241.3,565.8 228.0,555.0 C214.7,544.2 178.8,532.5 150.0,525.0 C121.2,517.5 65.0,517.5 55.0,510.0 C45.0,502.5 72.5,486.7 90.0,480.0 C107.5,473.3 135.0,473.0 160.0,470.0 C185.0,467.0 232.5,468.7 240.0,462.0 C247.5,455.3 220.0,442.0 205.0,430.0 C190.0,418.0 152.5,405.0 150.0,390.0 C147.5,375.0 175.8,356.7 190.0,340.0 C204.2,323.3 230.8,305.0 235.0,290.0 C239.2,275.0 220.0,262.5 215.0,250.0 C210.0,237.5 195.8,221.7 205.0,215.0 C214.2,208.3 245.8,211.3 270.0,210.0 C294.2,208.7 330.8,212.0 350.0,207.0 C369.2,202.0 374.2,187.8 385.0,180.0 C395.8,172.2 401.7,164.2 415.0,160.0 C428.3,155.8 449.2,150.8 465.0,155.0 C480.8,159.2 494.2,185.8 510.0,185.0 C525.8,184.2 542.5,162.2 560.0,150.0 C577.5,137.8 600.0,112.0 615.0,112.0 C630.0,112.0 639.2,135.3 650.0,150.0 C660.8,164.7 667.5,190.0 680.0,200.0 C692.5,210.0 710.0,207.5 725.0,210.0 C740.0,212.5 763.8,208.3 770.0,215.0 C776.2,221.7 764.5,238.3 762.0,250.0 C759.5,261.7 748.7,278.7 755.0,285.0 C761.3,291.3 783.3,288.0 800.0,288.0 C816.7,288.0 842.5,293.0 855.0,285.0 C867.5,277.0 872.5,255.8 875.0,240.0 C877.5,224.2 865.8,200.8 870.0,190.0 C874.2,179.2 890.0,182.0 900.0,175.0 C910.0,168.0 914.2,151.3 930.0,148.0 C945.8,144.7 973.3,151.3 995.0,155.0 C1016.7,158.7 1041.7,164.2 1060.0,170.0 C1078.3,175.8 1091.7,182.5 1105.0,190.0 C1118.3,197.5 1145.0,206.7 1140.0,215.0 C1135.0,223.3 1095.8,233.3 1075.0,240.0 C1054.2,246.7 1029.2,250.8 1015.0,255.0 C1000.8,259.2 982.5,260.0 990.0,265.0 C997.5,270.0 1036.7,278.3 1060.0,285.0 C1083.3,291.7 1130.0,299.5 1130.0,305.0 C1130.0,310.5 1081.7,315.2 1060.0,318.0 C1038.3,320.8 1012.5,320.8 1000.0,322.0 C987.5,323.2 992.5,320.3 985.0,325.0 C977.5,329.7 964.2,341.7 955.0,350.0 C945.8,358.3 934.5,365.0 930.0,375.0 C925.5,385.0 928.8,398.3 928.0,410.0 C927.2,421.7 938.0,435.8 925.0,445.0 C912.0,454.2 876.7,459.2 850.0,465.0 C823.3,470.8 785.0,474.2 765.0,480.0 C745.0,485.8 740.0,493.7 730.0,500.0 C720.0,506.3 701.7,516.3 705.0,518.0 C708.3,519.7 725.8,511.3 750.0,510.0 C774.2,508.7 808.3,510.0 850.0,510.0 C891.7,510.0 981.7,504.2 1000.0,510.0 C1018.3,515.8 974.2,533.3 960.0,545.0 C945.8,556.7 927.5,567.5 915.0,580.0 C902.5,592.5 895.0,606.7 885.0,620.0 C875.0,633.3 879.2,646.7 855.0,660.0 C830.8,673.3 777.5,687.5 740.0,700.0 C702.5,712.5 647.0,725.3 630.0,735.0 C613.0,744.7 635.5,751.3 638.0,758.0 C640.5,764.7 646.3,768.8 645.0,775.0 C643.7,781.2 635.0,789.2 630.0,795.0 C625.0,800.8 627.5,803.3 615.0,810.0 C602.5,816.7 576.7,828.3 555.0,835.0 C533.3,841.7 500.8,846.2 485.0,850.0 C469.2,853.8 460.0,855.7 460.0,858.0 Z"/>
+      <path class="t-hot" d="M460.0,858.0 C460.0,860.3 484.2,868.7 485.0,864.0 C485.8,859.3 475.8,835.2 465.0,830.0 C454.2,824.8 440.8,831.7 420.0,833.0 C399.2,834.3 360.0,836.0 340.0,838.0 C320.0,840.0 315.0,842.7 300.0,845.0 C285.0,847.3 266.7,851.2 250.0,852.0 C233.3,852.8 214.2,860.3 200.0,850.0 C185.8,839.7 174.2,810.8 165.0,790.0 C155.8,769.2 142.5,734.2 145.0,725.0 C147.5,715.8 162.5,731.2 180.0,735.0 C197.5,738.8 240.3,753.8 250.0,748.0 C259.7,742.2 240.8,718.8 238.0,700.0 C235.2,681.2 234.3,653.3 233.0,635.0 C231.7,616.7 230.8,603.3 230.0,590.0 C229.2,576.7 241.3,565.8 228.0,555.0 C214.7,544.2 178.8,532.5 150.0,525.0 C121.2,517.5 65.0,517.5 55.0,510.0 C45.0,502.5 72.5,486.7 90.0,480.0 C107.5,473.3 135.0,473.0 160.0,470.0 C185.0,467.0 232.5,468.7 240.0,462.0 C247.5,455.3 220.0,442.0 205.0,430.0 C190.0,418.0 152.5,405.0 150.0,390.0 C147.5,375.0 175.8,356.7 190.0,340.0 C204.2,323.3 230.8,305.0 235.0,290.0 C239.2,275.0 220.0,262.5 215.0,250.0 C210.0,237.5 195.8,221.7 205.0,215.0 C214.2,208.3 245.8,211.3 270.0,210.0 C294.2,208.7 330.8,212.0 350.0,207.0 C369.2,202.0 374.2,187.8 385.0,180.0 C395.8,172.2 401.7,164.2 415.0,160.0 C428.3,155.8 449.2,150.8 465.0,155.0 C480.8,159.2 494.2,185.8 510.0,185.0 C525.8,184.2 542.5,162.2 560.0,150.0 C577.5,137.8 600.0,112.0 615.0,112.0 C630.0,112.0 639.2,135.3 650.0,150.0 C660.8,164.7 667.5,190.0 680.0,200.0 C692.5,210.0 710.0,207.5 725.0,210.0 C740.0,212.5 763.8,208.3 770.0,215.0 C776.2,221.7 764.5,238.3 762.0,250.0 C759.5,261.7 748.7,278.7 755.0,285.0 C761.3,291.3 783.3,288.0 800.0,288.0 C816.7,288.0 842.5,293.0 855.0,285.0 C867.5,277.0 872.5,255.8 875.0,240.0 C877.5,224.2 865.8,200.8 870.0,190.0 C874.2,179.2 890.0,182.0 900.0,175.0 C910.0,168.0 914.2,151.3 930.0,148.0 C945.8,144.7 973.3,151.3 995.0,155.0 C1016.7,158.7 1041.7,164.2 1060.0,170.0 C1078.3,175.8 1091.7,182.5 1105.0,190.0 C1118.3,197.5 1145.0,206.7 1140.0,215.0 C1135.0,223.3 1095.8,233.3 1075.0,240.0 C1054.2,246.7 1029.2,250.8 1015.0,255.0 C1000.8,259.2 982.5,260.0 990.0,265.0 C997.5,270.0 1036.7,278.3 1060.0,285.0 C1083.3,291.7 1130.0,299.5 1130.0,305.0 C1130.0,310.5 1081.7,315.2 1060.0,318.0 C1038.3,320.8 1012.5,320.8 1000.0,322.0 C987.5,323.2 992.5,320.3 985.0,325.0 C977.5,329.7 964.2,341.7 955.0,350.0 C945.8,358.3 934.5,365.0 930.0,375.0 C925.5,385.0 928.8,398.3 928.0,410.0 C927.2,421.7 938.0,435.8 925.0,445.0 C912.0,454.2 876.7,459.2 850.0,465.0 C823.3,470.8 785.0,474.2 765.0,480.0 C745.0,485.8 740.0,493.7 730.0,500.0 C720.0,506.3 701.7,516.3 705.0,518.0 C708.3,519.7 725.8,511.3 750.0,510.0 C774.2,508.7 808.3,510.0 850.0,510.0 C891.7,510.0 981.7,504.2 1000.0,510.0 C1018.3,515.8 974.2,533.3 960.0,545.0 C945.8,556.7 927.5,567.5 915.0,580.0 C902.5,592.5 895.0,606.7 885.0,620.0 C875.0,633.3 879.2,646.7 855.0,660.0 C830.8,673.3 777.5,687.5 740.0,700.0 C702.5,712.5 647.0,725.3 630.0,735.0 C613.0,744.7 635.5,751.3 638.0,758.0 C640.5,764.7 646.3,768.8 645.0,775.0 C643.7,781.2 635.0,789.2 630.0,795.0 C625.0,800.8 627.5,803.3 615.0,810.0 C602.5,816.7 576.7,828.3 555.0,835.0 C533.3,841.7 500.8,846.2 485.0,850.0 C469.2,853.8 460.0,855.7 460.0,858.0 Z"/>
+    </svg>
+  </div>
+  <div class="boot-vignette" aria-hidden="true"></div>
+
+  <div class="boot-center">
+    <h1 class="boot-wordmark">TU <span class="boot-acc">Overlays</span></h1>
+    <div class="boot-hair"></div>
+  </div>
+
+  <div class="boot-load">
+    <div class="boot-load-row">
+      <span class="boot-load-status" id="bootStatus">Loading interface</span>
+      <span class="boot-load-pct" id="bootPct">0%</span>
+    </div>
+    <div class="boot-load-track">
+      <div class="boot-load-fill" id="bootFill"></div>
+      <div class="boot-load-head" id="bootHead"></div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  'use strict';
+  const boot = document.getElementById('boot');
+  if (!boot) return;
+  const fill = document.getElementById('bootFill');
+  const head = document.getElementById('bootHead');
+  const pct = document.getElementById('bootPct');
+  const statusEl = document.getElementById('bootStatus');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.body.classList.add('is-booting');
+
+  const statuses = [
+    [0,    'Loading interface'],
+    [0.35, 'Connecting to session'],
+    [0.75, 'Almost ready'],
+  ];
+  const setStatus = p => {
+    for (let i = statuses.length - 1; i >= 0; i--){
+      if (p >= statuses[i][0]){ statusEl.textContent = statuses[i][1]; break; }
+    }
+  };
+  const setProgress = p => {
+    const v = Math.round(p * 100);
+    fill.style.width = v + '%';
+    head.style.left = v + '%';
+    pct.textContent = v + '%';
+    setStatus(p);
+  };
+
+  const start = performance.now();
+  const MIN_VISIBLE = reduced ? 0 : 500;
+  let progress = 0;
+  let done = false;
+  let raf;
+
+  const tick = () => {
+    if (done) return;
+    progress += (0.92 - progress) * 0.045;
+    setProgress(progress);
+    raf = requestAnimationFrame(tick);
+  };
+  if (reduced) { setProgress(0.92); } else { raf = requestAnimationFrame(tick); }
+
+  const finish = () => {
+    if (done) return;
+    done = true;
+    if (raf) cancelAnimationFrame(raf);
+    setProgress(1);
+    const wait = Math.max(0, MIN_VISIBLE - (performance.now() - start));
+    setTimeout(() => {
+      boot.classList.add('is-done');
+      document.body.classList.remove('is-booting');
+      setTimeout(() => boot.remove(), reduced ? 0 : 550);
+    }, reduced ? 0 : Math.max(150, wait));
+  };
+
+  window.addEventListener('load', finish, { once: true });
+  setTimeout(finish, 4500);
+})();
+</script>
 
 <!-- ══════════════════════════ RELEASE RIBBON ══════════════════════════ -->
 <div class="relribbon" id="relRibbon" role="status" aria-live="off">
@@ -983,6 +1131,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
           </svg>
           Download
         </span>
+        <span class="btn-arrow" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
       </a>
     </div>
 
@@ -1005,7 +1156,7 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <a class="on" href="index.html" aria-current="true">EN</a>
     </div>
     <div class="m-cta">
-      <a class="btn btn-primary" href="download.html"><span class="btn-content">Download</span></a>
+      <a class="btn btn-primary" href="download.html"><span class="btn-content">Download</span><span class="btn-arrow" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     </div>
   </div>
 </header>
@@ -1036,6 +1187,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
             <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           Download for Windows
+        </span>
+        <span class="btn-arrow" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
     </div>
@@ -1233,35 +1387,30 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
       <div class="stat-item">
         <span class="mk">CPU load</span>
         <div class="mv-num">~1.8<small>%</small></div>
-        <div class="gauge"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <p>One core, full starting grid.</p>
       </div>
 
       <div class="stat-item">
         <span class="mk">FPS impact</span>
         <div class="mv-num">−3.4<small>FPS</small></div>
-        <div class="gauge"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <p>Median across 60 sessions, rendered as a separate layer.</p>
       </div>
 
       <div class="stat-item">
         <span class="mk">OBS compatibility</span>
         <div class="mv-num" style="font-size:clamp(1.15rem,1.9vw,1.5rem)">Game + Window</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pip">Capture OK</span><span class="pip d">Alpha OK</span></div>
         <p>Every widget is captured separately.</p>
       </div>
 
       <div class="stat-item">
         <span class="mk">Configurable settings</span>
         <div class="mv-num"><u>40</u>+</div>
-        <div class="gauge"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="hot"></i><i class="hot"></i><i class="hot"></i></div>
         <p>Tune everything to your liking.</p>
       </div>
 
       <div class="stat-item">
         <span class="mk">Interface scale</span>
         <div class="mv-num">50—300<small>%</small></div>
-        <div class="bar" style="height:6px"><i style="width:100%;background:linear-gradient(90deg,var(--data),var(--brand))"></i></div>
         <p>Just as comfortable on any screen.</p>
       </div>
 
@@ -1441,6 +1590,9 @@ html{scroll-behavior:smooth;scroll-padding-top:86px}
               <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Download for Windows
+          </span>
+          <span class="btn-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </a>
         </div>
