@@ -285,6 +285,14 @@ p{margin:0}
 .relribbon-cta:hover{background:rgba(0,0,0,.34)}
 .relribbon.is-live .relribbon-cd{display:none}
 .relribbon.is-live .relribbon-cta{display:inline-flex}
+/* quiet, opt-in promo pill — only surfaced on release day itself, see JS */
+.relribbon-promo{display:none;align-items:center;gap:6px;margin-left:2px;flex:none;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;
+  color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.4);
+  padding:4px 11px 4px 9px;border-radius:999px;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s}
+.relribbon-promo:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.7)}
+.relribbon-promo:active{transform:scale(.95)}
 .relribbon-close{margin-left:auto;flex:none;width:24px;height:24px;border-radius:6px;
   display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);transition:background .2s}
 .relribbon-close:hover{background:rgba(0,0,0,.18)}
@@ -297,9 +305,38 @@ p{margin:0}
 .relribbon-confetti span:nth-child(4){left:61%;background:#fff;animation-duration:3.4s;animation-delay:.3s}
 .relribbon-confetti span:nth-child(5){left:78%;background:var(--good);animation-duration:2.9s;animation-delay:1.6s}
 .relribbon-confetti span:nth-child(6){left:91%;background:var(--data);animation-duration:2.5s;animation-delay:.9s}
+.relribbon-confetti span:nth-child(7){left:15%;background:var(--warn);animation-duration:3.6s;animation-delay:1.9s}
+.relribbon-confetti span:nth-child(8){left:50%;background:#fff;animation-duration:2.2s;animation-delay:1.3s}
+.relribbon-confetti span:nth-child(9){left:69%;background:var(--good);animation-duration:3.3s;animation-delay:.4s}
 @keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:0}12%{opacity:.85}100%{transform:translateY(48px) rotate(220deg);opacity:0}}
-@media (max-width:640px){.relribbon-tx{font-size:12px}.relribbon-in{padding-block:8px}}
+@media (max-width:640px){.relribbon-tx{font-size:12px}.relribbon-in{padding-block:8px}.relribbon-promo span{display:none}}
 @media (prefers-reduced-motion: reduce){.relribbon-confetti{display:none}}
+
+/* ============================================================
+   release-day promo modal (Shelik preset giveaway)
+   ============================================================ */
+.promo{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;
+  padding:clamp(14px,4vw,44px);background:rgba(1,7,20,.86);backdrop-filter:blur(14px);
+  animation:lbIn .26s cubic-bezier(.2,.7,.3,1)}
+.promo[hidden]{display:none}
+.promo-box{position:relative;width:min(460px,100%);padding:clamp(28px,4vw,38px);border-radius:var(--r-lg);
+  border:1px solid var(--line-2);overflow:hidden;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 40%),rgba(6,22,52,.94);
+  box-shadow:0 50px 100px -40px #000}
+.promo-box::before{content:'';position:absolute;left:50%;top:-150px;width:360px;height:280px;transform:translateX(-50%);
+  pointer-events:none;background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), transparent 70%);filter:blur(54px)}
+.promo-box>*{position:relative;z-index:1}
+.promo-close{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;border:1px solid var(--line-2);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--tx-2);transition:.2s}
+.promo-close:hover{border-color:var(--brand);color:var(--brand-hi)}
+.promo-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--brand-hi);background:rgba(255,0,102,.12);
+  border:1px solid rgba(255,0,102,.3);padding:5px 12px;border-radius:999px;margin-bottom:16px}
+.promo-box h3{font-size:clamp(1.2rem,2.6vw,1.45rem);margin-bottom:10px}
+.promo-lead{color:var(--tx-2);font-size:14px;line-height:1.6;margin-bottom:22px}
+.promo-lead b{color:var(--tx)}
+.promo-dl{width:100%;justify-content:center}
+.promo-note{margin-top:14px;color:var(--tx-4);font-size:11.5px;line-height:1.5}
 
 /* ============================================================
    header
@@ -475,7 +512,6 @@ p{margin:0}
   background:var(--glass-2);
   border:1px solid var(--line-2);
 }
-.rel-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--brand-hi);box-shadow:0 0 6px rgba(255,95,150,.55);flex:none}
 .rel-badge b{color:var(--brand-hi);font-weight:700}
 
 .hero-in{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px}
@@ -1113,11 +1149,14 @@ body.is-booting{overflow:hidden}
 
 <!-- ══════════════════════════ RELEASE RIBBON ══════════════════════════ -->
 <div class="relribbon" id="relRibbon" role="status" aria-live="off">
-  <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+  <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
   <div class="relribbon-in wrap">
     <span class="relribbon-tx">Релиз <b>TU Overlays</b> — 22 августа, 22:00 МСК</span>
     <span class="relribbon-cd" id="ribbonCd" aria-hidden="true">…</span>
     <a class="relribbon-cta" href="download.html">Уже можно скачать</a>
+    <button class="relribbon-promo" id="ribbonPromoBtn" type="button" aria-haspopup="dialog" aria-controls="promo">
+      <span aria-hidden="true">🎁</span>Акция дня
+    </button>
     <button class="relribbon-close" id="ribbonClose" aria-label="Скрыть баннер">
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -1200,7 +1239,7 @@ body.is-booting{overflow:hidden}
   </div>
 
   <div class="wrap hero-in">
-    <span class="rel-badge"><i class="rel-badge-dot" aria-hidden="true"></i>Релиз <b>22 августа</b></span>
+    <span class="rel-badge">Релиз <b>22 августа</b></span>
     <span class="eyebrow">Windows · Глубокая кастомизация · Race Control</span>
     <h1>iRacing — теперь показывает <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">позицию</span><span class="cyc-w acc">топливо</span><span class="cyc-w acc">трафик</span><span class="cyc-w acc">погоду</span><span class="cyc-w acc">инциденты</span></span><span class="sr-only">позицию</span></h1>
     <p class="lead">Каждый оверлей — отдельное окно, настраиваемое под вас: позиция, размер, цвета, набор данных. Race Control ведёт живой журнал инцидентов сессии, чтобы вы не пропустили ни одного. Настройки сохраняются в профиль, которым можно поделиться.</p>
@@ -1665,6 +1704,33 @@ body.is-booting{overflow:hidden}
   </svg>
   <span class="fab-txt">Наш Discord</span>
 </a>
+
+<!-- ══════════════════════════ RELEASE-DAY PROMO ══════════════════════════ -->
+<div class="promo" id="promo" hidden role="dialog" aria-modal="true" aria-labelledby="promoTitle">
+  <div class="promo-box">
+    <span class="cddown-confetti" aria-hidden="true"></span>
+    <button class="promo-close" id="promoClose" aria-label="Закрыть">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <span class="promo-badge">🎁 Только сегодня, в день релиза</span>
+    <h3 id="promoTitle">Подарок от Shelik</h3>
+    <p class="promo-lead">В честь релиза дарим готовый пресет оверлеев <b>Shelik</b> — тот самый сетап виджетов, который вы видели в галерее. Заберите файл, пока действует акция.</p>
+    <a class="btn btn-primary promo-dl" href="downloads/presets/shelik-preset.json" download="shelik-preset.json">
+      <span class="btn-content">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="btn-label">Скачать пресет Shelik</span>
+      </span>
+      <span class="btn-arrow" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+          <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+    <p class="promo-note">Импортируйте файл в настройках TU Overlays. Акция действует только 22 августа.</p>
+  </div>
+</div>
 
 <!-- ══════════════════════════ PHOTO LIGHTBOX ══════════════════════════ -->
 <div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Просмотр скриншота">
@@ -2133,13 +2199,56 @@ $$('.frame').forEach(f => { fit(f); ro.observe(f); });
     if (heading) heading.innerHTML = 'Поставьте оверлеи<br> прямо <span class="acc">сейчас</span>';
     if (lead) lead.textContent = 'Установка занимает минуту. Виджеты подхватывают телеметрию автоматически, как только вы выходите на трассу.';
     if (cdSr) cdSr.textContent = 'TU Overlays уже можно скачать.';
+
+    const heroBadge = $('.hero .rel-badge');
+    if (heroBadge) heroBadge.innerHTML = '🏁 TU Overlays уже здесь';
   }
 
   gated.forEach(btn => {
     btn.addEventListener('click', e => { if (btn.classList.contains('is-locked')) e.preventDefault(); });
   });
 
+  /* ---------- release-day promo: Shelik preset giveaway — unlocks with the main download buttons ---------- */
+  const PROMO_START = TARGET; // same moment the gated "Скачать" buttons unlock
+  const PROMO_END   = new Date('2026-08-23T00:00:00+03:00').getTime(); // stays up for the rest of release day
+  const PROMO_PREVIEW = new URLSearchParams(location.search).get('promo') === '1'; // ?promo=1 forces it on for testing
+  const promoBtn = $('#ribbonPromoBtn');
+  const promo = $('#promo');
+  const promoClose = $('#promoClose');
+  let promoLastFocus = null;
+
+  function tickPromoVisibility() {
+    if (!promoBtn) return;
+    const now = Date.now();
+    promoBtn.style.display = (PROMO_PREVIEW || (now >= PROMO_START && now < PROMO_END)) ? 'inline-flex' : 'none';
+  }
+
+  function openPromo() {
+    if (!promo) return;
+    promoLastFocus = document.activeElement;
+    const confetti = $('.cddown-confetti', promo);
+    if (confetti) { confetti.replaceChildren(); spawnConfetti(confetti, 18); }
+    promo.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (promoClose) promoClose.focus();
+  }
+  function closePromo() {
+    if (!promo) return;
+    promo.hidden = true;
+    document.body.style.overflow = '';
+    if (promoLastFocus) promoLastFocus.focus();
+  }
+
+  if (promoBtn) promoBtn.addEventListener('click', openPromo);
+  if (promoClose) promoClose.addEventListener('click', closePromo);
+  if (promo) promo.addEventListener('click', e => { if (e.target === promo) closePromo(); });
+  addEventListener('keydown', e => {
+    if (!promo || promo.hidden) return;
+    if (e.key === 'Escape') closePromo();
+  });
+
   function tick() {
+    tickPromoVisibility();
     const ms = TARGET - Date.now();
     if (ms <= 0) { unlock(); return; }
     const p = parts(ms);

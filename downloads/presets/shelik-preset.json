@@ -1,0 +1,1833 @@
+{
+  "widgets": [
+    {
+      "id": "standings",
+      "enabled": true,
+      "layout": {
+        "x": 10,
+        "y": 10,
+        "width": 819,
+        "height": 378
+      },
+      "config": {
+        "useLivePosition": true,
+        "iratingChange": {
+          "enabled": true
+        },
+        "positionChange": {
+          "enabled": true
+        },
+        "badge": {
+          "enabled": true,
+          "badgeFormat": "license-bw-rating-bw-no-license"
+        },
+        "delta": {
+          "enabled": true
+        },
+        "gap": {
+          "enabled": true,
+          "decimalPlaces": 1
+        },
+        "interval": {
+          "enabled": true,
+          "decimalPlaces": 1
+        },
+        "lastTime": {
+          "enabled": true,
+          "timeFormat": "mixed"
+        },
+        "fastestTime": {
+          "enabled": false,
+          "timeFormat": "mixed"
+        },
+        "background": {
+          "opacity": 70
+        },
+        "foreground": {
+          "opacity": 0
+        },
+        "countryFlags": {
+          "enabled": false
+        },
+        "carNumber": {
+          "enabled": true
+        },
+        "driverName": {
+          "enabled": true,
+          "showStatusBadges": false,
+          "removeNumbersFromName": false,
+          "nameFormat": "name-surname"
+        },
+        "pitStatus": {
+          "enabled": true,
+          "showPitTime": true,
+          "showPitCount": false,
+          "pitLapDisplayMode": "lastPitLap"
+        },
+        "position": {
+          "enabled": true
+        },
+        "compound": {
+          "enabled": true
+        },
+        "carManufacturer": {
+          "enabled": true,
+          "hideIfSingleMake": false,
+          "scale": 100
+        },
+        "radio": {
+          "persistenceSeconds": 2
+        },
+        "lapTimeDeltas": {
+          "enabled": true,
+          "numLaps": 1,
+          "decimalPlaces": 1
+        },
+        "avgLapTime": {
+          "enabled": false,
+          "numLaps": 5,
+          "timeFormat": "mixed"
+        },
+        "driverStandings": {
+          "buffer": 3,
+          "numNonClassDrivers": 1,
+          "minPlayerClassDrivers": 10,
+          "numTopDrivers": 1,
+          "topDriverDivider": "theme",
+          "classSpacing": false,
+          "maxClasses": 4,
+          "topDriverDividerSpacing": 2,
+          "topDriverDividerOpacity": 70
+        },
+        "titleBar": {
+          "enabled": false,
+          "progressBar": {
+            "enabled": true
+          }
+        },
+        "headerBar": {
+          "enabled": true,
+          "sessionName": {
+            "enabled": true
+          },
+          "sessionTime": {
+            "enabled": true,
+            "mode": "Remaining",
+            "labelStyle": "minimal",
+            "totalFormat": "hh:mm"
+          },
+          "sessionLaps": {
+            "enabled": true,
+            "mode": "Elapsed"
+          },
+          "incidentCount": {
+            "enabled": false
+          },
+          "brakeBias": {
+            "enabled": false
+          },
+          "localTime": {
+            "enabled": false
+          },
+          "sessionClockTime": {
+            "enabled": false
+          },
+          "trackWetness": {
+            "enabled": false
+          },
+          "precipitation": {
+            "enabled": false
+          },
+          "airTemperature": {
+            "enabled": false,
+            "unit": "Metric"
+          },
+          "trackTemperature": {
+            "enabled": false,
+            "unit": "Metric"
+          },
+          "wind": {
+            "enabled": false
+          },
+          "trackName": {
+            "enabled": true
+          },
+          "displayOrder": [
+            "sessionName",
+            "sessionTime",
+            "sessionLaps",
+            "incidentCount",
+            "brakeBias",
+            "localTime",
+            "sessionClockTime",
+            "trackWetness",
+            "precipitation",
+            "airTemperature",
+            "trackTemperature",
+            "wind",
+            "trackName"
+          ],
+          "barBackground": {
+            "enabled": false
+          }
+        },
+        "footerBar": {
+          "enabled": false,
+          "sessionName": {
+            "enabled": false
+          },
+          "sessionTime": {
+            "enabled": false,
+            "mode": "Remaining"
+          },
+          "sessionLaps": {
+            "enabled": true
+          },
+          "incidentCount": {
+            "enabled": false
+          },
+          "brakeBias": {
+            "enabled": false
+          },
+          "localTime": {
+            "enabled": true
+          },
+          "sessionClockTime": {
+            "enabled": false
+          },
+          "trackWetness": {
+            "enabled": true
+          },
+          "precipitation": {
+            "enabled": false
+          },
+          "airTemperature": {
+            "enabled": true,
+            "unit": "Metric"
+          },
+          "trackTemperature": {
+            "enabled": true,
+            "unit": "Metric"
+          },
+          "wind": {
+            "enabled": false
+          },
+          "trackName": {
+            "enabled": false
+          },
+          "displayOrder": [
+            "sessionName",
+            "sessionTime",
+            "sessionLaps",
+            "incidentCount",
+            "brakeBias",
+            "localTime",
+            "sessionClockTime",
+            "trackWetness",
+            "precipitation",
+            "airTemperature",
+            "trackTemperature",
+            "wind",
+            "trackName"
+          ]
+        },
+        "showOnlyWhenOnTrack": false,
+        "pushToPass": {
+          "enabled": false
+        },
+        "displayOrder": [
+          "position",
+          "positionChange",
+          "carNumber",
+          "carManufacturer",
+          "driverName",
+          "badge",
+          "iratingChange",
+          "gap",
+          "interval",
+          "fastestTime",
+          "lastTime",
+          "countryFlags",
+          "driverTag",
+          "compound",
+          "lapTimeDeltas",
+          "teamName",
+          "pitStatus",
+          "avgLapTime",
+          "pushToPass"
+        ],
+        "driverTag": {
+          "enabled": false
+        },
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "stylingOptions": {
+          "badge": false,
+          "statusBadges": false,
+          "driverPosition": {
+            "background": false
+          },
+          "driverNumber": {
+            "background": false,
+            "border": true,
+            "borderWidth": 2,
+            "backgroundOpacity": 15
+          },
+          "flagContour": {
+            "enabled": false,
+            "borderWidth": 5
+          }
+        },
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 50,
+          "blur": 10,
+          "saturation": 100,
+          "cornerRadius": 15,
+          "accentColor": "#ff0059",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 20,
+          "playerRowOpacity": 20,
+          "shadowStrength": 35,
+          "sheen": false,
+          "fontFamily": "space-grotesk",
+          "sizeTier": "default",
+          "fontScale": 125,
+          "playerBarWidth": 2,
+          "playerBarGlow": 5,
+          "textColor": "#ffffff",
+          "textSecondaryColor": "#ffffff",
+          "showHeader": false,
+          "headerAlign": "left",
+          "headerBarHeight": 30,
+          "headerBarFontScale": 110,
+          "footerBarHeight": 20,
+          "footerBarFontScale": 75,
+          "positionWidth": 35,
+          "deltaWidth": 36,
+          "rowFill": true,
+          "headerTitle": "STANDINGS",
+          "rowHeight": 30,
+          "rowPaddingX": 10,
+          "badgeScale": 120,
+          "lapTimeColor": "#ffffff",
+          "intervalColor": "#ffffff",
+          "driverNameWidth": 220
+        },
+        "teamName": {
+          "enabled": false
+        },
+        "classHeaderStyle": {
+          "className": {
+            "colorBackground": false
+          },
+          "classInfo": {
+            "colorBackground": false
+          },
+          "classDivider": {
+            "bottomBorder": true
+          }
+        },
+        "browserPosition": {
+          "x": 20,
+          "y": 20,
+          "width": 835,
+          "height": 60
+        }
+      }
+    },
+    {
+      "id": "flag",
+      "enabled": true,
+      "layout": {
+        "x": 1695,
+        "y": 55,
+        "width": 156,
+        "height": 126
+      },
+      "config": {
+        "enabled": true,
+        "showOnlyWhenOnTrack": true,
+        "showLabel": false,
+        "animate": true,
+        "blinkPeriod": 0.5,
+        "matrixMode": "8x8",
+        "showNoFlagState": false,
+        "enableGlow": true,
+        "doubleFlag": false,
+        "background": {
+          "opacity": 100
+        },
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "browserPosition": {
+          "x": 50,
+          "y": 50,
+          "width": 156,
+          "height": 126
+        }
+      }
+    },
+    {
+      "id": "input",
+      "enabled": false,
+      "layout": {
+        "x": 10,
+        "y": 1043,
+        "width": 536,
+        "height": 74
+      },
+      "config": {
+        "useRawValues": false,
+        "trace": {
+          "enabled": true,
+          "includeThrottle": true,
+          "includeBrake": true,
+          "includeAbs": true,
+          "includeSteer": true,
+          "includeClutch": true,
+          "strokeWidth": 2,
+          "maxSamples": 400
+        },
+        "bar": {
+          "enabled": true,
+          "includeClutch": true,
+          "includeBrake": true,
+          "includeThrottle": true,
+          "includeAbs": true
+        },
+        "gear": {
+          "enabled": true,
+          "size": 100,
+          "showspeed": true,
+          "showspeedunit": true,
+          "unit": "km/h",
+          "swapSpeedUnit": true
+        },
+        "abs": {
+          "enabled": false
+        },
+        "steer": {
+          "enabled": false,
+          "config": {
+            "style": "lmp",
+            "color": "light"
+          }
+        },
+        "background": {
+          "opacity": 100
+        },
+        "showOnlyWhenOnTrack": true,
+        "displayOrder": [
+          "trace",
+          "bar",
+          "gear",
+          "steer"
+        ],
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "tachometer",
+      "enabled": false,
+      "layout": {
+        "x": 622,
+        "y": 864,
+        "width": 496,
+        "height": 50
+      },
+      "config": {
+        "showRpmText": false,
+        "rpmOrientation": "horizontal",
+        "oilTemp": {
+          "enabled": true,
+          "position": "top",
+          "edgeOffset": 0
+        },
+        "waterTemp": {
+          "enabled": true,
+          "position": "top",
+          "edgeOffset": 0
+        },
+        "tempLayout": {
+          "swapSides": false
+        },
+        "shiftPointSettings": {
+          "enabled": false,
+          "indicatorType": "glow",
+          "indicatorColor": "#00ff00",
+          "carConfigs": {}
+        },
+        "background": {
+          "opacity": 80
+        },
+        "showOnlyWhenOnTrack": true,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "relative",
+      "enabled": true,
+      "layout": {
+        "x": 10,
+        "y": 1122,
+        "width": 497,
+        "height": 308
+      },
+      "config": {
+        "buffer": 3,
+        "useLivePosition": true,
+        "background": {
+          "opacity": 100
+        },
+        "foreground": {
+          "opacity": 80
+        },
+        "position": {
+          "enabled": true
+        },
+        "carNumber": {
+          "enabled": true
+        },
+        "countryFlags": {
+          "enabled": false
+        },
+        "driverName": {
+          "enabled": true,
+          "showStatusBadges": true,
+          "removeNumbersFromName": true,
+          "nameFormat": "name-surname"
+        },
+        "pitStatus": {
+          "enabled": false,
+          "showPitTime": false,
+          "showPitCount": false,
+          "pitLapDisplayMode": "lastPitLap"
+        },
+        "carManufacturer": {
+          "enabled": true,
+          "hideIfSingleMake": false,
+          "scale": 120
+        },
+        "radio": {
+          "persistenceSeconds": 3
+        },
+        "badge": {
+          "enabled": true,
+          "badgeFormat": "license-color-rating-bw-no-license"
+        },
+        "iratingChange": {
+          "enabled": false
+        },
+        "positionChange": {
+          "enabled": false
+        },
+        "delta": {
+          "enabled": true,
+          "precision": 1
+        },
+        "fastestTime": {
+          "enabled": false,
+          "timeFormat": "full"
+        },
+        "lastTime": {
+          "enabled": false,
+          "timeFormat": "full"
+        },
+        "compound": {
+          "enabled": false
+        },
+        "lapTimeDeltas": {
+          "enabled": false,
+          "numLaps": 3,
+          "decimalPlaces": 1
+        },
+        "pushToPass": {
+          "enabled": false
+        },
+        "displayOrder": [
+          "position",
+          "carNumber",
+          "countryFlags",
+          "carManufacturer",
+          "driverName",
+          "badge",
+          "iratingChange",
+          "positionChange",
+          "delta",
+          "driverTag",
+          "teamName",
+          "pitStatus",
+          "fastestTime",
+          "lastTime",
+          "compound",
+          "lapTimeDeltas",
+          "pushToPass"
+        ],
+        "driverTag": {
+          "enabled": false
+        },
+        "titleBar": {
+          "enabled": false,
+          "progressBar": {
+            "enabled": true
+          }
+        },
+        "headerBar": {
+          "enabled": true,
+          "sessionName": {
+            "enabled": false
+          },
+          "sessionTime": {
+            "enabled": false,
+            "mode": "Remaining"
+          },
+          "sessionLaps": {
+            "enabled": false,
+            "mode": "Elapsed"
+          },
+          "incidentCount": {
+            "enabled": true
+          },
+          "brakeBias": {
+            "enabled": false
+          },
+          "localTime": {
+            "enabled": false
+          },
+          "sessionClockTime": {
+            "enabled": true
+          },
+          "trackWetness": {
+            "enabled": false
+          },
+          "precipitation": {
+            "enabled": false
+          },
+          "airTemperature": {
+            "enabled": true,
+            "unit": "Metric"
+          },
+          "trackTemperature": {
+            "enabled": true,
+            "unit": "Metric"
+          },
+          "wind": {
+            "enabled": true
+          },
+          "trackName": {
+            "enabled": false
+          },
+          "displayOrder": [
+            "airTemperature",
+            "trackTemperature",
+            "brakeBias",
+            "sessionName",
+            "sessionLaps",
+            "wind",
+            "incidentCount",
+            "sessionTime",
+            "localTime",
+            "sessionClockTime",
+            "trackWetness",
+            "precipitation",
+            "trackName"
+          ],
+          "barBackground": {
+            "enabled": false
+          }
+        },
+        "footerBar": {
+          "enabled": true,
+          "sessionName": {
+            "enabled": false
+          },
+          "sessionTime": {
+            "enabled": true,
+            "mode": "Remaining"
+          },
+          "sessionLaps": {
+            "enabled": true
+          },
+          "incidentCount": {
+            "enabled": false
+          },
+          "brakeBias": {
+            "enabled": false
+          },
+          "localTime": {
+            "enabled": false
+          },
+          "sessionClockTime": {
+            "enabled": false
+          },
+          "trackWetness": {
+            "enabled": false
+          },
+          "precipitation": {
+            "enabled": false
+          },
+          "airTemperature": {
+            "enabled": false,
+            "unit": "Metric"
+          },
+          "trackTemperature": {
+            "enabled": false,
+            "unit": "Metric"
+          },
+          "wind": {
+            "enabled": false
+          },
+          "trackName": {
+            "enabled": false
+          },
+          "displayOrder": [
+            "sessionName",
+            "sessionLaps",
+            "sessionTime",
+            "incidentCount",
+            "brakeBias",
+            "localTime",
+            "sessionClockTime",
+            "trackWetness",
+            "precipitation",
+            "airTemperature",
+            "trackTemperature",
+            "wind",
+            "trackName"
+          ],
+          "barBackground": {
+            "enabled": false
+          }
+        },
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "stylingOptions": {
+          "badge": false,
+          "statusBadges": false,
+          "driverPosition": {
+            "background": false
+          },
+          "driverNumber": {
+            "background": true,
+            "border": true,
+            "borderWidth": 5,
+            "backgroundOpacity": 15
+          },
+          "flagContour": {
+            "enabled": false,
+            "borderWidth": 5
+          }
+        },
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 70,
+          "blur": 10,
+          "saturation": 100,
+          "cornerRadius": 15,
+          "accentColor": "#ff0066",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 10,
+          "playerRowOpacity": 10,
+          "shadowStrength": 25,
+          "sheen": false,
+          "fontFamily": "space-grotesk",
+          "sizeTier": "default",
+          "fontScale": 125,
+          "playerBarWidth": 3,
+          "playerBarGlow": 24,
+          "textColor": "#ffffff",
+          "textSecondaryColor": "#ffffff",
+          "showHeader": false,
+          "headerAlign": "left",
+          "headerBarHeight": 20,
+          "headerBarFontScale": 105,
+          "footerBarHeight": 20,
+          "footerBarFontScale": 105,
+          "positionWidth": 50,
+          "deltaWidth": 60,
+          "headerTitle": "RELATIVE",
+          "rowHeight": 34,
+          "rowPaddingX": 10,
+          "lapTimeColor": "#ffffff",
+          "intervalColor": "#ffffff",
+          "gapColor": "#ffffff",
+          "badgeScale": 110,
+          "rowFill": true,
+          "deltaScale": 100,
+          "driverNameWidth": 190
+        },
+        "teamName": {
+          "enabled": false
+        },
+        "browserPosition": {
+          "x": 80,
+          "y": 80,
+          "width": 536,
+          "height": 313
+        }
+      }
+    },
+    {
+      "id": "map",
+      "enabled": false,
+      "layout": {
+        "x": 1860,
+        "y": 10,
+        "width": 431,
+        "height": 242
+      },
+      "config": {
+        "turnLabels": {
+          "enabled": true,
+          "labelType": "numbers",
+          "highContrast": true,
+          "labelFontSize": 175
+        },
+        "showCarNumbers": true,
+        "invertTrackColors": true,
+        "driverCircleSize": 40,
+        "playerCircleSize": 40,
+        "trackmapFontSize": 100,
+        "trackLineWidth": 35,
+        "trackOutlineWidth": 40,
+        "useHighlightColor": false,
+        "invertLeaderColor": false,
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "styling": {
+          "isMinimalTrack": false,
+          "isMinimalCar": false
+        },
+        "sectorColoring": {
+          "enabled": true
+        },
+        "playerIcon": {
+          "enabled": false,
+          "fileName": ""
+        },
+        "displayMode": "carNumber"
+      }
+    },
+    {
+      "id": "flatmap",
+      "enabled": false,
+      "layout": {
+        "x": 622,
+        "y": 700,
+        "width": 800,
+        "height": 150
+      },
+      "config": {
+        "showCarNumbers": true,
+        "displayMode": "carNumber",
+        "driverCircleSize": 40,
+        "playerCircleSize": 40,
+        "trackmapFontSize": 100,
+        "trackLineWidth": 20,
+        "trackOutlineWidth": 40,
+        "invertTrackColors": false,
+        "useHighlightColor": false,
+        "invertLeaderColor": false,
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "weather",
+      "enabled": true,
+      "layout": {
+        "x": 2300,
+        "y": 135,
+        "width": 250,
+        "height": 299
+      },
+      "config": {
+        "background": {
+          "opacity": 80
+        },
+        "layout": "vertical",
+        "horizontalMode": "compact",
+        "units": "Metric",
+        "displayOrder": [
+          "trackTemp",
+          "airTemp",
+          "wind",
+          "humidity",
+          "precipitation",
+          "wetness",
+          "trackState"
+        ],
+        "airTemp": {
+          "enabled": false
+        },
+        "trackTemp": {
+          "enabled": false
+        },
+        "wetness": {
+          "enabled": true
+        },
+        "trackState": {
+          "enabled": true
+        },
+        "humidity": {
+          "enabled": true
+        },
+        "precipitation": {
+          "enabled": true
+        },
+        "wind": {
+          "enabled": false
+        },
+        "showOnlyWhenOnTrack": true,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 70,
+          "blur": 14,
+          "saturation": 120,
+          "cornerRadius": 15,
+          "accentColor": "#5EEAD4",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 5,
+          "playerRowOpacity": 8,
+          "shadowStrength": 30,
+          "sheen": true,
+          "fontFamily": "space-grotesk",
+          "rowHeight": 33,
+          "rowPaddingX": 14,
+          "fontScale": 100,
+          "positionWidth": 28,
+          "deltaWidth": 56,
+          "playerBarWidth": 3,
+          "playerBarGlow": 8,
+          "textColor": "#F5F7FA",
+          "textSecondaryColor": "#8F98A8",
+          "showHeader": false,
+          "headerAlign": "left"
+        },
+        "browserPosition": {
+          "x": 110,
+          "y": 110,
+          "width": 250,
+          "height": 299
+        }
+      }
+    },
+    {
+      "id": "wind",
+      "enabled": false,
+      "layout": {
+        "x": 1334,
+        "y": 471,
+        "width": 174,
+        "height": 200
+      },
+      "config": {
+        "background": {
+          "opacity": 80
+        },
+        "units": "auto",
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "fastercarsfrombehind",
+      "enabled": false,
+      "layout": {
+        "x": 588,
+        "y": 44,
+        "width": 405,
+        "height": 43
+      },
+      "config": {
+        "distanceThreshold": -1.5,
+        "onlyShowFasterClasses": true,
+        "showOnlyWhenOnTrack": false,
+        "numberDriversBehind": 3,
+        "alignDriverBoxes": "Top",
+        "closestDriverBox": "Top",
+        "showName": true,
+        "removeNumbersFromName": false,
+        "showDistance": true,
+        "showBadge": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": false,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "badgeFormat": "license-color-rating-bw"
+      }
+    },
+    {
+      "id": "fuel",
+      "enabled": true,
+      "layout": {
+        "x": -519,
+        "y": 1148,
+        "width": 481,
+        "height": 273
+      },
+      "config": {
+        "showOnlyWhenOnTrack": true,
+        "fuelUnits": "L",
+        "layout": "vertical",
+        "showConsumption": true,
+        "showFuelLevel": true,
+        "showLapsRemaining": true,
+        "showMin": false,
+        "showCurrentLap": true,
+        "showLastLap": true,
+        "show3LapAvg": false,
+        "show10LapAvg": true,
+        "showMax": true,
+        "showPitWindow": true,
+        "showEnduranceStrategy": true,
+        "showFuelScenarios": true,
+        "showFuelRequired": true,
+        "showQualifyConsumption": false,
+        "showFuelHistory": true,
+        "fuelHistoryType": "histogram",
+        "safetyMargin": 0,
+        "background": {
+          "opacity": 100
+        },
+        "fuelRequiredMode": "toFinish",
+        "enableTargetPitLap": false,
+        "targetPitLap": 15,
+        "targetPitLapBasis": "avg",
+        "enableStorage": true,
+        "enableLogging": true,
+        "showFuelStatusBorder": true,
+        "economyPredictMode": "live",
+        "useGeneralFontSize": true,
+        "useGeneralCompactMode": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "layoutConfig": [],
+        "layoutTree": {
+          "id": "box-1",
+          "type": "box",
+          "direction": "col",
+          "children": [
+            {
+              "id": "box-1",
+              "type": "box",
+              "direction": "col",
+              "widgets": [
+                "fuelHeader",
+                "fuelGauge",
+                "fuelGrid"
+              ]
+            }
+          ],
+          "widgets": [
+            "fuelGauge",
+            "fuelGrid",
+            "fuelTimeEmpty",
+            "fuelAtEnd"
+          ]
+        },
+        "consumptionGridOrder": [
+          "curr",
+          "last",
+          "qual",
+          "avg",
+          "max",
+          "min"
+        ],
+        "avgLapsCount": 5,
+        "fuelStatusThresholds": {
+          "green": 100,
+          "amber": 100,
+          "red": 10
+        },
+        "fuelStatusBasis": "avg",
+        "fuelStatusRedLaps": 3,
+        "widgetStyles": {
+          "fuelGraph": {
+            "height": 40,
+            "labelFontSize": 10,
+            "valueFontSize": 12,
+            "barFontSize": 6
+          },
+          "fuelHeader": {
+            "labelFontSize": 10,
+            "valueFontSize": 14
+          },
+          "fuelConfidence": {
+            "labelFontSize": 10,
+            "valueFontSize": 12
+          },
+          "fuelGauge": {
+            "labelFontSize": 10,
+            "valueFontSize": 12
+          },
+          "fuelTimeEmpty": {
+            "labelFontSize": 10,
+            "valueFontSize": 14
+          },
+          "fuelGrid": {
+            "labelFontSize": 10,
+            "valueFontSize": 12
+          },
+          "fuelScenarios": {
+            "labelFontSize": 10,
+            "valueFontSize": 12
+          },
+          "fuelTargetMessage": {
+            "labelFontSize": 10,
+            "valueFontSize": 12
+          },
+          "fuelEconomyPredict": {
+            "labelFontSize": 12,
+            "valueFontSize": 14
+          }
+        },
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 90,
+          "blur": 14,
+          "saturation": 120,
+          "cornerRadius": 15,
+          "accentColor": "#000000",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 5,
+          "playerRowOpacity": 8,
+          "shadowStrength": 30,
+          "sheen": true,
+          "fontFamily": "space-grotesk",
+          "rowHeight": 33,
+          "rowPaddingX": 14,
+          "fontScale": 100,
+          "positionWidth": 28,
+          "deltaWidth": 56,
+          "playerBarWidth": 3,
+          "playerBarGlow": 8,
+          "textColor": "#F5F7FA",
+          "textSecondaryColor": "#8F98A8",
+          "showHeader": false,
+          "headerAlign": "left"
+        },
+        "fontSizeMultiplier": 1.2,
+        "showFuelAtEndColumn": false,
+        "matchKappsRoundUp": true,
+        "updateOncePerLap": true,
+        "browserPosition": {
+          "x": 140,
+          "y": 140,
+          "width": 481,
+          "height": 224
+        }
+      }
+    },
+    {
+      "id": "blindspotmonitor",
+      "enabled": false,
+      "layout": {
+        "x": 378,
+        "y": 102,
+        "width": 800,
+        "height": 500
+      },
+      "config": {
+        "showOnlyWhenOnTrack": false,
+        "distAhead": 4.5,
+        "distBehind": 4.5,
+        "background": {
+          "opacity": 30
+        },
+        "width": 20,
+        "borderSize": 1,
+        "indicatorColor": 16096779,
+        "displayMode": "standard",
+        "simpleSize": 44,
+        "simpleVerticalPosition": 50,
+        "simpleShowCount": true,
+        "thresholdColorsEnabled": false,
+        "thresholdColor1": 16096779,
+        "thresholdColor2": 15680580,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "garagecover",
+      "enabled": false,
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 600,
+        "height": 540
+      },
+      "config": {
+        "imageFilename": "",
+        "hideOnDesktop": true
+      }
+    },
+    {
+      "id": "rejoin",
+      "enabled": false,
+      "layout": {
+        "x": 378,
+        "y": 102,
+        "width": 800,
+        "height": 500
+      },
+      "config": {
+        "showAtSpeed": 30,
+        "clearGap": 3.5,
+        "careGap": 2,
+        "stopGap": 1,
+        "width": 20,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": false,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "laptimelog",
+      "enabled": true,
+      "layout": {
+        "x": 2300,
+        "y": 10,
+        "width": 250,
+        "height": 158
+      },
+      "config": {
+        "scale": 110,
+        "alignment": "top",
+        "reverse": false,
+        "showCurrentLap": true,
+        "showPredictedLap": false,
+        "showLastLap": true,
+        "showBestLap": true,
+        "showAllTimeLap": false,
+        "delta": {
+          "enabled": true,
+          "method": "bestlap"
+        },
+        "history": {
+          "enabled": false,
+          "count": 10
+        },
+        "background": {
+          "opacity": 80
+        },
+        "foreground": {
+          "opacity": 80
+        },
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "showOnlyWhenOnTrack": true,
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 70,
+          "blur": 14,
+          "saturation": 120,
+          "cornerRadius": 15,
+          "accentColor": "#5EEAD4",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 5,
+          "playerRowOpacity": 8,
+          "shadowStrength": 20,
+          "sheen": true,
+          "fontFamily": "space-grotesk",
+          "rowHeight": 33,
+          "rowPaddingX": 14,
+          "fontScale": 100,
+          "positionWidth": 28,
+          "deltaWidth": 56,
+          "playerBarWidth": 3,
+          "playerBarGlow": 8,
+          "textColor": "#ffffff",
+          "textSecondaryColor": "#8F98A8",
+          "showHeader": false,
+          "headerAlign": "left"
+        },
+        "browserPosition": {
+          "x": 170,
+          "y": 170,
+          "width": 250,
+          "height": 158
+        }
+      }
+    },
+    {
+      "id": "slowcarahead",
+      "enabled": false,
+      "layout": {
+        "x": 300,
+        "y": 100,
+        "width": 450,
+        "height": 50
+      },
+      "config": {
+        "maxDistance": 250,
+        "slowSpeedThreshold": 50,
+        "stoppedSpeedThreshold": 5,
+        "barThickness": 10,
+        "showOnlyWhenOnTrack": true,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": false,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "telemetryinspector",
+      "enabled": false,
+      "layout": {
+        "x": 50,
+        "y": 50,
+        "width": 250,
+        "height": 200
+      },
+      "config": {
+        "background": {
+          "opacity": 80
+        },
+        "properties": [
+          {
+            "source": "telemetry",
+            "path": "Speed",
+            "label": "Speed"
+          },
+          {
+            "source": "telemetry",
+            "path": "SessionTime",
+            "label": "Session Time"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pitlanehelper",
+      "enabled": false,
+      "layout": {
+        "x": 100,
+        "y": 100,
+        "width": 150,
+        "height": 200
+      },
+      "config": {
+        "showMode": "approaching",
+        "approachDistance": 200,
+        "enablePitLimiterWarning": true,
+        "enableEarlyPitboxWarning": true,
+        "earlyPitboxThreshold": 75,
+        "showPitlaneTraffic": true,
+        "showPastPitBox": false,
+        "showSpeedSummary": true,
+        "showSpeedDelta": true,
+        "speedUnit": "auto",
+        "speedLimitStyle": "text",
+        "progressBarOrientation": "horizontal",
+        "speedBarOrientation": "horizontal",
+        "showProgressBar": true,
+        "showSpeedBar": true,
+        "showPitExitInputs": false,
+        "pitExitInputs": {
+          "throttle": true,
+          "clutch": false
+        },
+        "showInputsPhase": "atPitbox",
+        "background": {
+          "opacity": 80
+        },
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": false,
+          "openQualify": false,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "twitchchat",
+      "alwaysEnabled": true,
+      "enabled": false,
+      "layout": {
+        "x": 378,
+        "y": 102,
+        "width": 400,
+        "height": 500
+      },
+      "config": {
+        "fontSize": 16,
+        "channel": "",
+        "background": {
+          "opacity": 30
+        },
+        "autoHide": {
+          "enabled": false,
+          "intervalSeconds": 20
+        }
+      }
+    },
+    {
+      "id": "infobar",
+      "enabled": false,
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 60
+      },
+      "config": {
+        "enabled": true,
+        "sessionName": {
+          "enabled": true
+        },
+        "sessionTime": {
+          "enabled": true,
+          "mode": "Remaining",
+          "totalFormat": "minimal",
+          "labelStyle": "minimal"
+        },
+        "sessionLaps": {
+          "enabled": true,
+          "mode": "Elapsed"
+        },
+        "incidentCount": {
+          "enabled": true
+        },
+        "brakeBias": {
+          "enabled": false
+        },
+        "localTime": {
+          "enabled": true
+        },
+        "sessionClockTime": {
+          "enabled": false
+        },
+        "trackWetness": {
+          "enabled": false
+        },
+        "precipitation": {
+          "enabled": false
+        },
+        "airTemperature": {
+          "enabled": false,
+          "unit": "Metric"
+        },
+        "trackTemperature": {
+          "enabled": true,
+          "unit": "Metric"
+        },
+        "wind": {
+          "enabled": false,
+          "speedPosition": "right"
+        },
+        "trackName": {
+          "enabled": false
+        },
+        "background": {
+          "opacity": 80
+        },
+        "foreground": {
+          "opacity": 70
+        },
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "displayOrder": [
+          "sessionName",
+          "sessionTime",
+          "sessionLaps",
+          "incidentCount",
+          "brakeBias",
+          "localTime",
+          "sessionClockTime",
+          "trackWetness",
+          "precipitation",
+          "airTemperature",
+          "trackTemperature",
+          "wind",
+          "trackName"
+        ]
+      }
+    },
+    {
+      "id": "sectordelta",
+      "enabled": true,
+      "layout": {
+        "x": 1053,
+        "y": 182,
+        "width": 455,
+        "height": 63
+      },
+      "config": {
+        "background": {
+          "opacity": 0
+        },
+        "timeFormat": "seconds-full",
+        "ghostComparison": "session-best-only",
+        "trackIncidentSectors": true,
+        "alwaysScroll": false,
+        "maxSectorsShown": null,
+        "thresholds": null,
+        "showOnlyWhenOnTrack": true,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "browserPosition": {
+          "x": 200,
+          "y": 200,
+          "width": 455,
+          "height": 63
+        }
+      }
+    },
+    {
+      "id": "heartrate",
+      "alwaysEnabled": true,
+      "enabled": false,
+      "layout": {
+        "x": 300,
+        "y": 100,
+        "width": 230,
+        "height": 112
+      },
+      "config": {
+        "deviceId": "",
+        "widgetUrl": "",
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    },
+    {
+      "id": "cornername",
+      "enabled": true,
+      "layout": {
+        "x": 884,
+        "y": 56,
+        "width": 260,
+        "height": 80
+      },
+      "config": {
+        "showCornerNumber": true,
+        "showProgressBar": false,
+        "showTrackPct": false,
+        "showBackground": false,
+        "fontSize": 16,
+        "opacity": 0.2,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "appearance": {
+          "style": "liquid-glass",
+          "glassTint": "#000000",
+          "glassOpacity": 20,
+          "blur": 0,
+          "saturation": 100,
+          "cornerRadius": 10,
+          "accentColor": "#5EEAD4",
+          "aheadColor": "#7DD3FC",
+          "behindColor": "#FDBA74",
+          "rowSeparatorOpacity": 5,
+          "playerRowOpacity": 8,
+          "shadowStrength": 0,
+          "sheen": false,
+          "fontFamily": "space-grotesk",
+          "rowHeight": 33,
+          "rowPaddingX": 14,
+          "fontScale": 90,
+          "positionWidth": 28,
+          "deltaWidth": 56,
+          "playerBarWidth": 3,
+          "playerBarGlow": 8,
+          "textColor": "#F5F7FA",
+          "textSecondaryColor": "#8F98A8",
+          "showHeader": false,
+          "headerAlign": "left"
+        },
+        "browserPosition": {
+          "x": 230,
+          "y": 230,
+          "width": 260,
+          "height": 80
+        }
+      }
+    },
+    {
+      "id": "standingscompact",
+      "enabled": false,
+      "layout": {
+        "x": 10,
+        "y": 160,
+        "width": 620,
+        "height": 260
+      },
+      "config": {
+        "useLivePosition": true,
+        "iratingChange": {
+          "enabled": true
+        },
+        "positionChange": {
+          "enabled": true
+        },
+        "badge": {
+          "enabled": true,
+          "badgeFormat": "license-color-rating-bw"
+        },
+        "delta": {
+          "enabled": false
+        },
+        "gap": {
+          "enabled": true,
+          "decimalPlaces": 1
+        },
+        "interval": {
+          "enabled": true,
+          "decimalPlaces": 1
+        },
+        "lastTime": {
+          "enabled": true,
+          "timeFormat": "full"
+        },
+        "fastestTime": {
+          "enabled": false,
+          "timeFormat": "full"
+        },
+        "background": {
+          "opacity": 0
+        },
+        "countryFlags": {
+          "enabled": false
+        },
+        "carNumber": {
+          "enabled": true
+        },
+        "driverName": {
+          "enabled": true,
+          "showStatusBadges": false,
+          "removeNumbersFromName": false,
+          "nameFormat": "name-surname"
+        },
+        "pitStatus": {
+          "enabled": true,
+          "showPitTime": true,
+          "showPitCount": false,
+          "pitLapDisplayMode": "lastPitLap"
+        },
+        "position": {
+          "enabled": true
+        },
+        "compound": {
+          "enabled": false
+        },
+        "carManufacturer": {
+          "enabled": true,
+          "hideIfSingleMake": true
+        },
+        "radio": {
+          "persistenceSeconds": 3
+        },
+        "lapTimeDeltas": {
+          "enabled": false,
+          "numLaps": 3,
+          "decimalPlaces": 1
+        },
+        "avgLapTime": {
+          "enabled": false,
+          "numLaps": 5,
+          "timeFormat": "mixed"
+        },
+        "driverStandings": {
+          "buffer": 3,
+          "numNonClassDrivers": 3,
+          "minPlayerClassDrivers": 9,
+          "numTopDrivers": 5,
+          "topDriverDivider": "none",
+          "classSpacing": false,
+          "maxClasses": 3
+        },
+        "showOnlyWhenOnTrack": false,
+        "pushToPass": {
+          "enabled": false
+        },
+        "displayOrder": [],
+        "driverTag": {
+          "enabled": false
+        },
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        },
+        "compact": {
+          "size": "s",
+          "headerSize": "m",
+          "condensed": true,
+          "bgOpacity": 80,
+          "bgLightness": {
+            "header": 0,
+            "odd": 0,
+            "even": 10
+          },
+          "currentHue": 180,
+          "gainUp": "#52e052",
+          "gainDown": "#ff7f66",
+          "showHeaders": true,
+          "nameWidth": 110,
+          "textShadow": false
+        }
+      }
+    },
+    {
+      "id": "abs",
+      "enabled": false,
+      "layout": {
+        "x": 40,
+        "y": 24,
+        "width": 160,
+        "height": 115
+      },
+      "config": {
+        "showOnlyWhenOnTrack": false,
+        "sessionVisibility": {
+          "race": true,
+          "loneQualify": true,
+          "openQualify": true,
+          "practice": true,
+          "offlineTesting": true
+        }
+      }
+    }
+  ],
+  "generalSettings": {
+    "fontType": "lato",
+    "fontSize": "md",
+    "fontWeight": "normal",
+    "colorPalette": "black",
+    "showOnlyWhenOnTrack": true,
+    "highlightColor": 960745,
+    "skipTaskbar": true,
+    "disableHardwareAcceleration": false,
+    "enableAutoStart": true,
+    "startMinimized": true,
+    "closeToTray": true,
+    "compactMode": "off",
+    "overlayAlwaysOnTop": true,
+    "enableNetworkAccess": false,
+    "editMode": {
+      "pixelDistances": true,
+      "snapToGrid": true,
+      "contentScaleMode": "proportional"
+    },
+    "raceControl": {
+      "detectContact": true,
+      "maxIncidents": 500
+    }
+  }
+}
