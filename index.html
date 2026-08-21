@@ -515,7 +515,7 @@ p{margin:0}
 .rel-badge b{color:var(--brand-hi);font-weight:700}
 
 .hero-in{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px}
-.hero h1{max-width:16ch}
+.hero h1{max-width:20ch}
 .acc{
   color:var(--brand);
   background:linear-gradient(180deg,var(--brand-hi),var(--brand));
@@ -524,8 +524,9 @@ p{margin:0}
 }
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* rotating word in the hero H1 */
-.cyc{position:relative;display:inline-grid;overflow:hidden;vertical-align:bottom;height:1.04em;line-height:1.04}
+/* rotating word in the hero H1 — own centred line, so the widest word can't
+   leave a gap next to the static text when a short word is showing */
+.cyc{position:relative;display:grid;justify-items:center;overflow:hidden;height:1.04em;line-height:1.04}
 .cyc-w{
   grid-area:1/1;align-self:start;white-space:nowrap;
   opacity:0;transform:translateY(.5em);
@@ -1239,8 +1240,8 @@ body.is-booting{overflow:hidden}
   <div class="wrap hero-in">
     <span class="rel-badge">Релиз <b>22 августа</b></span>
     <span class="eyebrow">Windows · Глубокая кастомизация · Race Control</span>
-    <h1>iRacing — теперь показывает <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">позицию</span><span class="cyc-w acc">топливо</span><span class="cyc-w acc">трафик</span><span class="cyc-w acc">погоду</span><span class="cyc-w acc">инциденты</span></span><span class="sr-only">позицию</span></h1>
-    <p class="lead">Каждый оверлей — отдельное окно, настраиваемое под вас: позиция, размер, цвета, набор данных. Race Control ведёт живой журнал инцидентов сессии, чтобы вы не пропустили ни одного. Настройки сохраняются в профиль, которым можно поделиться.</p>
+    <h1>TU Overlays&nbsp;— больше <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">контроля</span><span class="cyc-w acc">информации</span><span class="cyc-w acc">темпа</span><span class="cyc-w acc">деталей</span></span><span class="sr-only">контроля</span></h1>
+    <p class="lead">TU Overlays превращает данные iRacing в понятные визуальные инструменты прямо поверх симулятора. А функция Race Control поможет найти и разобрать интересующие вас инциденты.</p>
     <div class="hero-actions">
       <a class="btn btn-primary btn-lg" href="#download">
         <span class="btn-content">
