@@ -1,0 +1,610 @@
+/* ============================================================================
+   TU OVERLAYS — HOME COMPOSITION
+   ----------------------------------------------------------------------------
+   Seven named archetypes. Every section on the landing page is exactly one of
+   them, so section #7 sits beside section #1 as a set instead of as a pile:
+
+     A  hero-deck    split hero: copy 5/12, instrument deck 7/12
+     B  card-grid    irregular 12-col grid — two 6-wide leads, then 4-wide cards
+     C  sticky-log   sticky rail 5/12 + hairline row stack 7/12
+     D  metric-rail  n tiles, hairline-separated, NO fill (the rule is the card)
+     E  plate-pair   asymmetric 7/5 media plates
+     F  ledger       full-width hairline accordion / spec sheet
+     G  terminal     boxed CTA, magenta top hairline, no glow
+
+   THE WEIRD MOVE (present exactly once per section, and nowhere else):
+   `.sect-fig` — the section's index set at display size in --elev-2 and pushed
+   left out of the text column, clipped by the viewport edge on narrow screens.
+   Everything else in the system stays inside the grid. This one thing does not.
+   ========================================================================== */
+
+/* ============================================================
+   section shell — one-sided rhythm: every section pays for its own top space
+   ============================================================ */
+.sect{position:relative;padding-top:var(--sect)}
+.sect > .wrap{position:relative}
+
+/* --- the weird move --------------------------------------------------------
+   The section index, set at display size, sitting behind its own heading and
+   pushed out past the left edge of the text column. On a narrow viewport the
+   page edge cuts it in half. Nothing else in this system leaves the grid. */
+.sect-fig{
+  position:absolute;left:0;top:-.34em;z-index:-1;pointer-events:none;user-select:none;
+  font-family:var(--f-display);font-weight:600;font-stretch:var(--wd-display);
+  font-size:clamp(4rem,6.5vw,8rem);line-height:.8;letter-spacing:-.06em;
+  color:var(--elev-2);
+  transform:translateX(calc(-1 * var(--pad) - .14em));
+}
+
+.sect-hd{position:relative;z-index:1;display:flex;flex-direction:column;gap:var(--s4);
+  margin-bottom:clamp(32px,3vw,56px);max-width:66ch}
+.sect-hd .lead{margin-top:2px}
+.sect-rule{margin-bottom:var(--s6)}
+
+/* ============================================================
+   A — HERO DECK
+   ============================================================ */
+.hero{position:relative;overflow:hidden;
+  padding-top:clamp(36px,3.4vw,68px);padding-bottom:clamp(44px,4vw,80px)}
+
+.hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-cam{position:absolute;inset:0}
+.hero-dim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none}
+
+/* --- the shot ---------------------------------------------------------------
+   Instrument Deck builds depth from contrast, not from imagery, so the
+   photograph is admitted as a *canvas* layer rather than as content: graded to
+   the canvas navy before it ever reaches the page, held under a scrim, and
+   ruled over by the same grid and track silhouette the rest of the system uses.
+   It is the only photograph on the site, and it stays underneath everything. */
+.hero-shot,.boot-shot{position:absolute;inset:0;display:block;overflow:hidden;
+  transform-origin:64% 56%}   /* pivots on the crop anchor, same in both layers */
+.hero-shot img,.boot-shot img{
+  width:100%;height:100%;display:block;object-fit:cover;object-position:64% 56%}
+.hero-shot{opacity:.86}
+
+/* The scrim does two jobs: it holds the headline and lead at AA over the one
+   bright area in frame (the monitor slab, right of centre), and it dissolves
+   the bottom of the photograph into the canvas so the hero has no photo edge. */
+.hero-scrim{position:absolute;inset:0;
+  background:
+    linear-gradient(97deg,
+      rgba(2,16,44,.93) 0%,  rgba(2,16,44,.86) 26%,
+      rgba(2,16,44,.52) 50%, rgba(2,16,44,.18) 74%, rgba(2,16,44,.40) 100%),
+    linear-gradient(180deg,
+      rgba(2,16,44,.62) 0%,  rgba(2,16,44,.10) 30%,
+      rgba(2,16,44,.26) 68%, var(--bg) 100%);
+}
+
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:76px 76px;
+  -webkit-mask-image:radial-gradient(120% 74% at 50% 6%,#000 6%,transparent 74%);
+  mask-image:radial-gradient(120% 74% at 50% 6%,#000 6%,transparent 74%);
+  opacity:.3;
+}
+/* ONE ambient wash. The old build had two blurred colour blobs; a system that
+   builds depth from contrast does not get to keep a second one. */
+.hero-wash{
+  position:absolute;left:50%;top:-320px;width:min(1100px,130vw);height:640px;
+  transform:translateX(-50%);border-radius:50%;filter:blur(100px);opacity:.34;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.42), rgba(255,0,102,0) 70%);
+}
+.hero-track{position:absolute;left:50%;top:20px;transform:translateX(-50%);width:min(1400px,150vw);opacity:.28}
+.hero-track use{fill:none;stroke:rgba(150,190,250,.15);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
+.hero-track use.t-hot{stroke:rgba(255,0,102,.5);stroke-width:1.6;stroke-dasharray:120 1560}
+
+.hero-in{position:relative;z-index:1;
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,2.6vw,52px);align-items:center}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s5)}
+.hero-copy h1{max-width:20ch}
+.hero-copy .lead{max-width:44ch}
+.hero-copy .eyebrow{font-size:var(--t-lbl-s);letter-spacing:.14em}
+.hero-actions{display:flex;gap:var(--s3);flex-wrap:wrap}
+
+.rel-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;
+  color:var(--tx-2);padding:6px 14px;border-radius:var(--r-pill);
+  background:var(--elev-1);border:1px solid var(--line-2);
+}
+.rel-badge b{color:var(--brand-hi);font-weight:700}
+
+.hero-meta{display:flex;gap:8px 20px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);
+  color:var(--tx-3);text-transform:uppercase}
+.hero-meta i{font-style:normal;color:var(--tx-4)}
+
+/* the rotating word owns its own centred line so a short word can never leave
+   a hole beside the static text */
+.cyc{position:relative;display:grid;justify-items:start;overflow:hidden;height:1.02em;line-height:1.02}
+.cyc-w{
+  grid-area:1/1;align-self:start;white-space:nowrap;
+  opacity:0;transform:translateY(.42em);
+  transition:transform var(--d-3) var(--e-enter),opacity var(--d-2) var(--e-state);
+}
+.cyc-w.is-on{opacity:1;transform:translateY(0)}
+.cyc-w.is-out{opacity:0;transform:translateY(-.42em)}
+
+/* --- the instrument deck: three real app windows, no invented chrome --- */
+.deck-wrap{display:flex;flex-direction:column;gap:var(--s3)}
+.deck{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s3);align-items:start}
+.deck-a{grid-column:1/-1}
+.deck-b{grid-column:1/span 3}
+.deck-c{grid-column:4/span 3}
+
+/* screenshots carry their own chrome — the site adds none */
+.w{position:relative;border-radius:var(--r-2);overflow:hidden}
+.w-shot{display:block;width:100%;height:auto;cursor:zoom-in}
+
+/* ============================================================
+   B — CARD GRID  (features · 8 cards, irregular by design)
+   ============================================================ */
+.fgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gut)}
+.fcard{
+  grid-column:span 4;overflow:hidden;
+  display:flex;flex-direction:column;gap:var(--s4);
+  padding:var(--s4) var(--s4) var(--s5);
+  transition:background var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state);
+}
+.fcard.is-lead{grid-column:span 6}
+.fcard:hover{background:var(--elev-2);border-color:var(--line-3)}
+/* the hover affordance is a hairline, not a lift: 200ms, left to right */
+.fcard::after{
+  content:'';position:absolute;left:0;right:0;top:0;height:1px;background:var(--brand);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform var(--d-2) var(--e-state);
+}
+.fcard:hover::after{transform:scaleX(1)}
+
+.fcard .mv{
+  position:relative;height:132px;border-radius:var(--r-1);overflow:hidden;
+  border:1px solid var(--line);background:var(--well);
+}
+.fcard.is-lead .mv{height:194px}
+/* absolute + inset, not grid place-items: percentage max-height silently
+   resolves to none against an auto-sized grid track, which is why the SVG
+   icon and the portrait screenshot used to fill the box edge-to-edge instead
+   of shrinking. inset gives every image the same deterministic margin. */
+.fcard .mv img{
+  position:absolute;inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);
+  object-fit:contain;cursor:zoom-in;
+}
+.fcard .mv img[src$=".svg"]{inset:26px;width:calc(100% - 52px);height:calc(100% - 52px)}
+.fcard .ft{display:flex;align-items:baseline;gap:10px}
+.fcard h3{color:var(--tx)}
+.fcard .idx{font-family:var(--f-mono);font-size:var(--t-lbl-s);color:var(--tx-4);
+  letter-spacing:.12em;margin-left:auto;flex:none}
+.fcard p{font-size:13.8px;line-height:1.55;color:var(--tx-2d);margin-top:8px}
+
+/* ============================================================
+   C — STICKY LOG  (race control: a log, presented as a log)
+   ============================================================ */
+.rc{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,3vw,60px);align-items:start}
+.rc-rail{position:sticky;top:104px;display:flex;flex-direction:column;gap:var(--s4)}
+.rc-rail .sect-hd{margin-bottom:0}
+.rc-count{
+  display:inline-flex;align-items:baseline;gap:6px;
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4);font-variant-numeric:tabular-nums;
+}
+.rc-count b{font-weight:400;color:var(--brand-hi);font-size:1.5em;letter-spacing:.04em}
+
+.rc-log{border-top:1px solid var(--line-2)}
+.rc-row{
+  position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:var(--s5);
+  padding:var(--s5) 0 var(--s5) var(--s4);border-bottom:1px solid var(--line);
+  transition:background var(--d-1) var(--e-state);
+}
+.rc-row::before{
+  content:'';position:absolute;left:0;top:-1px;bottom:-1px;width:2px;background:var(--brand);
+  transform:scaleY(0);transform-origin:top;
+  transition:transform var(--d-2) var(--e-state);
+}
+.rc-row:hover,.rc-row.is-now{background:var(--elev-1)}
+.rc-row:hover::before,.rc-row.is-now::before{transform:scaleY(1)}
+.rc-row .n{font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.14em;
+  color:var(--tx-4);padding-top:.34em;font-variant-numeric:tabular-nums}
+.rc-row h3{color:var(--tx)}
+.rc-row p{grid-column:2;margin-top:7px;font-size:14px;line-height:1.55;color:var(--tx-2d);max-width:56ch}
+
+/* ============================================================
+   D — METRIC RAIL  (the card is implied by the rule, never by a fill)
+   ============================================================ */
+.mrail{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line-2)}
+.mitem{
+  position:relative;display:flex;flex-direction:column;gap:var(--s3);
+  padding:var(--s5) var(--s5) var(--s6) 0;border-bottom:1px solid var(--line);
+}
+.mitem + .mitem{padding-left:var(--s5)}
+.mitem + .mitem::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--line)}
+.mitem .mk{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl-w);
+  line-height:1.35;min-height:2.7em;text-transform:uppercase;color:var(--tx-4)}
+.mitem .mv-num{
+  font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-size:var(--t-num);line-height:.94;letter-spacing:-.035em;color:var(--tx);
+}
+.mitem .mv-num u{text-decoration:none;color:var(--brand)}
+.mitem .mv-num small{font-size:.36em;letter-spacing:.06em;color:var(--tx-3);margin-left:5px;vertical-align:.55em}
+.mitem p{font-size:12.8px;line-height:1.5;color:var(--tx-2d);margin-top:auto;padding-top:var(--s2)}
+
+/* ============================================================
+   E — PLATE PAIR  (gallery)
+   ============================================================ */
+.gpair{display:grid;grid-template-columns:7fr 5fr;gap:var(--gut);align-items:start}
+.gcard{padding:0;overflow:hidden;text-align:left;width:100%;display:block;
+  transition:border-color var(--d-1) var(--e-state)}
+.gcard:hover{border-color:var(--line-3)}
+.frame{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--well);
+  border-bottom:1px solid var(--line)}
+.g-photo{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.gcap{display:flex;align-items:center;gap:var(--s3);padding:14px 16px}
+.gcap h3{font-size:15px}
+.gcap span{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4)}
+.gcap .zoom{margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--tx-3);
+  font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;transition:color var(--d-1) var(--e-state)}
+.gcap .zoom svg{transition:transform var(--d-2) var(--e-state)}
+.gcard:hover .zoom{color:var(--brand-hi)}
+.gcard:hover .zoom svg{transform:translate(2px,-2px)}
+
+/* the composed-screenshot scene, kept for the lightbox rig */
+.shot{position:absolute;top:0;left:0;width:960px;height:540px;transform-origin:0 0}
+.shot .w{position:absolute}
+
+/* ============================================================
+   quote pair (who it's for) — flat, top hairline, no fill
+   ============================================================ */
+.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gut) clamp(24px,4vw,64px);max-width:900px}
+.tcard{display:flex;flex-direction:column;gap:var(--s5);
+  padding:var(--s5) 0 var(--s2);border-top:1px solid var(--line-2)}
+.tcard .q{font-size:15.5px;line-height:1.6;color:var(--tx);text-wrap:pretty}
+.tcard .q::before{content:'';display:block;width:20px;height:2px;background:var(--brand);margin-bottom:var(--s4)}
+.tcard .who{display:flex;align-items:center;gap:11px;margin-top:auto}
+.av{width:32px;height:32px;border-radius:var(--r-1);flex:none;display:grid;place-items:center;
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.04em;color:var(--tx-2);
+  background:var(--elev-2);border:1px solid var(--line-2)}
+.who .n{font-size:13.5px;color:var(--tx);line-height:1.25}
+.who .rr{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4)}
+
+/* ============================================================
+   F — LEDGER  (faq + the 23-widget spec sheet)
+   ============================================================ */
+.faq{border-top:1px solid var(--line-2)}
+.qa{border-bottom:1px solid var(--line)}
+.qa-q{display:flex;align-items:center;gap:var(--s5);width:100%;text-align:left;padding:22px 4px;
+  font-family:var(--f-display);font-stretch:var(--wd-title);font-weight:600;
+  font-size:clamp(15px,1.25vw,17.5px);color:var(--tx);
+  transition:color var(--d-1) var(--e-state)}
+.qa-q:hover{color:var(--brand-hi)}
+.qa-q .qn{font-family:var(--f-mono);font-size:var(--t-lbl);color:var(--tx-4);
+  letter-spacing:.12em;flex:none;font-weight:400}
+.qa-q .qi{margin-left:auto;flex:none;width:20px;height:20px;position:relative}
+.qa-q .qi::before,.qa-q .qi::after{content:'';position:absolute;background:var(--tx-3);border-radius:2px;
+  transition:transform var(--d-2) var(--e-state),background var(--d-1) var(--e-state)}
+.qa-q .qi::before{left:0;right:0;top:9.25px;height:1.5px}
+.qa-q .qi::after{top:0;bottom:0;left:9.25px;width:1.5px}
+.qa.on .qi::after{transform:scaleY(0)}
+.qa.on .qi::before{background:var(--brand)}
+.qa-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--d-2) var(--e-state)}
+.qa.on .qa-a{grid-template-rows:1fr}
+.qa-a > div{overflow:hidden}
+.qa-a p{padding:0 46px 24px 36px;color:var(--tx-2);font-size:15px;line-height:1.6;max-width:78ch}
+
+.wlist{margin:0 46px 24px 36px;padding:0;list-style:none;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:0 var(--s7)}
+.wlist li{padding:9px 0;border-bottom:1px solid var(--line);
+  color:var(--tx-2d);font-size:14px;line-height:1.5}
+.wlist b{color:var(--tx);font-weight:600;
+  font-family:var(--f-display);font-stretch:var(--wd-title);letter-spacing:.004em}
+
+/* ============================================================
+   G — TERMINAL  (final CTA + release countdown)
+   ============================================================ */
+.cta{position:relative;overflow:hidden;border-radius:var(--r-3);
+  padding:clamp(40px,4.5vw,76px) var(--pad);text-align:center;
+  border:1px solid var(--line-2);background:var(--elev-1)}
+.cta::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:var(--brand)}
+.cta::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 100%;
+  -webkit-mask-image:radial-gradient(70% 100% at 50% 100%,#000,transparent 75%);
+  mask-image:radial-gradient(70% 100% at 50% 100%,#000,transparent 75%);opacity:.7}
+.cta > *{position:relative;z-index:1}
+.cta h2{max-width:18ch;margin-inline:auto}
+.cta .lead{margin:var(--s5) auto 0;text-align:center}
+.cta .eyebrow{margin-bottom:var(--s5)}
+.cta .hero-actions{margin-top:var(--s6);justify-content:center}
+.cta .hero-meta{margin-top:var(--s5);justify-content:center}
+
+.cddown{position:relative;overflow:hidden;padding:22px 26px;margin:var(--s1) auto var(--s6);
+  max-width:440px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  border-radius:var(--r-2);border:1px solid var(--line-2);background:var(--well)}
+.cddown-grid{display:flex;align-items:baseline;gap:6px}
+.cddown-cell{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:44px}
+.cddown-num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-size:clamp(1.5rem,2vw,2.1rem);font-weight:600;line-height:1;color:var(--tx);letter-spacing:-.02em}
+.cddown-lbl{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4)}
+.cddown-sep{font-family:var(--f-mono);font-size:clamp(1.1rem,1.5vw,1.6rem);color:var(--tx-4);transform:translateY(-6px)}
+.cddown-live{display:none;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-block:6px}
+.cddown-live-big{width:26px;height:26px}
+.cddown-live p{font-family:var(--f-display);font-stretch:var(--wd-title);font-weight:600;font-size:17px;color:var(--tx)}
+.cddown.is-live .cddown-grid{display:none}
+.cddown.is-live .cddown-live{display:flex}
+.cddown-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.cddown-confetti span{position:absolute;top:-8%;width:6px;height:11px;border-radius:1px;opacity:0;
+  animation-name:confettiBurst;animation-timing-function:var(--e-state);animation-fill-mode:forwards}
+@keyframes confettiBurst{0%{transform:translateY(-10px) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translateY(220px) rotate(360deg);opacity:0}}
+
+/* ============================================================
+   BOOT LOADER — the hero backdrop, held for one beat before the page arrives
+   ============================================================ */
+.boot{position:fixed;inset:0;z-index:200;background:var(--bg);overflow:hidden;
+  transition:opacity var(--d-3) var(--e-state)}
+.boot.is-done{opacity:0;pointer-events:none}
+body.is-booting{overflow:hidden}
+.boot-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.boot-shot{opacity:.6;animation:bootDrift 5s var(--e-state) both}
+@keyframes bootDrift{from{transform:scale(1.13)}to{transform:scale(1.10)}}
+/* Parked where .hero-wash lands once the header and ribbon are above it, so the
+   magenta does not jump at the cut — it is the same glow in both layers. */
+.boot-wash{position:absolute;left:50%;top:-260px;width:min(1100px,130vw);height:640px;
+  transform:translateX(-50%);border-radius:50%;filter:blur(100px);opacity:.3;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.42), rgba(255,0,102,0) 70%)}
+.boot-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:76px 76px;
+  -webkit-mask-image:radial-gradient(120% 68% at 50% 42%,#000 8%,transparent 72%);
+  mask-image:radial-gradient(120% 68% at 50% 42%,#000 8%,transparent 72%);
+  opacity:.28;
+}
+.boot-track{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:min(1400px,145vw);opacity:.2}
+.boot-track use{fill:none;stroke:rgba(150,190,250,.16);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
+.boot-track use.t-hot{stroke:rgba(255,0,102,.55);stroke-width:1.6;stroke-dasharray:120 1560}
+.boot-vignette{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(60% 55% at 50% 46%, transparent 0%, rgba(2,16,44,.55) 78%, var(--bg) 100%)}
+
+.boot-center{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 24px}
+.boot-wordmark{font-family:var(--f-display);font-weight:600;font-stretch:var(--wd-display);
+  letter-spacing:var(--tr-hero);line-height:1;margin:0;
+  font-size:clamp(2rem,3.4vw,3.2rem);color:var(--tx);
+  animation:enterUp var(--d-3) var(--e-enter) 80ms backwards}
+.boot-wordmark .boot-acc{
+  color:var(--brand);background:linear-gradient(180deg,var(--brand-hi),var(--brand));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.boot-hair{width:0;height:1px;background:var(--line-2);margin-top:2px;
+  animation:bootHair var(--d-3) var(--e-state) 260ms forwards}
+@keyframes bootHair{to{width:30px}}
+
+.boot-load{position:absolute;left:50%;bottom:clamp(34px,7vh,64px);transform:translateX(-50%);z-index:1;
+  width:min(460px,calc(100% - 48px));animation:bootLoadIn var(--d-3) var(--e-enter) 200ms backwards}
+@keyframes bootLoadIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.boot-load-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px;
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase}
+.boot-load-status{color:var(--tx-3)}
+.boot-load-pct{color:var(--tx);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.boot-load-track{position:relative;height:6px;border-radius:var(--r-pill);overflow:hidden;
+  background:var(--elev-1);border:1px solid var(--line-2)}
+.boot-load-fill{position:absolute;inset:0;border-radius:var(--r-pill);overflow:hidden;
+  background-image:repeating-linear-gradient(45deg, var(--brand) 0 6px, var(--brand-lo) 6px 12px);
+  animation:bootStripe .6s linear infinite;
+  clip-path:inset(0 100% 0 0);transition:clip-path var(--d-2) linear}
+@keyframes bootStripe{from{background-position:0 0}to{background-position:17px 0}}
+
+/* --- boot → hero handoff ----------------------------------------------------
+   Not a crossfade. The same photograph runs under both layers, so the boot's
+   slow push-in hands straight over to the hero's settle (1.10 → 1) and the eye
+   reads one continuous camera move instead of two screens. The wash sits at the
+   same viewport position in both, so the magenta never blinks. And the wordmark
+   is measured against the real headline at handoff time (js sets --boot-dx/dy/s)
+   and drifts most of the way toward it before it dissolves — so the hero's h1 is
+   what the wordmark turns into, rather than what replaces it.
+
+   This is the one place in the system that scales anything. It is a single
+   non-interactive page entrance, not a scroll-driven or hover effect, and it is
+   the only exception being made. */
+.boot{--boot-dx:0px;--boot-dy:0px;--boot-s:1}
+.boot-bg{transition:transform var(--d-3) var(--e-enter)}
+.boot.is-done .boot-bg{transform:translateY(-18px)}
+.boot-center{transition:opacity 260ms var(--e-state) 40ms}
+.boot.is-done .boot-center{opacity:0}
+.boot-wordmark{transform-origin:left top;transition:transform var(--d-3) var(--e-enter)}
+.boot.is-done .boot-wordmark{
+  transform:translate3d(var(--boot-dx),var(--boot-dy),0) scale(var(--boot-s))}
+.boot-load{transition:opacity var(--d-2) var(--e-state),transform var(--d-2) var(--e-state)}
+.boot.is-done .boot-load{opacity:0;transform:translateX(-50%) translateY(12px)}
+
+/* The hero shot is held at the boot's parked scale while the boot covers it, and
+   released the moment the boot is actually finished loading — never on a timer.
+   Both photographs run the SAME keyframe from the same instant, so during the
+   420ms dissolve the two layers are not two scales of one image cross-fading —
+   they are one image, moving. The dissolve ends first, and the last 140ms of the
+   settle plays on the hero alone. */
+@keyframes heroSettle{from{transform:scale(1.10)}to{transform:none}}
+body.is-booting .hero-shot{transform:scale(1.10)}
+.boot.is-done .boot-shot,
+body.is-ready .hero-shot{animation:heroSettle var(--d-4) var(--e-enter) both}
+
+/* ============================================================
+   entrances — one keyframe, one easing, four steps of 60ms
+   ============================================================ */
+@keyframes enterUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes dash{to{stroke-dashoffset:-1680}}
+.hero-copy > *{animation:enterUp var(--d-3) var(--e-enter) backwards}
+.hero-copy > *:nth-child(1){animation-delay:0ms}
+.hero-copy > *:nth-child(2){animation-delay:60ms}
+.hero-copy > *:nth-child(3){animation-delay:120ms}
+.hero-copy > *:nth-child(4){animation-delay:180ms}
+.hero-copy > *:nth-child(5){animation-delay:240ms}
+.deck-wrap{animation:enterUp var(--d-3) var(--e-enter) 180ms backwards}
+.hero-track .t-hot,.boot-track .t-hot{animation:dash 9s linear infinite}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-copy > *,.deck-wrap,.boot-wordmark,.boot-load,.boot-hair{animation:none}
+  .hero-track .t-hot,.boot-track .t-hot,.boot-load-fill{animation:none}
+  .boot-hair{width:30px}
+  /* the handoff collapses to a short cut: no push-in, no drift, no settle */
+  .boot-shot,.hero-shot,
+  .boot.is-done .boot-shot,body.is-ready .hero-shot{animation:none;transform:none}
+  body.is-booting .hero-shot{transform:none}
+  .boot-bg,.boot-center,.boot-wordmark,.boot-load{transition:none}
+  .boot.is-done .boot-bg,.boot.is-done .boot-wordmark{transform:none}
+  .boot.is-done .boot-load{transform:translateX(-50%)}  /* stays centred */
+  .boot{transition:opacity 120ms linear}
+}
+
+/* ============================================================
+   responsive — remember: layout width = media-query width / 1.5
+   ============================================================ */
+@media (max-width:1280px){
+  .fcard.is-lead{grid-column:span 6}
+  .wlist{gap:0 var(--s6)}
+}
+@media (max-width:1040px){
+  .hero-in{grid-template-columns:1fr;gap:var(--s7)}
+  /* single column: the copy now sits over the middle of the frame, so the crop
+     moves toward the rig and the scrim goes vertical to carry the text */
+  .hero-shot img,.boot-shot img{object-position:68% 60%}
+  .hero-shot,.boot-shot{transform-origin:68% 60%}
+  .hero-shot{opacity:.78}
+  .hero-copy{align-items:flex-start}
+  .hero-copy h1{max-width:18ch}
+  .rc{grid-template-columns:1fr;gap:var(--s6)}
+  .rc-rail{position:static}
+  .mrail{grid-template-columns:repeat(2,1fr)}
+  .mitem{padding-right:var(--s5)}
+  .mitem:nth-child(odd){padding-left:0}
+  .mitem:nth-child(even){padding-left:var(--s5)}
+  .mitem:nth-child(odd)::before{display:none}
+  .fcard,.fcard.is-lead{grid-column:span 6}
+  .gpair{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .sect-fig{font-size:clamp(3.4rem,9vw,5.5rem)}
+  .qgrid{grid-template-columns:1fr}
+  .qa-a p,.wlist{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
+  .qa-a p{padding-bottom:24px}
+  .wlist{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  /* Collapse the multi-track grids outright. Leaving 12 tracks in place means
+     11 column gaps (220px) still claim space the phone does not have, and the
+     grid overflows its own container even though every card spans 1/-1. */
+  .fgrid,.deck{grid-template-columns:1fr}
+  .deck-a,.deck-b,.deck-c{grid-column:auto}
+  /* Phone: the shot is cropped hard by cover, so it stops being a composition
+     and becomes texture. Pull the crop onto the rig, drop the layer further, and
+     swap the diagonal scrim for a vertical one — the copy runs down the middle
+     here, not down the left, and it is the copy the scrim exists to protect. */
+  .hero-shot img,.boot-shot img{object-position:72% 62%}
+  .hero-shot,.boot-shot{transform-origin:72% 62%}
+  .hero-shot{opacity:.62}
+  .hero-scrim{background:linear-gradient(180deg,
+    rgba(2,16,44,.90) 0%, rgba(2,16,44,.80) 42%,
+    rgba(2,16,44,.62) 74%, var(--bg) 100%)}
+  .fcard,.fcard.is-lead{grid-column:auto}
+  .gpair{grid-template-columns:1fr}
+  .mrail{grid-template-columns:1fr}
+  .mitem,.mitem + .mitem{padding-left:0;padding-right:0}
+  .mitem + .mitem::before{display:none}
+  .cta{border-radius:var(--r-2)}
+  /* the countdown row has to survive a 320px phone: cells share the width
+     instead of each demanding a 44px floor */
+  .cddown{padding:18px 14px}
+  .cddown-grid{width:100%;gap:2px}
+  .cddown-cell{min-width:0;flex:1}
+  .cddown-num{font-size:clamp(1.15rem,7vw,1.6rem)}
+  .cddown-sep{font-size:1rem;transform:translateY(-4px)}
+}
+
+/* ============================================================
+   BETA sticker — random variant per load (home pages only)
+   The one hand-drawn, off-system object on the page: sticker pinks and
+   mints that appear nowhere else, deliberately rotated off the grid.
+   ============================================================ */
+.beta{
+  --fs:9.5px;
+  position:absolute;right:-15px;bottom:-10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Arial Black','Segoe UI Black',Impact,sans-serif;
+  font-size:var(--fs);font-weight:900;line-height:1;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+  padding:calc(var(--fs)*.34) calc(var(--fs)*.56);
+  color:#2e1a3f;
+  filter:drop-shadow(0 calc(var(--fs)*.18) calc(var(--fs)*.42) rgba(0,0,0,.45));
+  pointer-events:none;user-select:none;z-index:2;
+}
+.beta .q{opacity:.55;font-weight:900}
+.beta .sub{
+  display:block;font-family:var(--f-text);font-weight:600;
+  font-size:calc(var(--fs)*.52);letter-spacing:.01em;text-transform:none;
+  opacity:.72;margin-top:calc(var(--fs)*.12);text-align:center;
+}
+.beta.stack{flex-direction:column;line-height:1}
+
+.beta.v1{
+  background:#ffc2d4;
+  border:max(1px,calc(var(--fs)*.14)) dashed #2e1a3f;
+  border-radius:calc(var(--fs)*.62) calc(var(--fs)*.5) calc(var(--fs)*.68) calc(var(--fs)*.46);
+  transform:rotate(-5deg);
+}
+.beta.v2{
+  background:#a9f0d9;color:#2b2f38;
+  border:max(2px,calc(var(--fs)*.22)) solid #fff;
+  border-radius:calc(var(--fs)*.58);
+  transform:rotate(7deg);
+}
+.beta.v2 .qm{color:var(--brand);margin-left:.1em}
+.beta.v3{
+  background:#ffc2d4;
+  border:max(1px,calc(var(--fs)*.13)) dashed #2e1a3f;
+  border-radius:calc(var(--fs)*.58) calc(var(--fs)*.48) calc(var(--fs)*.62) calc(var(--fs)*.5);
+  transform:rotate(-5deg);
+  padding:calc(var(--fs)*.3) calc(var(--fs)*.5) calc(var(--fs)*.34);
+}
+.beta.v4{
+  --cut:polygon(2% 14%,15% 3%,30% 10%,45% 2%,62% 9%,77% 2%,91% 11%,100% 24%,
+                97% 44%,100% 63%,95% 81%,99% 94%,84% 99%,69% 92%,53% 100%,
+                37% 93%,21% 100%,8% 95%,1% 81%,4% 59%,0% 39%);
+  --cut2:polygon(4% 10%,17% 1%,31% 8%,47% 0,60% 7%,79% 1%,93% 8%,99% 21%,
+                 95% 40%,99% 60%,97% 78%,100% 92%,86% 100%,71% 94%,55% 99%,
+                 39% 91%,23% 98%,10% 92%,3% 78%,6% 56%,1% 36%);
+  background:#2e1a3f;
+  clip-path:var(--cut);
+  padding:calc(var(--fs)*.4) calc(var(--fs)*.34);
+  border-radius:0;border:0;
+  transform:rotate(-5deg);
+}
+.beta.v4 .inner{
+  display:block;background:#a9f0d9;color:#2b2f38;
+  clip-path:var(--cut2);
+  padding:calc(var(--fs)*.4) calc(var(--fs)*.66);
+  font-family:var(--f-mono);font-weight:700;
+  font-size:calc(var(--fs)*.92);letter-spacing:.2em;
+}
+.beta.v5{
+  background:#ffa8c2;
+  border:max(1px,calc(var(--fs)*.15)) solid #2e1a3f;
+  border-radius:calc(var(--fs)*.6) calc(var(--fs)*.44) calc(var(--fs)*.66) calc(var(--fs)*.5);
+  transform:rotate(-5deg);
+}
+.beta.v5::after{
+  content:'';position:absolute;inset:calc(var(--fs)*-.3) calc(var(--fs)*-.26);
+  border:max(1px,calc(var(--fs)*.11)) dashed rgba(46,26,63,.55);
+  border-radius:calc(var(--fs)*.5) calc(var(--fs)*.7) calc(var(--fs)*.44) calc(var(--fs)*.72);
+  transform:rotate(2.5deg);
+}
+.beta.v6{
+  background:#a9f0d9;color:#2b2f38;
+  border:max(1px,calc(var(--fs)*.13)) dashed #2b2f38;
+  border-radius:calc(var(--fs)*.6) calc(var(--fs)*.46) calc(var(--fs)*.64) calc(var(--fs)*.48);
+  transform:rotate(7deg);
+  padding:calc(var(--fs)*.3) calc(var(--fs)*.5) calc(var(--fs)*.34);
+}

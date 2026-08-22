@@ -15,56 +15,26 @@
 <link rel="icon" type="image/png" sizes="512x512" href="img/favicon-512.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 
+<link rel="stylesheet" href="/css/tu-core.css">
 <style>
-:root{
-  --bg:        #02102c;
-  --glass:     rgba(8, 30, 68, .58);
-  --line:      rgba(124,162,224,.13);
-  --line-2:    rgba(124,162,224,.24);
-  --line-3:    rgba(124,162,224,.40);
-  --tx:        #e4ecfb;
-  --tx-2:      #9fb2d4;
-  --tx-2d:     #8ea3c8;
-  --tx-3:      #64789e;
-  --tx-4:      #4a5f86;
-  --brand:     #ff0066;
-  --brand-lo:  #c8004f;
-  --brand-hi:  #ff5f96;
-  --good:      #35e08d;
-  --bad:       #ff5577;
-  --warn:      #ffb02e;
-  --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
-  --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
-  --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
-  --maxw: 720px;
-  --r: 13px;
-  --r-sm: 9px;
-}
-*,*::before,*::after{box-sizing:border-box}
-html,body{max-width:100%;overflow-x:clip}
-body{
-  margin:0;background:var(--bg);color:var(--tx);
-  font-family:var(--f-text);font-size:15.5px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding:clamp(20px,5vw,40px)}
-h1{font-family:var(--f-display);font-weight:600;font-stretch:88%;font-size:clamp(1.5rem,4vw,2rem);letter-spacing:-.02em;margin:0}
-h2{font-family:var(--f-display);font-weight:600;font-stretch:90%;font-size:16.5px;letter-spacing:-.005em;margin:0}
-p{margin:0}
+/* admin is a tool page, not a marketing surface: it opts out of the site-wide
+   1.5x zoom so forms stay at native size, and inherits everything else. */
+html{zoom:1}
+:root{--maxw:720px;--bad:#ff5577}
+body{font-size:15.5px;line-height:1.55}
+.wrap{padding:clamp(20px,5vw,40px)}
+h1{font-size:clamp(1.5rem,4vw,2rem)}
+h2{font-size:16.5px}
 a{color:var(--brand-hi)}
-button{font:inherit;cursor:pointer}
 input{font:inherit}
 
-.hdr{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+/* .hdr is reused here for small in-panel flex rows, not the site banner —
+   reset core's sticky positioning so panel headers don't stick to the viewport */
+.hdr{position:static;display:flex;align-items:center;gap:14px;margin-bottom:28px}
 .hdr a.back{color:var(--tx-3);font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-left:auto}
 .hdr a.back:hover{color:var(--tx)}
 
-.panel{
-  border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,0) 42%),var(--glass);
-  border:1px solid var(--line);
-  padding:22px;margin-bottom:18px;
-}
+.panel{padding:22px;margin-bottom:18px}
 .panel h2{margin-bottom:4px}
 .panel .hint{color:var(--tx-3);font-size:13px;line-height:1.55;margin-top:6px}
 .panel .hint a{color:var(--tx-2)}
@@ -74,22 +44,16 @@ input{font:inherit}
 .row input{flex:1 1 160px}
 
 input[type="text"],input[type="password"],input[type="url"]{
-  width:100%;padding:10px 12px;border-radius:8px;
-  border:1px solid var(--line-2);background:#051a3f;color:var(--tx);
+  width:100%;padding:10px 12px;border-radius:var(--r-1);
+  border:1px solid var(--line-2);background:var(--well);color:var(--tx);
   outline:none;
 }
 input:focus{border-color:var(--brand)}
 
-.btn{
-  padding:10px 16px;border-radius:8px;border:1px solid var(--line-2);
-  background:rgba(255,255,255,.03);color:var(--tx);font-weight:600;font-size:14px;
-  white-space:nowrap;transition:border-color .2s,background .2s;
-}
-.btn:hover{border-color:var(--line-3);background:rgba(255,255,255,.06)}
+.btn{--bh:40px;font-family:var(--f-text);font-weight:600;font-size:14px}
+.btn:not(.btn-primary){border:1px solid var(--line-2);background:transparent;color:var(--tx)}
+.btn:not(.btn-primary):hover{border-color:var(--line-3);background:var(--elev-1)}
 .btn:disabled{opacity:.5;cursor:default}
-.btn-primary{border:none;color:#fff;background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo))}
-.btn-primary:hover{opacity:.92;background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo))}
-.btn-ghost{background:none}
 
 .status{font-family:var(--f-mono);font-size:12.5px;margin-top:12px;min-height:1em}
 .status.ok{color:var(--good)}
@@ -102,8 +66,8 @@ input:focus{border-color:var(--brand)}
 .list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
 .list-empty{color:var(--tx-3);font-size:13.5px;padding:8px 2px}
 .item{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;
-  border:1px solid var(--line-2);background:rgba(255,255,255,.02);
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-1);
+  border:1px solid var(--line-2);background:var(--elev-1);
 }
 .item .name{font-family:var(--f-display);font-weight:600;font-stretch:92%;font-size:14.5px}
 .item .tier{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-hi);border:1px solid rgba(255,0,102,.35);border-radius:999px;padding:2px 7px}

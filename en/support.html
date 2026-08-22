@@ -21,147 +21,38 @@
 <link rel="icon" type="image/png" sizes="512x512" href="../img/favicon-512.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 
+<link rel="stylesheet" href="/css/tu-core.css">
 <style>
-:root{
-  --bg:        #02102c;
-  --bg-sub:    #010b1f;
-  --glass:     rgba(8, 30, 68, .58);
-
-  --line:      rgba(124,162,224,.13);
-  --line-2:    rgba(124,162,224,.24);
-  --line-3:    rgba(124,162,224,.40);
-
-  --tx:        #e4ecfb;
-  --tx-2:      #9fb2d4;
-  --tx-2d:     #8ea3c8;
-  --tx-3:      #64789e;
-  --tx-4:      #4a5f86;
-
-  --brand:     #ff0066;
-  --brand-lo:  #c8004f;
-  --brand-hi:  #ff5f96;
-  --data:      #3fd8e0;
-  --good:      #35e08d;
-  --warn:      #ffb02e;
-
-  --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
-  --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
-  --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
-
-  --maxw: 980px;
-  --r-sm: 8px;
-  --r:    13px;
-  --r-lg: 20px;
-  --pad: clamp(20px, 5vw, 40px);
-}
-*,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;zoom:1.5}
-html,body{max-width:100%;overflow-x:clip}
-body{
-  margin:0;background:var(--bg);color:var(--tx);
-  font-family:var(--f-text);font-size:16px;line-height:1.62;letter-spacing:.005em;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-}
-img,svg{max-width:100%;display:block}
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-::selection{background:rgba(255,0,102,.32);color:#fff}
-:focus-visible{outline:2px solid var(--data);outline-offset:3px;border-radius:4px}
-
-.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
-
-h1,h2,h3{font-family:var(--f-display);font-weight:600;font-stretch:88%;letter-spacing:-.02em;line-height:1.05;margin:0;text-wrap:balance}
-h1{font-size:clamp(2.1rem,5.6vw,3.4rem);letter-spacing:-.024em}
-h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
-h3{font-size:17px;font-stretch:92%;letter-spacing:.004em;color:var(--tx)}
-p{margin:0}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
-.acc{
-  color:var(--brand);
-  background:linear-gradient(180deg,var(--brand-hi),var(--brand));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  text-shadow:0 0 46px rgba(255,0,102,.42);
-}
-.lead{color:var(--tx-2);font-size:clamp(1rem,1.5vw,1.1rem);max-width:60ch;text-wrap:pretty}
-
-.eyebrow{
-  display:inline-flex;align-items:center;gap:10px;
-  font-family:var(--f-mono);font-size:11px;line-height:1;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-3);
-}
-.eyebrow::before{content:'';width:22px;height:1px;background:var(--brand);flex:none;box-shadow:0 0 9px rgba(255,0,102,.85)}
-
-/* ---------- buttons ---------- */
-.btn{
-  --bh:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  height:var(--bh);padding:0 20px;border-radius:10px;
-  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
-  letter-spacing:.005em;white-space:nowrap;
-  transition:transform .18s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s, box-shadow .28s;
-}
-.btn svg{flex:none}
-.btn-primary{
-  color:#fff;background:linear-gradient(175deg,var(--brand-hi),var(--brand) 42%,var(--brand-lo));
-  box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 6px 24px -8px rgba(255,0,102,.7);
-}
-.btn-primary:hover{transform:translateY(-1px)}
-.btn-primary:active{transform:translateY(0)}
-.btn-ghost{
-  color:var(--tx);border:1px solid var(--line-2);background:rgba(255,255,255,.015);
-  backdrop-filter:blur(8px);
-}
-.btn-ghost:hover{border-color:var(--line-3);background:rgba(255,255,255,.045);transform:translateY(-1px)}
-.btn-lg{--bh:50px;padding:0 24px;font-size:15.5px;width:100%}
-@media (max-width:430px){.btn{white-space:normal;text-align:center;line-height:1.2}}
-
-/* ---------- glass panel + corner brackets ---------- */
-.panel{
-  position:relative;border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,0) 42%),var(--glass);
-  border:1px solid var(--line);
-  backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
-  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 24px 50px -28px rgba(0,4,16,.95);
-}
-.brk::before,.brk::after{
-  content:'';position:absolute;width:11px;height:11px;pointer-events:none;
-  border-color:var(--line-3);border-style:solid;border-width:0;
-  transition:width .3s cubic-bezier(.2,.7,.3,1),height .3s cubic-bezier(.2,.7,.3,1),border-color .3s;
-}
-.brk::before{top:-1px;left:-1px;border-top-width:1px;border-left-width:1px;border-radius:var(--r) 0 0 0}
-.brk::after{bottom:-1px;right:-1px;border-bottom-width:1px;border-right-width:1px;border-radius:0 0 var(--r) 0}
-.brk:hover::before,.brk:hover::after{width:26px;height:26px;border-color:var(--brand)}
-
+/* page container is narrower than the landing page; everything else is inherited */
+:root{--maxw:980px}
 /* ---------- header ---------- */
-.hdr{padding-block:18px;border-bottom:1px solid var(--line)}
+/* these pages don't run the scroll-driven .stuck toggle from js/tu-home.js,
+   so a sticky transparent header (core's default) would let scrolled content
+   show through underneath it. Keep it in normal flow instead. */
+.hdr{position:static;padding-block:18px;border-bottom:1px solid var(--line)}
 .hdr-in{display:flex;align-items:center;gap:14px}
-.logo{display:flex;align-items:center;gap:11px}
-.logo-mk{width:26px;height:auto;display:block}
-.logo-tx{font-family:var(--f-display);font-stretch:86%;font-weight:600;font-size:16.5px}
-.logo-tx b{color:var(--tx)}
-.logo-tx span{color:var(--tx-3);font-weight:400}
 .hdr-back{margin-left:auto;display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
-  transition:color .2s}
+  font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  transition:color var(--d-1)}
 .hdr-back:hover{color:var(--tx)}
 .lang-switch{display:flex;align-items:center;gap:2px;padding:3px;
-  border:1px solid var(--line-2);border-radius:8px;flex:none}
-.lang-switch a{padding:4px 9px;border-radius:6px;font-family:var(--f-mono);font-size:11px;
-  letter-spacing:.06em;color:var(--tx-3);transition:color .18s,background .18s}
+  border:1px solid var(--line-2);border-radius:var(--r-1);flex:none}
+.lang-switch a{padding:4px 9px;border-radius:var(--r-1);font-family:var(--f-mono);font-size:var(--t-lbl);
+  letter-spacing:.06em;color:var(--tx-3);transition:color var(--d-1),background var(--d-1)}
 .lang-switch a:hover{color:var(--tx)}
 .lang-switch a.on{color:var(--tx);background:rgba(255,255,255,.07)}
 
 /* ---------- hero ---------- */
 .stage{position:relative;overflow:hidden;padding-block:clamp(52px,8vw,88px) clamp(26px,4vw,38px)}
-.glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+.glow{position:absolute;border-radius:50%;filter:blur(100px);opacity:.34;pointer-events:none}
 .glow-a{width:min(900px,120vw);height:480px;left:50%;top:-220px;transform:translateX(-50%);
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
-.glow-b{width:min(600px,90vw);height:380px;right:-10%;top:60px;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(63,216,224,.14), rgba(63,216,224,0) 70%)}
 .stage-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;max-width:64ch}
 
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 0;padding:0;list-style:none}
 .fact{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
   border:1px solid var(--line-2);background:rgba(255,255,255,.02);
-  font-size:12.5px;line-height:1.3;color:var(--tx-2d)}
+  font-size:var(--t-xs);line-height:1.3;color:var(--tx-2d)}
 .fact svg{flex:none;color:var(--good)}
 
 /* ---------- section headers ---------- */
@@ -177,15 +68,14 @@ p{margin:0}
 .hub-act{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px}
 .hub-act .btn{flex:1 1 190px}
 .ticks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.ticks li{display:flex;gap:10px;align-items:flex-start;font-size:13.4px;line-height:1.5;color:var(--tx-2d)}
+.ticks li{display:flex;gap:10px;align-items:flex-start;font-size:var(--t-sm);line-height:1.5;color:var(--tx-2d)}
 .ticks svg{flex:none;margin-top:4px;color:var(--good)}
 
 /* ---------- QR ---------- */
 .qr-fig{margin:0;flex:none;display:flex;flex-direction:column;align-items:center;gap:10px}
-.qr-box{padding:10px;border-radius:12px;background:#fff;line-height:0;
-  box-shadow:0 16px 36px -18px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.08)}
+.qr-box{padding:10px;border-radius:var(--r-2);background:#fff;line-height:0;}
 .qr-box img{width:var(--qr,152px);height:var(--qr,152px)}
-.qr-cap{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+.qr-cap{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:.13em;text-transform:uppercase;
   color:var(--tx-4);text-align:center;line-height:1.6;max-width:22ch}
 .qr-cap b{display:block;color:var(--tx-3);font-weight:400;letter-spacing:.1em}
 
@@ -194,15 +84,15 @@ p{margin:0}
 .sp-grid>*{min-width:0}
 @media (max-width:700px){.sp-grid{grid-template-columns:1fr}}
 .spcard{padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+.ic{width:40px;height:40px;border-radius:var(--r-2);display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.04);border:1px solid var(--line-2);color:var(--data);flex:none}
 .hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
 .hd h2,.hd h3{min-width:0;overflow-wrap:anywhere}
-.hd .tag{margin-left:auto;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;
+.hd .tag{margin-left:auto;font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:.14em;
   text-transform:uppercase;color:var(--tx-4);border:1px solid var(--line-2);border-radius:999px;padding:3px 8px;white-space:nowrap}
-p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
+p.desc{color:var(--tx-2d);font-size:var(--t-sm);line-height:1.55}
 .spcard .btn{margin-top:auto}
-.hub h2{font-size:clamp(1.35rem,2.6vw,1.7rem)}
+.hub h2{font-size:clamp(1.25rem,1.6vw,1.6rem)}
 .hub .ic{background:rgba(255,0,102,.08)}
 
 .spcard-hi{border-color:rgba(255,0,102,.32)}
@@ -212,9 +102,9 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 /* meta rows inside a card */
 .meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 16px;margin:0;
   padding-top:14px;border-top:1px solid var(--line)}
-.meta dt{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+.meta dt{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:.13em;text-transform:uppercase;
   color:var(--tx-4);padding-top:3px;white-space:nowrap}
-.meta dd{margin:0;font-size:13px;line-height:1.45;color:var(--tx-2d)}
+.meta dd{margin:0;font-size:var(--t-xs);line-height:1.45;color:var(--tx-2d)}
 @media (max-width:430px){
   .meta{grid-template-columns:1fr;gap:2px 0}
   .meta dt{padding-top:8px}
@@ -225,16 +115,16 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 /* ---------- crypto address ---------- */
 .crypto-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
 .crypto-col{flex:1 1 260px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.addr-box{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:9px;
+.addr-box{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:var(--r-1);
   border:1px solid var(--line-2);background:rgba(255,255,255,.03)}
-.addr-box .addr-txt{flex:1;font-family:var(--f-mono);font-size:11.5px;line-height:1.4;color:var(--tx-2);word-break:break-all}
-.copy-btn{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:7px;
+.addr-box .addr-txt{flex:1;font-family:var(--f-mono);font-size:var(--t-lbl);line-height:1.4;color:var(--tx-2);word-break:break-all}
+.copy-btn{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:var(--r-1);
   border:1px solid var(--line-2);background:rgba(255,255,255,.02);
-  font-family:var(--f-mono);font-size:11px;letter-spacing:.03em;color:var(--tx-2);
-  transition:border-color .2s,color .2s,background .2s}
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.03em;color:var(--tx-2);
+  transition:border-color var(--d-1),color var(--d-1),background var(--d-1)}
 .copy-btn:hover{border-color:var(--line-3);color:var(--tx);background:rgba(255,255,255,.05)}
 .copy-btn.copied{border-color:var(--good);color:var(--good)}
-.copy-wide{height:44px;padding-inline:18px;border-radius:10px;font-size:12px;justify-content:center;flex:1 1 160px}
+.copy-wide{height:44px;padding-inline:18px;border-radius:var(--r-2);font-size:var(--t-xs);justify-content:center;flex:1 1 160px}
 
 /* ---------- supporters ---------- */
 .sup-panel{padding:24px}
@@ -242,20 +132,20 @@ p.desc{color:var(--tx-2d);font-size:13.6px;line-height:1.55}
 .sup-chip{
   display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
   border:1px solid var(--line-2);background:rgba(255,255,255,.025);
-  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:13.5px;color:var(--tx-2);
-  transition:border-color .2s,color .2s,background .2s,transform .18s;
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:var(--t-sm);color:var(--tx-2);
+  transition:border-color var(--d-1),color var(--d-1),background var(--d-1),transform var(--d-1);
 }
 a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(255,0,102,.08);transform:translateY(-1px)}
 .sup-chip .sup-tag{
-  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:.1em;text-transform:uppercase;
   color:var(--brand-hi);border:1px solid rgba(255,0,102,.35);border-radius:999px;padding:2px 7px;
 }
-.sup-empty{color:var(--tx-3);font-size:13.6px;padding:6px 2px}
+.sup-empty{color:var(--tx-3);font-size:var(--t-sm);padding:6px 2px}
 
 /* ---------- info strip ---------- */
 .note{display:flex;gap:12px;padding:18px 20px;align-items:flex-start}
 .note svg{flex:none;margin-top:2px;color:var(--data)}
-.note p{font-size:13.4px;color:var(--tx-2d);line-height:1.6}
+.note p{font-size:var(--t-sm);color:var(--tx-2d);line-height:1.6}
 .note b{color:var(--tx-2);font-weight:600}
 
 /* ---------- FAQ ---------- */
@@ -263,15 +153,15 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
 .faq details{border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(255,255,255,.014)}
 .faq details[open]{border-color:var(--line-2)}
 .faq summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:14px;
-  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:15px;
-  letter-spacing:.004em;transition:color .2s}
+  font-family:var(--f-display);font-stretch:92%;font-weight:600;font-size:var(--t-body);
+  letter-spacing:.004em;transition:color var(--d-1)}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:'';margin-left:auto;flex:none;width:7px;height:7px;
   border-right:1.6px solid var(--tx-3);border-bottom:1.6px solid var(--tx-3);
-  transform:translateY(-2px) rotate(45deg);transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .2s}
+  transform:translateY(-2px) rotate(45deg);transition:transform var(--d-2) var(--e-state),border-color var(--d-1)}
 .faq details[open] summary::after{transform:translateY(1px) rotate(-135deg);border-color:var(--brand)}
 .faq summary:hover{color:var(--brand-hi)}
-.faq .ans{padding:0 18px 16px;font-size:13.4px;line-height:1.62;color:var(--tx-2d)}
+.faq .ans{padding:0 18px 16px;font-size:var(--t-sm);line-height:1.62;color:var(--tx-2d)}
 .faq .ans a{color:var(--data);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
 .faq .ans a:hover{color:var(--tx)}
 
@@ -279,9 +169,9 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
 .ftr{border-top:1px solid var(--line);margin-top:clamp(56px,8vw,90px);padding-block:36px}
 .ftr-in{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:center}
 .ftr-links{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto}
-.ftr-links a{font-size:13px;color:var(--tx-3);transition:color .2s}
+.ftr-links a{font-size:var(--t-xs);color:var(--tx-3);transition:color var(--d-1)}
 .ftr-links a:hover{color:var(--tx)}
-.disc{width:100%;color:var(--tx-4);font-size:12px;line-height:1.6;max-width:74ch;
+.disc{width:100%;color:var(--tx-4);font-size:var(--t-xs);line-height:1.6;max-width:74ch;
   padding-top:22px;margin-top:4px;border-top:1px solid var(--line)}
 .disc b{color:var(--tx-3);font-weight:500}
 
@@ -314,7 +204,6 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
 <!-- ══════════════════════════ HERO ══════════════════════════ -->
 <section class="stage">
   <div class="glow glow-a" aria-hidden="true"></div>
-  <div class="glow glow-b" aria-hidden="true"></div>
   <div class="wrap stage-in">
     <span class="eyebrow">Support the project</span>
     <h1>Support the <span class="acc">development</span></h1>
@@ -327,7 +216,7 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
 </section>
 
 <!-- ══════════════════════════ HUB: DALINK ══════════════════════════ -->
-<section class="wrap" style="padding-block:0 6px" aria-labelledby="dalink-h">
+<section class="wrap band-tight" aria-labelledby="dalink-h">
   <article class="panel brk hub">
     <div class="hub-main">
       <div class="hd">
@@ -370,7 +259,7 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
   <h2>Familiar payment rails</h2>
   <p class="lead">Both options work directly inside Russia, with no intermediaries or currency conversion.</p>
 </section>
-<section class="wrap sp-grid" style="padding-block:0 12px">
+<section class="wrap sp-grid band-t">
 
   <!-- Boosty -->
   <div class="panel brk spcard">
@@ -422,7 +311,7 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
   <h2>TON wallet — no verification</h2>
   <p class="lead">Mainstream services either don't pay out to Russia or require a verified foreign account. A wallet skips that — the donation arrives directly, and the only fee is the network fee, a few cents.</p>
 </section>
-<section class="wrap" style="padding-block:0 12px">
+<section class="wrap band-t">
   <div class="panel brk spcard spcard-hi">
     <div class="hd">
       <span class="ic">
@@ -467,14 +356,14 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
   <h2>Who's already supported the project</h2>
   <p class="lead">The people who chipped in money are what keeps development moving. Thank you, each of you.</p>
 </section>
-<section class="wrap" style="padding-block:0 12px">
+<section class="wrap band-t">
   <div class="panel brk sup-panel">
     <div class="sup-grid" id="supportersList"></div>
   </div>
 </section>
 
 <!-- ══════════════════════════ WHY SEPARATE ══════════════════════════ -->
-<section class="wrap" style="padding-block:20px 0">
+<section class="wrap band-end">
   <div class="panel note">
     <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.3" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4M8 5.1v.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
     <p><b>Why not just one option for everyone?</b> International sanctions mean most mainstream services (Patreon, PayPal, Stripe) can't pay out to Russia, while payments from Russia don't work on most foreign platforms. A crypto wallet sidesteps that with no intermediaries. So there are separate options for Russia and for the rest of the world — each with the lowest fee available in your country.</p>
@@ -487,7 +376,7 @@ a.sup-chip:hover{border-color:var(--brand-hi);color:var(--tx);background:rgba(25
   <span class="eyebrow">04 / Questions</span>
   <h2>Good to know</h2>
 </section>
-<section class="wrap" style="padding-block:0 clamp(40px,7vw,72px)">
+<section class="wrap band-close">
   <div class="faq">
 
     <details>
