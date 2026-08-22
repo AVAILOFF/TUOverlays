@@ -243,9 +243,7 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
   font-size:clamp(2.2rem,4.4vw,4.4rem);line-height:.86;letter-spacing:-.05em;
   color:var(--tx);text-transform:uppercase;
 }
-/* two flat steps of the text ladder, not a gradient: the product name reads
-   first, the category word recedes behind it */
-.cine-wordmark span{display:block;color:var(--tx-3)}
+.cine-wordmark span{display:block;color:var(--brand)}
 .cine-copy h2{font-size:clamp(1.15rem,1.8vw,1.9rem)}
 .cine-copy .lead{font-size:clamp(.9rem,.92vw,1.04rem);max-width:46ch}
 

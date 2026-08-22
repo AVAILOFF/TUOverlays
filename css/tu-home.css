@@ -342,6 +342,18 @@ body.is-booting{overflow:hidden}
   clip-path:inset(0 100% 0 0);transition:clip-path var(--d-2) linear}
 @keyframes bootStripe{from{background-position:0 0}to{background-position:17px 0}}
 
+/* the only reachable language switch while the real header is still
+   hidden (it stays off until block 01) — same pill as .lang-switch, just
+   pinned to the corner over the boot screen and the hero beneath it.
+   js/tu-home.js hides it the moment #topBar takes over. */
+.hero-lang{
+  position:fixed;top:22px;right:22px;z-index:201;margin:0;
+  background:rgba(2,14,38,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:opacity var(--d-3) var(--e-state);
+}
+.hero-lang.is-hidden{opacity:0;pointer-events:none}
+@media (max-width:640px){.hero-lang{top:14px;right:14px}}
+
 /* --- boot → hero handoff ----------------------------------------------------
    Not a crossfade. The same photograph runs under both layers, so the boot's
    slow push-in hands straight over to the hero's settle (1.10 → 1) and the eye

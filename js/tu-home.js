@@ -99,8 +99,13 @@ const pad2 = n => String(n).padStart(2, '0');
 (() => {
   const bar = $('#topBar');
   const feat = $('#features');
+  const heroLang = $('#heroLang');
   if (!bar || !feat) return;
-  const onScroll = () => bar.classList.toggle('show', feat.getBoundingClientRect().top <= innerHeight * 0.85);
+  const onScroll = () => {
+    const show = feat.getBoundingClientRect().top <= innerHeight * 0.85;
+    bar.classList.toggle('show', show);
+    if (heroLang) heroLang.classList.toggle('is-hidden', show);
+  };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 

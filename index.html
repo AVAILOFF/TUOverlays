@@ -90,6 +90,14 @@
     </div>
   </div>
 </div>
+
+<!-- outside the boot loader's aria-hidden scope on purpose: the header
+     is hidden until block 01, so this is the only reachable language
+     switch over the boot screen and the hero beneath it -->
+<div class="lang-switch hero-lang" id="heroLang" aria-label="Язык">
+  <a class="on" href="index.html" aria-current="true">RU</a>
+  <a href="en/index.html">EN</a>
+</div>
 <script>
 (() => {
   'use strict';
@@ -314,7 +322,7 @@
           <div class="cine-copy">
             <p class="cine-wordmark">TU<span>Overlays</span></p>
             <h2>В каждой сессии — больше <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">контроля</span><span class="cyc-w acc">информации</span><span class="cyc-w acc">темпа</span><span class="cyc-w acc">деталей</span></span><span class="sr-only">контроля</span></h2>
-            <p class="lead">TU Overlays превращает телеметрию iRacing в 23 отдельных окна поверх симулятора: позиция в классе и в абсолюте, отрывы до соперников, топливо, погода, трафик и собственная техника пилотирования. Каждое окно настраивается под себя, а Race&nbsp;Control ведёт живой журнал инцидентов сессии — клик по строке перематывает реплей к нужному моменту.</p>
+            <p class="lead">TU Overlays превращает телеметрию iRacing в 23 отдельных окна поверх симулятора: позиция в классе и в абсолюте, отрывы до соперников, топливо, погода, трафик. Каждое окно глубоко настраивается, а Race&nbsp;Control ведёт живой журнал инцидентов сессии — клик по строке перематывает реплей к нужному моменту.</p>
           </div>
         </div>
 

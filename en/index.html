@@ -90,6 +90,14 @@
     </div>
   </div>
 </div>
+
+<!-- outside the boot loader's aria-hidden scope on purpose: the header
+     is hidden until block 01, so this is the only reachable language
+     switch over the boot screen and the hero beneath it -->
+<div class="lang-switch hero-lang" id="heroLang" aria-label="Language">
+  <a href="../index.html">RU</a>
+  <a class="on" href="index.html" aria-current="true">EN</a>
+</div>
 <script>
 (() => {
   'use strict';
