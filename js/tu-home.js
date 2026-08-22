@@ -100,11 +100,13 @@ const pad2 = n => String(n).padStart(2, '0');
   const bar = $('#topBar');
   const feat = $('#features');
   const heroLang = $('#heroLang');
+  const heroNav = $('#heroQuicknav');
   if (!bar || !feat) return;
   const onScroll = () => {
     const show = feat.getBoundingClientRect().top <= innerHeight * 0.85;
     bar.classList.toggle('show', show);
     if (heroLang) heroLang.classList.toggle('is-hidden', show);
+    if (heroNav) heroNav.classList.toggle('is-hidden', show);
   };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();

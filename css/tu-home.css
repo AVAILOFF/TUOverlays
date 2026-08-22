@@ -354,6 +354,26 @@ body.is-booting{overflow:hidden}
 .hero-lang.is-hidden{opacity:0;pointer-events:none}
 @media (max-width:640px){.hero-lang{top:14px;right:14px}}
 
+/* the same quiet stand-in as .hero-lang, but for the header's core nav
+   (Возможности / Race Control / Скачать) rather than the language
+   switch — deliberately plain text, no fill, no weight, so it reads as
+   a hint rather than a call to action. Gone the moment #topBar takes
+   over, same trigger and timing as .hero-lang. */
+.hero-quicknav{
+  position:fixed;top:22px;left:22px;z-index:201;margin:0;
+  display:flex;align-items:center;gap:14px;
+  padding:9px 16px;border-radius:var(--r-pill);
+  background:rgba(2,14,38,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:opacity var(--d-3) var(--e-state);
+}
+.hero-quicknav a{
+  font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--tx-3);transition:color var(--d-1) var(--e-state);
+}
+.hero-quicknav a:hover{color:var(--tx)}
+.hero-quicknav.is-hidden{opacity:0;pointer-events:none}
+@media (max-width:900px){.hero-quicknav{display:none}}
+
 /* --- boot → hero handoff ----------------------------------------------------
    Not a crossfade. The same photograph runs under both layers, so the boot's
    slow push-in hands straight over to the hero's settle (1.10 → 1) and the eye
