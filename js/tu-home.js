@@ -20,14 +20,18 @@ const fmt = (tpl, v) => String(tpl || '').replace(/\{(\w+)\}/g, (_, k) => v[k]);
 const pad2 = n => String(n).padStart(2, '0');
 
 /* ---------- floating buttons -------------------------------------------------
-   They hold off until the hero is behind you: the hero is a two-column split and
-   a bottom-left pill would sit straight on top of the lead paragraph. */
+   They hold off until the opening is behind you. On the home pages that is the
+   whole pinned cinematic track, not a screen height: a pill floating over a
+   full-bleed plate mid-transition reads as a bug, not as chrome. */
 (() => {
   const fabs = ['#supportFab', '#discordFab'].map(s => $(s)).filter(Boolean);
   if (!fabs.length) return;
-  if (!document.querySelector('.hero')) { fabs.forEach(f => f.classList.add('show')); return; }
+  const opening = $('.cine') || $('.hero');
+  if (!opening) { fabs.forEach(f => f.classList.add('show')); return; }
   const update = () => {
-    const past = scrollY > innerHeight * 0.62;
+    const past = opening.classList.contains('cine')
+      ? opening.getBoundingClientRect().bottom <= innerHeight * 0.6
+      : scrollY > innerHeight * 0.62;
     fabs.forEach((f, i) => {
       if (past === f.classList.contains('show')) return;
       setTimeout(() => f.classList.toggle('show', past), reduced ? 0 : i * 90);
@@ -37,12 +41,13 @@ const pad2 = n => String(n).padStart(2, '0');
   update();
 })();
 
-/* ---------- hero H1: rotating word -------------------------------------------
-   Driven by index, not by state, and re-queried every step: the hero copy the
-   scroll transition mounts on the rig's monitor is a clone of this one, and the
-   two headlines have to say the same word at the same moment. */
+/* ---------- the rotating word ------------------------------------------------
+   It lives on the info page inside the cinematic plate now, not on the hero H1.
+   Driven by index rather than by state, and re-queried every step, so if a
+   locale or a future surface ever mounts a second .cyc the two say the same
+   word at the same moment instead of drifting apart. */
 (() => {
-  if (!$('.hero h1 .cyc') || reduced) return;
+  if (!$('.cyc') || reduced) return;
   let i = 0;
   setInterval(() => {
     i++;
@@ -87,6 +92,25 @@ const pad2 = n => String(n).padStart(2, '0');
   const onScroll = () => hdr.classList.toggle('stuck', scrollY > 14);
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+})();
+
+/* ---------- top bar (ribbon + header): stays hidden over the hero,
+   fades in once block 01 (#features) starts entering the viewport ---------- */
+(() => {
+  const bar = $('#topBar');
+  const feat = $('#features');
+  if (!bar || !feat) return;
+  const onScroll = () => bar.classList.toggle('show', feat.getBoundingClientRect().top <= innerHeight * 0.85);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // .rc-rail (Race Control's sticky log) clears the bar's real height via
+  // --topbar-h — the ribbon inside it is dismissable, so that height isn't
+  // constant and has to be tracked, not hard-coded.
+  const setH = () => document.documentElement.style.setProperty('--topbar-h', bar.offsetHeight + 'px');
+  setH();
+  if (window.ResizeObserver) new ResizeObserver(setH).observe(bar);
+  else addEventListener('resize', setH, { passive: true });
 })();
 
 /* ---------- mobile nav ---------- */
@@ -365,7 +389,7 @@ $$('#faqList .qa').forEach(qa => {
     if (cdSr && u.sr) cdSr.textContent = u.sr;
     // every copy of it: the scroll transition mounts a clone of the hero on
     // the rig's monitor, and both badges have to say the same thing
-    if (u.heroBadge) $$('.hero .rel-badge').forEach(b => { b.innerHTML = u.heroBadge; });
+    if (u.heroBadge) $$('.rel-badge').forEach(b => { b.innerHTML = u.heroBadge; });
   }
 
   gated.forEach(btn => btn.addEventListener('click', e => {

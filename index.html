@@ -39,6 +39,7 @@
 
 <link rel="stylesheet" href="/css/tu-core.css">
 <link rel="stylesheet" href="/css/tu-home.css">
+<link rel="stylesheet" href="/css/tu-cine.css">
 
 
 <script type="application/ld+json">
@@ -144,7 +145,7 @@
       // different place in each locale and at every breakpoint; k damps it to a
       // drift toward the headline instead of a literal morph onto it.
       if (!reduced){
-        const h1 = document.querySelector('.hero-copy h1');
+        const h1 = document.querySelector('.cine-slogan h1');
         const wm = boot.querySelector('.boot-wordmark');
         if (h1 && wm){
           const a = wm.getBoundingClientRect();
@@ -170,6 +171,8 @@
 })();
 </script>
 
+<!-- ══════════════════════════ TOP BAR (ribbon + header, hidden over the hero) ══════════════════════════ -->
+<div class="top-bar" id="topBar">
 <!-- ══════════════════════════ RELEASE RIBBON ══════════════════════════ -->
 <div class="relribbon" id="relRibbon" role="status" aria-live="off">
   <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -245,61 +248,98 @@
     </div>
   </div>
 </header>
+</div>
 
 <main id="top">
 
-<!-- ═══════════════ HERO — archetype A: split deck ═══════════════ -->
-<div class="hero-stage" id="heroStage">
-<section class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <div class="hero-scrim"></div>
-    <div class="hero-dim"></div>
-    <div class="hero-grid"></div>
-    <div class="hero-wash"></div>
-    <svg class="hero-track" viewBox="0 0 1200 900" aria-hidden="true">
-      <use href="#nordschleife"/>
-      <use class="t-hot" href="#nordschleife"/>
-    </svg>
-  </div>
+<!-- ═══════════════ HERO — archetype A′: cinematic plate ═══════════════
+     Three acts on one pinned stage, scrubbed by js/tu-cine.js:
+       0  the slogan            1  an --elev-1 plate rises and goes full-bleed
+       2  the page it carries, then fades and slides away, releasing the pin
+     Act 2 is the section the numbered sections below count from — it is 00, and
+     the features grid the pin releases into is 01. There is no act 3: the plate
+     does not pull back to reveal a call behind it, it simply leaves. -->
+<div class="cine" id="cine">
+  <div class="cine-stage">
 
-  <div class="wrap hero-in">
-    <div class="hero-copy">
-      <span class="rel-badge">Релиз <b>23 августа</b></span>
-      <span class="eyebrow">Windows · Глубокая кастомизация · Race Control</span>
-      <h1>TU Overlays&nbsp;— больше <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">контроля</span><span class="cyc-w acc">информации</span><span class="cyc-w acc">темпа</span><span class="cyc-w acc">деталей</span></span><span class="sr-only">контроля</span></h1>
-      <p class="lead">TU Overlays превращает данные iRacing в понятные визуальные инструменты прямо поверх симулятора. А функция Race Control поможет найти и разобрать интересующие вас инциденты.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="#download">
-          <span class="btn-content">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Скачать
-          </span>
-          <span class="btn-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </a>
+    <div class="cine-bg" aria-hidden="true">
+      <div class="cine-grid"></div>
+      <div class="cine-wash"></div>
+      <svg class="cine-trackline" viewBox="0 0 1200 900" aria-hidden="true">
+        <use href="#nordschleife"/>
+        <use class="t-hot" href="#nordschleife"/>
+      </svg>
+    </div>
+
+    <!-- ACT 0 ─ the slogan -->
+    <div class="cine-slogan">
+      <h1>
+        <span class="cine-l1">Гонку выигрывают на данных,</span>
+        <span class="cine-l2">а не на догадках.</span>
+      </h1>
+      <div class="cine-slogan-foot">
+        <span class="rel-badge">Релиз <b>23 августа</b></span>
+        <span class="cine-scrollhint">
+          <svg width="11" height="14" viewBox="0 0 12 16" fill="none" aria-hidden="true"><path d="M6 1.5v13m0 0 4.2-4.2M6 14.5 1.8 10.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Листайте
+        </span>
       </div>
     </div>
 
-    <!-- живая композиция виджетов -->
-    <div class="deck-wrap">
-      <div class="deck">
-        <div class="w deck-a">
-          <img class="w-shot" src="img/standings.png" alt="Standings overlay" width="845" height="418" decoding="async">
+    <!-- ACTS 1–2 ─ the plate, and the page it carries.
+         The surface and its contents are separate elements: the surface is what
+         resizes, the contents stay pinned at full-bleed and never reflow. -->
+    <div class="cine-platewrap">
+      <div class="cine-plate" aria-hidden="true"></div>
+
+      <div class="cine-plate-in">
+        <div class="cine-plate-hd">
+          <span class="eyebrow">00 / О приложении</span>
         </div>
-        <div class="w deck-b">
-          <img class="w-shot" src="img/relative.png" alt="Relative overlay" width="584" height="307" decoding="async">
+
+        <div class="cine-body">
+          <div class="cine-screen">
+            <div class="cine-screen-frame">
+              <div class="cine-screen-bar">
+                <span class="lbl">Сессия · Race</span>
+                <span class="lbl">Трасса · Ле-Ман</span>
+              </div>
+              <img src="img/example-3.jpg" alt="Виджеты TU Overlays на стриме Shelik — 24 часа Ле-Мана" width="1800" height="1013" decoding="async">
+            </div>
+            <div class="cine-screen-foot">
+              <span><b>В кадре:</b> Standings · Relative · Track Map · Corner Names · Flag · Lap Timer · Weather</span>
+            </div>
+          </div>
+
+          <div class="cine-copy">
+            <p class="cine-wordmark">TU<span>Overlays</span></p>
+            <h2>В каждой сессии — больше <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">контроля</span><span class="cyc-w acc">информации</span><span class="cyc-w acc">темпа</span><span class="cyc-w acc">деталей</span></span><span class="sr-only">контроля</span></h2>
+            <p class="lead">TU Overlays превращает телеметрию iRacing в 23 отдельных окна поверх симулятора: позиция в классе и в абсолюте, отрывы до соперников, топливо, погода, трафик и собственная техника пилотирования. Каждое окно настраивается под себя, а Race&nbsp;Control ведёт живой журнал инцидентов сессии — клик по строке перематывает реплей к нужному моменту.</p>
+          </div>
         </div>
-        <div class="w deck-c">
-          <img class="w-shot" src="img/fuel-calculator.png" alt="Fuel Calculator overlay" width="423" height="234" decoding="async">
+
+        <div class="cine-rail">
+          <div class="cine-mi">
+            <span class="mk">Виджетов</span>
+            <div class="mv"><span data-count="23">23</span></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">Параметров настройки</span>
+            <div class="mv"><span data-count="40">40</span><u>+</u></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">Нагрузка CPU</span>
+            <div class="mv">~<span data-count="1.8">1.8</span><small>%</small></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">Захват в OBS</span>
+            <div class="mv mv-tx">Game + Window</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-</section>
+  </div>
 </div>
 
 <!-- ═══════════════ FEATURES — archetype B: card grid ═══════════════ -->
@@ -309,8 +349,9 @@
     <div class="sect-hd">
       <span class="sect-fig" aria-hidden="true" data-tt-hd>01</span>
       <span class="eyebrow" data-reveal data-tt-hd>01 / Возможности</span>
-      <h2 data-reveal data-tt-hd style="--d:60ms">Двадцать три виджета.<br>Каждый — отдельное глубоко кастомизируемое окно.</h2>
-      <p class="lead" data-reveal data-tt-hd style="--d:120ms">Включайте только то, что нужно в текущей сессии. Настраивайте виджеты под себя.</p>
+      <div class="hero-meta" data-reveal style="--d:60ms"><span>Windows · Глубокая кастомизация · Race Control</span></div>
+      <h2 data-reveal data-tt-hd style="--d:120ms">Двадцать три виджета.<br>Каждый — отдельное глубоко кастомизируемое окно.</h2>
+      <p class="lead" data-reveal data-tt-hd style="--d:180ms">Включайте только то, что нужно в текущей сессии. Настраивайте виджеты под себя.</p>
     </div>
 
     <div class="fgrid" data-reveal-group>
@@ -822,5 +863,6 @@ window.TU_L = {
 };
 </script>
 <script src="/js/tu-home.js" defer></script>
+<script src="/js/tu-cine.js" defer></script>
 </body>
 </html>

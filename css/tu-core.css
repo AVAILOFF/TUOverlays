@@ -307,10 +307,22 @@ p{margin:0}
 .pip.d::before{background:var(--data)}
 
 /* ============================================================
+   top bar — ribbon + header wrapped so they can hide as one unit
+   over the hero and only appear once block 01 (Возможности)
+   scrolls into view. Only present on pages with a #features
+   section; harmless everywhere else since nothing has this class.
+   ============================================================ */
+.top-bar{
+  position:sticky;top:0;z-index:60;
+  opacity:0;pointer-events:none;
+  transition:opacity var(--d-3) var(--e-enter);
+}
+.top-bar.show{opacity:1;pointer-events:auto}
+
+/* ============================================================
    header — transparent over the hero, frosted once it leaves
    ============================================================ */
 .hdr{
-  position:sticky;top:0;z-index:60;
   border-bottom:1px solid transparent;
   transition:background var(--d-2) var(--e-state),border-color var(--d-2) var(--e-state);
 }

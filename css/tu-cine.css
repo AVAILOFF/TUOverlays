@@ -1,0 +1,368 @@
+/* ============================================================================
+   TU OVERLAYS — CINEMATIC HERO  (archetype A′)
+   ----------------------------------------------------------------------------
+   A pinned opening that replaces the old split-deck hero on the two home
+   pages. Ported from a GSAP/ScrollTrigger React component and rebuilt in the
+   Instrument Deck materials: flat navy, hairline edges, one magenta, one
+   condensed display face. No glass, no drop shadow for depth, no spring.
+
+   THE ACTS
+     0  slogan            two condensed lines, the second wiped in
+     1  the plate rises   an --elev-1 panel climbs from below and goes full-bleed
+     2  the info page     what the app is: screen, wordmark, copy, metric rail —
+                           then it fades and the plate slides away, releasing
+                           the pin straight into 01 / Features. There is no
+                           further act: nothing is parked behind the plate.
+
+   DEVIATION, RECORDED HONESTLY
+   The DNA bans scroll-driven transform, scale and blur. This surface is
+   scroll-driven by design brief; the ban is honoured everywhere else on the
+   page, and inside here the vocabulary is still the system's — the same two
+   easings, hairlines instead of shadows, no element bounces or overshoots.
+   Two exceptions are scoped to the one-time title-card entrance only (never
+   to the scrubber, never repeated elsewhere): it runs slower than --d-3/--d-4
+   because a title card gets one showing per visit, and the headline resolves
+   in from a soft blur rather than a hard cut, matching the brief's reference.
+
+   THE ZOOM CAVEAT
+   html carries zoom:1.5, so 1vh renders 1.5x the real viewport. Everything
+   vertical here is sized off --vph (one true viewport, in layout px) which
+   js/tu-cine.js keeps in sync. The calc() below is the no-JS fallback.
+   ========================================================================== */
+
+:root{
+  --cine-zoom: 1.5;                            /* mirrors html{zoom} */
+  --vph: calc(100vh / var(--cine-zoom));       /* one real viewport, layout px */
+  --cine-steps: 4.6;                           /* scroll length, in viewports */
+}
+
+/* ============================================================
+   the scroll track and its pinned stage
+   ============================================================ */
+/* The header is designed to sit *over* the opening, not above it — but it is a
+   sticky element in normal flow, so it pushes instead. The track is pulled back
+   up underneath the ribbon and the header by exactly their height, which puts
+   the first frame dead centre in the viewport at scroll 0 and hands the header
+   back the transparent hero it was written for. js/tu-cine.js measures it;
+   flow-root on the parent stops that negative margin collapsing out through
+   <main> and dragging the whole page up with it. */
+main:has(> .cine){display:flow-root}
+.cine{
+  position:relative;
+  margin-top:calc(-1 * var(--cine-top, 0px));
+  height:calc(var(--cine-steps) * var(--vph));
+}
+.cine-stage{
+  position:sticky;top:0;
+  height:var(--vph);
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+
+/* --- backdrop: the same three layers the old hero used --------------------- */
+.cine-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.cine-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:76px 76px;
+  -webkit-mask-image:radial-gradient(120% 74% at 50% 46%,#000 4%,transparent 72%);
+  mask-image:radial-gradient(120% 74% at 50% 46%,#000 4%,transparent 72%);
+  opacity:.32;
+}
+.cine-wash{
+  position:absolute;left:50%;top:-38%;width:min(1100px,130vw);height:78%;
+  transform:translateX(-50%);border-radius:50%;filter:blur(100px);opacity:.34;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.42), rgba(255,0,102,0) 70%);
+}
+.cine-trackline{position:absolute;left:50%;top:4%;transform:translateX(-50%);
+  width:min(1400px,150vw);opacity:.26}
+.cine-trackline use{fill:none;stroke:rgba(150,190,250,.15);stroke-width:1.25;
+  stroke-linejoin:round;stroke-linecap:round}
+.cine-trackline use.t-hot{stroke:rgba(255,0,102,.5);stroke-width:1.6;stroke-dasharray:120 1560;
+  animation:dash 9s linear infinite}
+
+/* ============================================================
+   ACT 0 — the slogan
+   ============================================================ */
+.cine-slogan{
+  position:absolute;inset:0;z-index:1;gap:var(--s5);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding-inline:var(--pad);
+  will-change:transform,opacity;
+}
+
+.cine-slogan h1{
+  margin:0;max-width:18ch;
+  font-size:clamp(2.3rem,5.2vw,5.2rem);
+  line-height:1.02;letter-spacing:-.036em;
+  display:flex;flex-direction:column;align-items:center;gap:.06em;
+}
+.cine-l1{color:var(--tx);will-change:filter}
+/* The second line carries the signal: a wipe, then flat brand magenta — no
+   gradient, because a gradient here would be the only decorative fill on the
+   page. This is the hero exemption to the 2% magenta rule, and the only place
+   on the home page where magenta touches display type at this size. */
+.cine-l2{color:var(--brand)}
+.cine-slogan-foot{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap;
+  justify-content:center}
+.cine-scrollhint{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl-w);
+  text-transform:uppercase;color:var(--tx-4);
+}
+.cine-scrollhint svg{animation:cineHint 2.2s var(--e-state) infinite}
+@keyframes cineHint{0%,72%,100%{transform:translateY(0);opacity:.5}36%{transform:translateY(4px);opacity:1}}
+
+/* the reveal: held until the boot loader hands over, so it never plays behind
+   a covered screen. It is also the one entrance on the page allowed to run
+   slower than --d-3 (420ms) and --d-4 (560ms) — a title card gets one showing
+   per visit, so it is paced like one: long enough to read as deliberate, still
+   built from the system's own decelerating curve rather than a new spring or
+   overshoot (the DNA bans exactly that class of easing).
+
+   The white line resolves out of a soft blur rather than a hard cut — the
+   slowest, softest beat on the page, because it is the first thing anyone
+   reads. cineHeadline is its own keyframe rather than a wider cineRise,
+   because filter is expensive enough that nothing else should inherit it by
+   accident; cineRise stays the plain fade-up the footer row uses, and it is
+   also the shared enterUp keyframe's wider cousin — kept local rather than
+   changed in place, since enterUp also drives the boot wordmark's own beat. */
+@keyframes cineHeadline{
+  from{opacity:0;transform:translateY(40px);filter:blur(16px)}
+  to  {opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes cineRise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+.cine-slogan .cine-l1,
+.cine-slogan .cine-l2,
+.cine-slogan .cine-slogan-foot{opacity:0}
+body.is-ready .cine-slogan .cine-l1{animation:cineHeadline 2400ms var(--e-enter) 150ms both}
+body.is-ready .cine-slogan .cine-l2{animation:cineWipe 1800ms var(--e-enter) 1450ms both}
+body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-enter) 3100ms both}
+@keyframes cineWipe{
+  from{opacity:0;clip-path:inset(0 100% 0 0)}
+  to  {opacity:1;clip-path:inset(0 0% 0 0)}
+}
+
+/* ============================================================
+   ACT 1 + 2 — the plate
+   ============================================================ */
+/* The surface and the words it carries are two elements, not one. Resizing the
+   plate is a paint on an empty box; the contents stay pinned at full-bleed and
+   never reflow, because the only state they are ever visible in is full-bleed.
+   That is the difference between this scrubbing at 60fps and it relaying out a
+   fifteen-node subtree on every frame of the scroll. */
+.cine-platewrap{position:absolute;inset:0;z-index:2;display:grid;place-items:center;
+  pointer-events:none}
+.cine-plate{
+  position:relative;
+  width:var(--pw,88%);height:var(--ph,78%);
+  border-radius:var(--pr,var(--r-3));
+  background:var(--elev-1);
+  border:1px solid var(--line-2);
+  will-change:transform;
+  transform:translate3d(0,126%,0);
+}
+/* the plate is the one surface here that floats over the whole page, so it is
+   the one surface allowed the overlay shadow — and only while it is inset */
+.cine-plate::after{
+  content:'';position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  box-shadow:var(--shadow-overlay);opacity:var(--pshadow,1);
+}
+/* A single magenta hairline along the top edge — archetype G's tell. It rides
+   the same --pshadow the overlay shadow uses, for the same reason: this is an
+   inset-card accent. Once the plate goes full-bleed it sits directly behind
+   the sticky header, and the header is deliberately translucent there (it is
+   transparent over the hero, frosted once .stuck) — a hard-edged accent line
+   would bleed straight through that glass. Fading it out with the same value
+   that closes the shadow means it is simply gone well before block 01, not
+   patched over. */
+.cine-plate::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:1px;z-index:3;
+  border-radius:inherit;
+  background:linear-gradient(90deg,transparent,var(--brand) 22%,var(--brand) 78%,transparent);
+  opacity:calc(.7 * var(--pshadow, 1));
+}
+
+/* The header stays sticky over the plate once it goes full-bleed — that is the
+   point of a transparent header — so the page inside reserves its height at the
+   top rather than sliding its own section label underneath it. */
+.cine-plate-in{
+  position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
+  max-width:var(--maxw);margin-inline:auto;
+  padding:calc(var(--cine-hdr, 72px) + clamp(6px,1vw,18px)) var(--pad) clamp(18px,2.4vw,34px);
+  display:grid;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr) auto;
+  gap:clamp(12px,1.6vw,24px);
+}
+
+/* --- plate header row: the eyebrow alone, now that the two feature chips
+   that used to share this row are gone ------------------------------------- */
+.cine-plate-hd{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
+
+/* --- the body: archetype E, 7/5 -------------------------------------------- */
+.cine-body{
+  min-height:0;
+  display:grid;grid-template-columns:minmax(0,8fr) minmax(0,5fr);
+  gap:clamp(20px,2.6vw,44px);align-items:center;
+}
+
+/* the screen — one real frame of the product, held in a hairline bezel */
+.cine-screen{min-width:0;will-change:transform,opacity}
+.cine-screen-frame{
+  position:relative;border:1px solid var(--line-2);border-radius:var(--r-2);
+  background:var(--well);overflow:hidden;
+}
+.cine-screen-bar{
+  display:flex;align-items:center;gap:var(--s4);
+  padding:8px 12px;border-bottom:1px solid var(--line);background:var(--elev-2);
+}
+/* --tx-4 is calibrated at 4.1:1 against the canvas, and every label in this
+   component sits on a raised surface instead, where it falls to 3.3–3.8:1.
+   Each one steps up a rung rather than the surface stepping down. */
+.cine-screen-bar .lbl{color:var(--tx-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* On a short viewport the frame's own aspect ratio would push the metric rail
+   off the plate, so the shot is allowed to crop rather than the page to break */
+.cine-screen-frame img{
+  display:block;width:100%;height:auto;aspect-ratio:1799/963;object-fit:cover;
+  max-height:calc(.46 * var(--vph));
+}
+.cine-screen-foot{
+  display:flex;gap:var(--s2) var(--s5);flex-wrap:wrap;margin-top:var(--s3);
+  font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-3);
+}
+.cine-screen-foot b{color:var(--tx-2);font-weight:400}
+
+/* the copy column */
+.cine-copy{display:flex;flex-direction:column;gap:var(--s4);min-width:0;
+  will-change:transform,opacity}
+.cine-wordmark{
+  font-family:var(--f-display);font-weight:600;font-stretch:var(--wd-display);
+  font-size:clamp(2.2rem,4.4vw,4.4rem);line-height:.86;letter-spacing:-.05em;
+  color:var(--tx);text-transform:uppercase;
+}
+/* two flat steps of the text ladder, not a gradient: the product name reads
+   first, the category word recedes behind it */
+.cine-wordmark span{display:block;color:var(--tx-3)}
+.cine-copy h2{font-size:clamp(1.15rem,1.8vw,1.9rem)}
+.cine-copy .lead{font-size:clamp(.9rem,.92vw,1.04rem);max-width:46ch}
+
+/* --- the metric rail: archetype D, no fill, hairlines do the containing ---- */
+.cine-rail{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--line-2);
+}
+.cine-mi{
+  position:relative;padding:clamp(10px,1.3vw,18px) 0 2px;
+  will-change:transform,opacity;
+}
+.cine-mi + .cine-mi{padding-left:var(--s5)}
+.cine-mi + .cine-mi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:var(--line)}
+.cine-mi .mk{
+  display:block;font-family:var(--f-mono);font-size:var(--t-lbl-s);
+  letter-spacing:var(--tr-lbl-w);text-transform:uppercase;color:var(--tx-3);
+  margin-bottom:6px;
+}
+.cine-mi .mv{
+  font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+  font-size:clamp(1.3rem,2vw,2.1rem);line-height:1;letter-spacing:-.02em;color:var(--tx);
+}
+.cine-mi .mv-tx{font-family:var(--f-display);font-stretch:var(--wd-title);
+  font-size:clamp(.95rem,1.25vw,1.3rem);letter-spacing:-.01em}
+.cine-mi .mv small{font-size:.42em;letter-spacing:.06em;color:var(--tx-3);margin-left:4px;
+  vertical-align:.5em}
+.cine-mi .mv u{text-decoration:none;color:var(--brand)}
+
+/* ============================================================
+   responsive — remember: layout width = media-query width / 1.5
+   ============================================================ */
+@media (max-width:1280px){
+  .cine-body{gap:var(--s5)}
+  .cine-copy .lead{font-size:.95rem}
+}
+/* The plate has exactly one viewport to work in and no scrollbar to fall back
+   on, so each step down drops content rather than stacking it. Two columns are
+   held all the way to 820: collapsing to one column is what makes the page too
+   tall for its own plate, not what saves it. */
+@media (max-width:1040px){
+  :root{--cine-steps:4.2}
+  .cine-body{gap:var(--s4)}
+  .cine-copy{gap:var(--s3)}
+  .cine-copy .lead{display:none}   /* the claim survives, the paragraph does not */
+  .cine-wordmark{font-size:clamp(1.6rem,4.2vw,2.6rem)}
+  .cine-copy h2{font-size:clamp(1.05rem,1.7vw,1.4rem)}
+  .cine-screen-foot{display:none}
+  .cine-screen-frame img{max-height:calc(.40 * var(--vph))}
+}
+@media (max-width:820px){
+  :root{--cine-steps:3.8}
+  /* The chrome above the fold is two stacked bars here, not one, and the track
+     is pulled up under both of them, so the slogan centres below the header
+     rather than behind it. */
+  .cine-slogan{padding-top:calc(var(--cine-hdr, 72px) + var(--s5))}
+  .cine-slogan-foot{gap:var(--s4);flex-direction:column}
+  /* one plate, one screen height: the info page keeps the product shot, the
+     name, the claim and the four figures, and gives up everything that was
+     only ever there to fill a wide plate */
+  .cine-plate-in{padding-inline:var(--s5);gap:var(--s3)}
+  .cine-body{grid-template-columns:minmax(0,1fr);align-content:center}
+  .cine-copy{gap:var(--s2)}
+  .cine-copy h2{font-size:clamp(1rem,1.6vw,1.25rem)}
+  .cine-screen-frame img{max-height:calc(.28 * var(--vph))}
+  .cine-rail{grid-template-columns:repeat(2,1fr)}
+  .cine-mi + .cine-mi{padding-left:0}
+  .cine-mi + .cine-mi::before{display:none}
+  .cine-mi:nth-child(even){padding-left:var(--s4)}
+  .cine-mi:nth-child(even)::before{display:block;content:'';position:absolute;left:0;top:0;
+    bottom:0;width:1px;background:var(--line)}
+  .cine-mi:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:620px){
+  .cine-slogan h1{font-size:clamp(1.9rem,7.4vw,2.6rem)}
+  .cine-screen-bar .lbl:nth-child(2){display:none}
+}
+
+/* ============================================================
+   THE STATIC FALLBACK
+   ----------------------------------------------------------------------------
+   js/tu-cine.js adds .is-live only once it has decided to actually scrub, which
+   it refuses to do under prefers-reduced-motion. So one selector covers both
+   the accessibility case and the no-JavaScript case, and neither can end up
+   staring at four viewports of an empty pinned stage: the pin is dismantled and
+   the two acts become two ordinary blocks in document order, running straight
+   into 01 / Features below.
+   ============================================================ */
+.cine:not(.is-live){height:auto;margin-top:0}
+.cine:not(.is-live) .cine-stage{position:static;height:auto;display:block;
+  padding-block:var(--s8) var(--s6)}
+.cine:not(.is-live) .cine-bg{display:none}
+.cine:not(.is-live) .cine-slogan{position:static;opacity:1;transform:none;visibility:visible;
+  margin-inline:auto;padding-block:var(--s7) 0}
+.cine:not(.is-live) .cine-slogan .cine-l1,
+.cine:not(.is-live) .cine-slogan .cine-l2,
+.cine:not(.is-live) .cine-slogan .cine-slogan-foot{opacity:1;animation:none}
+.cine:not(.is-live) .cine-scrollhint{display:none}
+.cine:not(.is-live) .cine-platewrap{position:relative;display:block;pointer-events:auto;
+  padding-block:var(--s7) 0;margin-inline:var(--pad)}
+.cine:not(.is-live) .cine-plate{position:absolute;inset:var(--s7) 0 0;
+  width:auto;height:auto;transform:none}
+.cine:not(.is-live) .cine-plate::after{display:none}
+.cine:not(.is-live) .cine-plate-in{position:relative;inset:auto;height:auto;
+  opacity:1;visibility:visible;pointer-events:auto;
+  display:flex;flex-direction:column;
+  padding-inline:clamp(16px,2.4vw,34px);
+  padding-block:clamp(20px,2.4vw,34px)}   /* nothing sticky to clear down here */
+.cine:not(.is-live) .cine-body{align-items:start}
+.cine:not(.is-live) .cine-copy .lead{display:block}
+.cine:not(.is-live) .cine-screen,
+.cine:not(.is-live) .cine-copy,
+.cine:not(.is-live) .cine-mi{opacity:1;transform:none;visibility:visible}
+
+/* the ambient loops are decoration, and decoration is the first thing to go */
+@media (prefers-reduced-motion: reduce){
+  .cine-trackline use.t-hot,.cine-scrollhint svg{animation:none}
+}

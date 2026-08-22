@@ -4,7 +4,8 @@
    Seven named archetypes. Every section on the landing page is exactly one of
    them, so section #7 sits beside section #1 as a set instead of as a pile:
 
-     A  hero-deck    split hero: copy 5/12, instrument deck 7/12
+     A′ retired here  the opening is now the cinematic plate in tu-cine.css;
+                    .rel-badge, .hero-meta and .cyc below are what it still borrows
      B  card-grid    irregular 12-col grid — two 6-wide leads, then 4-wide cards
      C  sticky-log   sticky rail 5/12 + hairline row stack 7/12
      D  metric-rail  n tiles, hairline-separated, NO fill (the rule is the card)
@@ -42,66 +43,14 @@
 .sect-rule{margin-bottom:var(--s6)}
 
 /* ============================================================
-   A — HERO DECK
+   A — HERO DECK (retired on the home page)
+   ----------------------------------------------------------------------------
+   The split hero this archetype describes is gone — replaced by the pinned
+   cinematic plate in css/tu-cine.css. Four primitives survive here because
+   that new hero, and the final CTA below, still borrow them: the download
+   button row, the release badge, the OS/version meta line, and the rotating
+   word. Nothing else from the old archetype is reachable from any page.
    ============================================================ */
-.hero{position:relative;overflow:hidden;
-  padding-top:clamp(36px,3.4vw,68px);padding-bottom:clamp(44px,4vw,80px)}
-
-.hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
-.hero-cam{position:absolute;inset:0}
-.hero-dim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none}
-
-/* --- the shot ---------------------------------------------------------------
-   Instrument Deck builds depth from contrast, not from imagery, so the
-   photograph is admitted as a *canvas* layer rather than as content: graded to
-   the canvas navy before it ever reaches the page, held under a scrim, and
-   ruled over by the same grid and track silhouette the rest of the system uses.
-   It is the only photograph on the site, and it stays underneath everything. */
-.hero-shot,.boot-shot{position:absolute;inset:0;display:block;overflow:hidden;
-  transform-origin:64% 56%}   /* pivots on the crop anchor, same in both layers */
-.hero-shot img,.boot-shot img{
-  width:100%;height:100%;display:block;object-fit:cover;object-position:64% 56%}
-.hero-shot{opacity:.86}
-
-/* The scrim does two jobs: it holds the headline and lead at AA over the one
-   bright area in frame (the monitor slab, right of centre), and it dissolves
-   the bottom of the photograph into the canvas so the hero has no photo edge. */
-.hero-scrim{position:absolute;inset:0;
-  background:
-    linear-gradient(97deg,
-      rgba(2,16,44,.93) 0%,  rgba(2,16,44,.86) 26%,
-      rgba(2,16,44,.52) 50%, rgba(2,16,44,.18) 74%, rgba(2,16,44,.40) 100%),
-    linear-gradient(180deg,
-      rgba(2,16,44,.62) 0%,  rgba(2,16,44,.10) 30%,
-      rgba(2,16,44,.26) 68%, var(--bg) 100%);
-}
-
-.hero-grid{
-  position:absolute;inset:0;
-  background-image:linear-gradient(var(--line) 1px,transparent 1px),
-                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
-  background-size:76px 76px;
-  -webkit-mask-image:radial-gradient(120% 74% at 50% 6%,#000 6%,transparent 74%);
-  mask-image:radial-gradient(120% 74% at 50% 6%,#000 6%,transparent 74%);
-  opacity:.3;
-}
-/* ONE ambient wash. The old build had two blurred colour blobs; a system that
-   builds depth from contrast does not get to keep a second one. */
-.hero-wash{
-  position:absolute;left:50%;top:-320px;width:min(1100px,130vw);height:640px;
-  transform:translateX(-50%);border-radius:50%;filter:blur(100px);opacity:.34;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.42), rgba(255,0,102,0) 70%);
-}
-.hero-track{position:absolute;left:50%;top:20px;transform:translateX(-50%);width:min(1400px,150vw);opacity:.28}
-.hero-track use{fill:none;stroke:rgba(150,190,250,.15);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
-.hero-track use.t-hot{stroke:rgba(255,0,102,.5);stroke-width:1.6;stroke-dasharray:120 1560}
-
-.hero-in{position:relative;z-index:1;
-  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,2.6vw,52px);align-items:center}
-.hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s5)}
-.hero-copy h1{max-width:20ch}
-.hero-copy .lead{max-width:44ch}
-.hero-copy .eyebrow{font-size:var(--t-lbl-s);letter-spacing:.14em}
 .hero-actions{display:flex;gap:var(--s3);flex-wrap:wrap}
 
 .rel-badge{
@@ -127,17 +76,6 @@
 }
 .cyc-w.is-on{opacity:1;transform:translateY(0)}
 .cyc-w.is-out{opacity:0;transform:translateY(-.42em)}
-
-/* --- the instrument deck: three real app windows, no invented chrome --- */
-.deck-wrap{display:flex;flex-direction:column;gap:var(--s3)}
-.deck{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s3);align-items:start}
-.deck-a{grid-column:1/-1}
-.deck-b{grid-column:1/span 3}
-.deck-c{grid-column:4/span 3}
-
-/* screenshots carry their own chrome — the site adds none */
-.w{position:relative;border-radius:var(--r-2);overflow:hidden}
-.w-shot{display:block;width:100%;height:auto;cursor:zoom-in}
 
 /* ============================================================
    B — CARD GRID  (features · 8 cards, irregular by design)
@@ -183,7 +121,15 @@
    C — STICKY LOG  (race control: a log, presented as a log)
    ============================================================ */
 .rc{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,3vw,60px);align-items:start}
-.rc-rail{position:sticky;top:104px;display:flex;flex-direction:column;gap:var(--s4)}
+/* The sticky offset has to clear two things stacked on top of each other: the
+   top bar (ribbon + header, real height in --topbar-h — the ribbon is
+   dismissable, so this can't be a flat number) it sticks below, and
+   .sect-fig's own numeral — which pokes *above* .sect-hd by .34 of its own
+   font-size, the same clamp() that sizes it. Deriving the offset from the
+   same clamp() keeps the two in lockstep at every width instead of guessing
+   a bigger flat number. */
+.rc-rail{position:sticky;top:calc(var(--topbar-h,69px) + clamp(4rem,6.5vw,8rem) * .34 + var(--s3));
+  display:flex;flex-direction:column;gap:var(--s4)}
 .rc-rail .sect-hd{margin-bottom:0}
 .rc-count{
   display:inline-flex;align-items:baseline;gap:6px;
@@ -348,9 +294,7 @@
 .boot.is-done{opacity:0;pointer-events:none}
 body.is-booting{overflow:hidden}
 .boot-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
-.boot-shot{opacity:.6;animation:bootDrift 5s var(--e-state) both}
-@keyframes bootDrift{from{transform:scale(1.13)}to{transform:scale(1.10)}}
-/* Parked where .hero-wash lands once the header and ribbon are above it, so the
+/* Parked where .cine-wash lands once the header and ribbon are above it, so the
    magenta does not jump at the cut — it is the same glow in both layers. */
 .boot-wash{position:absolute;left:50%;top:-260px;width:min(1100px,130vw);height:640px;
   transform:translateX(-50%);border-radius:50%;filter:blur(100px);opacity:.3;
@@ -421,39 +365,17 @@ body.is-booting{overflow:hidden}
 .boot-load{transition:opacity var(--d-2) var(--e-state),transform var(--d-2) var(--e-state)}
 .boot.is-done .boot-load{opacity:0;transform:translateX(-50%) translateY(12px)}
 
-/* The hero shot is held at the boot's parked scale while the boot covers it, and
-   released the moment the boot is actually finished loading — never on a timer.
-   Both photographs run the SAME keyframe from the same instant, so during the
-   420ms dissolve the two layers are not two scales of one image cross-fading —
-   they are one image, moving. The dissolve ends first, and the last 140ms of the
-   settle plays on the hero alone. */
-@keyframes heroSettle{from{transform:scale(1.10)}to{transform:none}}
-body.is-booting .hero-shot{transform:scale(1.10)}
-.boot.is-done .boot-shot,
-body.is-ready .hero-shot{animation:heroSettle var(--d-4) var(--e-enter) both}
-
 /* ============================================================
    entrances — one keyframe, one easing, four steps of 60ms
    ============================================================ */
 @keyframes enterUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes dash{to{stroke-dashoffset:-1680}}
-.hero-copy > *{animation:enterUp var(--d-3) var(--e-enter) backwards}
-.hero-copy > *:nth-child(1){animation-delay:0ms}
-.hero-copy > *:nth-child(2){animation-delay:60ms}
-.hero-copy > *:nth-child(3){animation-delay:120ms}
-.hero-copy > *:nth-child(4){animation-delay:180ms}
-.hero-copy > *:nth-child(5){animation-delay:240ms}
-.deck-wrap{animation:enterUp var(--d-3) var(--e-enter) 180ms backwards}
-.hero-track .t-hot,.boot-track .t-hot{animation:dash 9s linear infinite}
+.boot-track .t-hot{animation:dash 9s linear infinite}
 
 @media (prefers-reduced-motion: reduce){
-  .hero-copy > *,.deck-wrap,.boot-wordmark,.boot-load,.boot-hair{animation:none}
-  .hero-track .t-hot,.boot-track .t-hot,.boot-load-fill{animation:none}
+  .boot-wordmark,.boot-load,.boot-hair{animation:none}
+  .boot-track .t-hot,.boot-load-fill{animation:none}
   .boot-hair{width:30px}
-  /* the handoff collapses to a short cut: no push-in, no drift, no settle */
-  .boot-shot,.hero-shot,
-  .boot.is-done .boot-shot,body.is-ready .hero-shot{animation:none;transform:none}
-  body.is-booting .hero-shot{transform:none}
   .boot-bg,.boot-center,.boot-wordmark,.boot-load{transition:none}
   .boot.is-done .boot-bg,.boot.is-done .boot-wordmark{transform:none}
   .boot.is-done .boot-load{transform:translateX(-50%)}  /* stays centred */
@@ -468,14 +390,6 @@ body.is-ready .hero-shot{animation:heroSettle var(--d-4) var(--e-enter) both}
   .wlist{gap:0 var(--s6)}
 }
 @media (max-width:1040px){
-  .hero-in{grid-template-columns:1fr;gap:var(--s7)}
-  /* single column: the copy now sits over the middle of the frame, so the crop
-     moves toward the rig and the scrim goes vertical to carry the text */
-  .hero-shot img,.boot-shot img{object-position:68% 60%}
-  .hero-shot,.boot-shot{transform-origin:68% 60%}
-  .hero-shot{opacity:.78}
-  .hero-copy{align-items:flex-start}
-  .hero-copy h1{max-width:18ch}
   .rc{grid-template-columns:1fr;gap:var(--s6)}
   .rc-rail{position:static}
   .mrail{grid-template-columns:repeat(2,1fr)}
@@ -494,21 +408,11 @@ body.is-ready .hero-shot{animation:heroSettle var(--d-4) var(--e-enter) both}
   .wlist{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-  /* Collapse the multi-track grids outright. Leaving 12 tracks in place means
-     11 column gaps (220px) still claim space the phone does not have, and the
-     grid overflows its own container even though every card spans 1/-1. */
-  .fgrid,.deck{grid-template-columns:1fr}
-  .deck-a,.deck-b,.deck-c{grid-column:auto}
-  /* Phone: the shot is cropped hard by cover, so it stops being a composition
-     and becomes texture. Pull the crop onto the rig, drop the layer further, and
-     swap the diagonal scrim for a vertical one — the copy runs down the middle
-     here, not down the left, and it is the copy the scrim exists to protect. */
-  .hero-shot img,.boot-shot img{object-position:72% 62%}
-  .hero-shot,.boot-shot{transform-origin:72% 62%}
-  .hero-shot{opacity:.62}
-  .hero-scrim{background:linear-gradient(180deg,
-    rgba(2,16,44,.90) 0%, rgba(2,16,44,.80) 42%,
-    rgba(2,16,44,.62) 74%, var(--bg) 100%)}
+  /* Collapse the multi-track card grid outright. Leaving 12 tracks in place
+     means 11 column gaps (220px) still claim space the phone does not have,
+     and the grid overflows its own container even though every card spans
+     1/-1. */
+  .fgrid{grid-template-columns:1fr}
   .fcard,.fcard.is-lead{grid-column:auto}
   .gpair{grid-template-columns:1fr}
   .mrail{grid-template-columns:1fr}

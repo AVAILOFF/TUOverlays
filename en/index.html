@@ -39,6 +39,7 @@
 
 <link rel="stylesheet" href="/css/tu-core.css">
 <link rel="stylesheet" href="/css/tu-home.css">
+<link rel="stylesheet" href="/css/tu-cine.css">
 
 
 <script type="application/ld+json">
@@ -144,7 +145,7 @@
       // different place in each locale and at every breakpoint; k damps it to a
       // drift toward the headline instead of a literal morph onto it.
       if (!reduced){
-        const h1 = document.querySelector('.hero-copy h1');
+        const h1 = document.querySelector('.cine-slogan h1');
         const wm = boot.querySelector('.boot-wordmark');
         if (h1 && wm){
           const a = wm.getBoundingClientRect();
@@ -170,6 +171,8 @@
 })();
 </script>
 
+<!-- ══════════════════════════ TOP BAR (ribbon + header, hidden over the hero) ══════════════════════════ -->
+<div class="top-bar" id="topBar">
 <!-- ══════════════════════════ RELEASE RIBBON ══════════════════════════ -->
 <div class="relribbon" id="relRibbon" role="status" aria-live="off">
   <span class="relribbon-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -245,63 +248,98 @@
     </div>
   </div>
 </header>
+</div>
 
 <main id="top">
 
-<!-- ═══════════════ HERO — archetype A: split deck ═══════════════ -->
-<div class="hero-stage" id="heroStage">
-<section class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <div class="hero-scrim"></div>
-    <div class="hero-dim"></div>
-    <div class="hero-grid"></div>
-    <div class="hero-wash"></div>
-    <svg class="hero-track" viewBox="0 0 1200 900" aria-hidden="true">
-      <use href="#nordschleife"/>
-      <use class="t-hot" href="#nordschleife"/>
-    </svg>
-  </div>
+<!-- ═══════════════ HERO — archetype A′: cinematic plate ═══════════════
+     Three acts on one pinned stage, scrubbed by js/tu-cine.js:
+       0  the slogan            1  an --elev-1 plate rises and goes full-bleed
+       2  the page it carries, then fades and slides away, releasing the pin
+     Act 2 is the section the numbered sections below count from — it is 00, and
+     the features grid the pin releases into is 01. There is no act 3: the plate
+     does not pull back to reveal a call behind it, it simply leaves. -->
+<div class="cine" id="cine">
+  <div class="cine-stage">
 
-  <div class="wrap hero-in">
-    <div class="hero-copy">
-      <span class="eyebrow">Windows · Deep customization · Race Control</span>
-      <h1>iRacing — now shows your <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">position</span><span class="cyc-w acc">fuel</span><span class="cyc-w acc">traffic</span><span class="cyc-w acc">weather</span><span class="cyc-w acc">incidents</span></span><span class="sr-only">position</span></h1>
-      <p class="lead">Every overlay is its own window, tuned to fit you — position, size, colors, the data it shows. Race Control keeps a live log of every incident, so nothing slips by. Settings save to a profile you can export and share.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="#download">
-          <span class="btn-content">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Download for Windows
-          </span>
-          <span class="btn-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </a>
-      </div>
-      <div class="hero-meta">
-        <span class="js-version">v0.1</span><i>/</i><span>Win 10 · 11 x64</span><i>/</i><span>OBS-ready</span>
+    <div class="cine-bg" aria-hidden="true">
+      <div class="cine-grid"></div>
+      <div class="cine-wash"></div>
+      <svg class="cine-trackline" viewBox="0 0 1200 900" aria-hidden="true">
+        <use href="#nordschleife"/>
+        <use class="t-hot" href="#nordschleife"/>
+      </svg>
+    </div>
+
+    <!-- ACT 0 ─ the slogan -->
+    <div class="cine-slogan">
+      <h1>
+        <span class="cine-l1">Races are won on data,</span>
+        <span class="cine-l2">not on guesswork.</span>
+      </h1>
+      <div class="cine-slogan-foot">
+        <span class="rel-badge">Release <b>August 23</b></span>
+        <span class="cine-scrollhint">
+          <svg width="11" height="14" viewBox="0 0 12 16" fill="none" aria-hidden="true"><path d="M6 1.5v13m0 0 4.2-4.2M6 14.5 1.8 10.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Scroll
+        </span>
       </div>
     </div>
 
-    <!-- live widget composition -->
-    <div class="deck-wrap">
-      <div class="deck">
-        <div class="w deck-a">
-          <img class="w-shot" src="../img/standings.png" alt="Standings overlay" width="845" height="418" decoding="async">
+    <!-- ACTS 1–2 ─ the plate, and the page it carries.
+         The surface and its contents are separate elements: the surface is what
+         resizes, the contents stay pinned at full-bleed and never reflow. -->
+    <div class="cine-platewrap">
+      <div class="cine-plate" aria-hidden="true"></div>
+
+      <div class="cine-plate-in">
+        <div class="cine-plate-hd">
+          <span class="eyebrow">00 / What it is</span>
         </div>
-        <div class="w deck-b">
-          <img class="w-shot" src="../img/relative.png" alt="Relative overlay" width="584" height="307" decoding="async">
+
+        <div class="cine-body">
+          <div class="cine-screen">
+            <div class="cine-screen-frame">
+              <div class="cine-screen-bar">
+                <span class="lbl">Session · Race</span>
+                <span class="lbl">Track · Le Mans</span>
+              </div>
+              <img src="../img/example-3.jpg" alt="TU Overlays widgets on Shelik's stream — 24 Hours of Le Mans" width="1800" height="1013" decoding="async">
+            </div>
+            <div class="cine-screen-foot">
+              <span><b>On screen:</b> Standings · Relative · Track Map · Corner Names · Flag · Lap Timer · Weather</span>
+            </div>
+          </div>
+
+          <div class="cine-copy">
+            <p class="cine-wordmark">TU<span>Overlays</span></p>
+            <h2>Every session, now showing your <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">position</span><span class="cyc-w acc">fuel</span><span class="cyc-w acc">traffic</span><span class="cyc-w acc">weather</span><span class="cyc-w acc">incidents</span></span><span class="sr-only">position</span></h2>
+            <p class="lead">TU Overlays turns iRacing telemetry into 23 separate windows on top of the sim: position in class and overall, gaps to the cars around you, fuel, weather, traffic and your own inputs. Every window is tuned to fit you, and Race&nbsp;Control keeps a live log of every incident — click a row and the replay jumps straight to it.</p>
+          </div>
         </div>
-        <div class="w deck-c">
-          <img class="w-shot" src="../img/fuel-calculator.png" alt="Fuel Calculator overlay" width="423" height="234" decoding="async">
+
+        <div class="cine-rail">
+          <div class="cine-mi">
+            <span class="mk">Widgets</span>
+            <div class="mv"><span data-count="23">23</span></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">Settings per widget</span>
+            <div class="mv"><span data-count="40">40</span><u>+</u></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">CPU load</span>
+            <div class="mv">~<span data-count="1.8">1.8</span><small>%</small></div>
+          </div>
+          <div class="cine-mi">
+            <span class="mk">OBS capture</span>
+            <div class="mv mv-tx">Game + Window</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-</section>
+  </div>
 </div>
 
 <!-- ═══════════════ FEATURES — archetype B: card grid ═══════════════ -->
@@ -311,8 +349,9 @@
     <div class="sect-hd">
       <span class="sect-fig" aria-hidden="true" data-tt-hd>01</span>
       <span class="eyebrow" data-reveal data-tt-hd>01 / Features</span>
-      <h2 data-reveal data-tt-hd style="--d:60ms">Twenty-three widgets.<br>Each one a separate, deeply customizable window.</h2>
-      <p class="lead" data-reveal data-tt-hd style="--d:120ms">Turn on only what you need for the current session. Customize every widget to fit you.</p>
+      <div class="hero-meta" data-reveal style="--d:60ms"><span>Windows · Deep customization · Race Control</span></div>
+      <h2 data-reveal data-tt-hd style="--d:120ms">Twenty-three widgets.<br>Each one a separate, deeply customizable window.</h2>
+      <p class="lead" data-reveal data-tt-hd style="--d:180ms">Turn on only what you need for the current session. Customize every widget to fit you.</p>
     </div>
 
     <div class="fgrid" data-reveal-group>
@@ -826,5 +865,6 @@ window.TU_L = {
 };
 </script>
 <script src="/js/tu-home.js" defer></script>
+<script src="/js/tu-cine.js" defer></script>
 </body>
 </html>
