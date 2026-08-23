@@ -328,12 +328,12 @@ $$('#faqList .qa').forEach(qa => {
    ========================================================================== */
 (() => {
   const cdPanel = $('#dlCountdown');
-  const TARGET = new Date((cdPanel && cdPanel.dataset.target) || '2026-08-23T21:00:00+03:00').getTime();
+  const targetStr = cdPanel && cdPanel.dataset.target;
+  const TARGET = targetStr ? new Date(targetStr).getTime() : Infinity;
   const PROMO_END = new Date((cdPanel && cdPanel.dataset.promoEnd) || '2026-08-24T00:00:00+03:00').getTime();
 
   const gated = $$('a.btn[href="download.html"]');
-  const ribbon = $('#relRibbon'), ribbonCd = $('#ribbonCd'), cdSr = $('#cdSr');
-  const cdD = $('#cdDays'), cdH = $('#cdHours'), cdM = $('#cdMins'), cdS = $('#cdSecs');
+  const ribbon = $('#relRibbon'), cdSr = $('#cdSr');
 
   // remember each button's own label so unlocking restores the exact wording
   gated.forEach(btn => {
@@ -341,18 +341,12 @@ $$('#faqList .qa').forEach(qa => {
     if (label && !btn.dataset.origLabel) btn.dataset.origLabel = label.textContent;
   });
 
-  const parts = ms => {
-    const s = Math.floor(ms / 1000);
-    return { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
-  };
-
-  function lockBtn(btn, p) {
+  function lockBtn(btn) {
     btn.classList.add('is-locked');
     btn.setAttribute('aria-disabled', 'true');
-    const v = { d: p.d, h: pad2(p.h), m: pad2(p.m), s: pad2(p.s) };
     const label = $('.btn-label', btn);
-    if (label) label.textContent = p.d > 0 ? fmt(L.lockD, v) : fmt(L.lockH, v);
-    btn.setAttribute('aria-label', p.d > 0 ? fmt(L.lockAriaD, p) : fmt(L.lockAriaH, p));
+    if (label) label.textContent = L.lockSoon || 'Скоро';
+    btn.setAttribute('aria-label', L.lockAriaSoon || 'Скачивание скоро откроется.');
   }
 
   function spawnConfetti(container, count) {
@@ -435,18 +429,19 @@ $$('#faqList .qa').forEach(qa => {
     if (promo && !promo.hidden && e.key === 'Escape') closePromo();
   });
 
+  let locked = false;
+  function lockAll() {
+    if (locked) return;
+    locked = true;
+    gated.forEach(btn => lockBtn(btn));
+  }
+
   function tick() {
     tickPromoVisibility();
+    if (!Number.isFinite(TARGET)) { lockAll(); return; }
     const ms = TARGET - Date.now();
     if (ms <= 0) { unlock(); return; }
-    const p = parts(ms);
-    if (cdD) cdD.textContent = pad2(p.d);
-    if (cdH) cdH.textContent = pad2(p.h);
-    if (cdM) cdM.textContent = pad2(p.m);
-    if (cdS) cdS.textContent = pad2(p.s);
-    if (ribbonCd) ribbonCd.textContent = (p.d > 0 ? p.d + (L.dayShort || 'd') + ' ' : '') +
-      pad2(p.h) + ':' + pad2(p.m) + ':' + pad2(p.s);
-    gated.forEach(btn => lockBtn(btn, p));
+    lockAll();
   }
   tick();
   setInterval(tick, 1000);
