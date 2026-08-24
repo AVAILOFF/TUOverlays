@@ -636,82 +636,118 @@
     <div class="sect-hd">
       <span class="sect-fig" aria-hidden="true">06</span>
       <span class="eyebrow" data-reveal>06 / FAQ</span>
-      <h2 data-reveal style="--d:60ms">Quick answers</h2>
+      <h2 data-reveal style="--d:60ms">Quick answers to the main questions</h2>
     </div>
 
     <div class="faq" id="faqList" data-reveal>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">01</span>What is TU Overlays, and why does it exist?<span class="qi" aria-hidden="true"></span></button>
+        <button class="qa-q" aria-expanded="false"><span class="qn">01</span>How much does TU Overlays cost?<span class="qi" aria-hidden="true"></span></button>
         <div class="qa-a"><div>
-          <p>TU Overlays is an independent project we're building toward one simple goal: the most convenient, modern and flexible overlay app for iRacing.</p>
-          <p>We didn't want to just make another overlay. We wanted to build a tool people actually enjoy using — one that everyone can configure to fit themselves.</p>
-          <p>The idea came from our own experience. We liked how accurate Kapps' data was, but it lacked a modern interface and freedom to customize. Plenty of useful features were either missing everywhere or locked behind a paid subscription elsewhere. So we decided to try it our way: keep the telemetry accuracy, add a modern design, and include features competitors often charge for.</p>
-          <p>Right now TU Overlays is just getting started. So bugs, rough edges, or things that don't quite work the way they should can still show up here and there. That's normal — the project grows together with the people who use it.</p>
-          <p>That's exactly why your feedback matters to us.</p>
-          <p>On our <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Discord server</a> you can do more than just report a bug. You can suggest a new feature, tell us what you feel is missing from the overlays, share your own idea, or just talk about what a genuinely convenient iRacing tool should look like.</p>
-          <p><b>TU Overlays isn't only built by us. You can shape what it becomes too.</b></p>
-          <p>If something's missing — tell us. If you found a problem — help us track it down. If you have an idea — bring it with you.</p>
-          <p>Maybe your idea will be the next feature in TU Overlays.</p>
+          <p>Right now — nothing. TU Overlays is completely free.</p>
+          <p>From the start, we wanted to build an app where useful features aren't locked behind a subscription. So everything available in the current version can be used for free.</p>
         </div></div>
       </div>
       <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">02</span>How much does it cost?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>The app is currently completely free.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">03</span>Which operating systems are supported?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Windows 10 and Windows 11, 64-bit only. There's no macOS or Linux version, and none is planned — iRacing itself only runs on Windows.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">04</span>How much does FPS drop?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>In our measurements, it's within the margin of error: a median of −3.4 FPS. Overlays render as separate windows on top of the simulator and don't touch its render loop.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">05</span>Does it work with OBS?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Yes. Widgets are captured through both Game Capture and Window Capture. Any widget can be excluded from capture individually — it stays visible on your monitor but won't appear in the stream.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">06</span>Can I recolor and rearrange everything?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Yes: position, size, scale, opacity, class colors, column set, row count, and units are all configurable per widget.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">07</span>Can I save my settings and share them?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>Yes. All widget settings save to a profile file — you can download it, send it to someone else (over Discord, for example), and import it back to apply a ready-made setup in one click.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">08</span>Do I need an account?<span class="qi" aria-hidden="true"></span></button>
-        <div class="qa-a"><div><p>No. The app reads telemetry locally and sends nothing out. You just need an iRacing account with an active subscription.</p></div></div>
-      </div>
-      <div class="qa">
-        <button class="qa-q" aria-expanded="false"><span class="qn">09</span>What widgets does the app include?<span class="qi" aria-hidden="true"></span></button>
+        <button class="qa-q" aria-expanded="false"><span class="qn">02</span>Which systems does the app run on?<span class="qi" aria-hidden="true"></span></button>
         <div class="qa-a"><div>
-          <p>23 independent widgets in total — each can be toggled, dragged, resized and configured on its own:</p>
+          <p>TU Overlays runs on Windows 10 and Windows 11 (64-bit).</p>
+          <p>There's no macOS or Linux version right now. Since iRacing itself officially only runs on Windows, that's the platform we've focused on for now.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">03</span>Does TU Overlays hit your FPS much?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>We've tried to make sure the overlays don't get in the way of what matters — the race itself.</p>
+          <p>In our tests the median drop was around 3.4 FPS on a full starting grid. Overlays run as separate windows on top of the simulator and don't touch its render loop directly.</p>
+          <p>Of course, results can vary depending on your PC and settings.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">04</span>Can I use TU Overlays together with OBS?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>Yes. We had streamers in mind from the start.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">05</span>Can I customize the overlays to fit me?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>That's one of the core ideas behind TU Overlays.</p>
+          <p>You can change each widget's position and size, scale, opacity, class colors, visible columns, row count and units.</p>
+          <p>Don't like the default look? Build your own.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">06</span>Can I save my layout and share it?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>Yes.</p>
+          <p>Settings save to a profile file. You can send it to a friend, share it on Discord, or just keep it as a backup.</p>
+          <p>And if someone's already built a setup you like, you can import it in just a couple of clicks.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">07</span>Do I need a TU Overlays account?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>No.</p>
+          <p>We don't want to add extra sign-ups or accounts where they're not needed. The app works with telemetry locally and doesn't send it to our servers.</p>
+          <p>All you need is an active iRacing account with a valid subscription.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">08</span>What widgets does TU Overlays have?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>There are 23 independent widgets available right now, and each can be toggled, moved, resized and configured on its own:</p>
           <ul class="wlist">
-            <li><b>Standings</b> — full-field standings: position, gap, best laps, pit status and class tags.</li>
-            <li><b>Relative</b> — drivers around you with live delta timing.</li>
-            <li><b>Track Map</b> — live car positions on a track-shaped layout.</li>
-            <li><b>Flat Track Map</b> — a simplified, horizontal-line version of Track Map.</li>
-            <li><b>Weather</b> — track and air temperature, humidity, track state.</li>
+            <li><b>Standings</b> — positions, gaps, best laps, pit status and classes.</li>
+            <li><b>Relative</b> — the cars around you and live intervals to them.</li>
+            <li><b>Track Map</b> — a track map with every driver's live position.</li>
+            <li><b>Flat Track Map</b> — a compact, horizontal version of the map.</li>
+            <li><b>Weather</b> — track and air temperature, humidity and track state.</li>
             <li><b>Wind</b> — wind direction and speed.</li>
-            <li><b>Faster Cars From Behind</b> — a warning when a faster car is closing in from behind.</li>
-            <li><b>Fuel Calculator</b> — consumption, fuel remaining, pit-window timing, consumption history.</li>
-            <li><b>Blind Spot Monitor</b> — visual indicators for cars in your left or right blind spot.</li>
-            <li><b>Garage Cover</b> — a custom overlay while you're in the garage (for stream privacy).</li>
-            <li><b>Rejoin Indicator</b> — a color-coded safety indicator for rejoining the track.</li>
-            <li><b>Pitlane Helper</b> — speed delta, pitbox position and warnings on pit entry.</li>
-            <li><b>Tachometer</b> — RPM gauge with shift points, oil and water temperature.</li>
-            <li><b>Flag</b> — the session's current flag, large, on top of your screen.</li>
-            <li><b>Twitch Chat</b> — a live Twitch chat overlay, no OAuth required.</li>
-            <li><b>Lap Timer</b> — current, best and last lap plus lap history.</li>
-            <li><b>Information Bar</b> — flag status, lap count and session time in one bar.</li>
-            <li><b>Slow Car Ahead</b> — a warning for a slower car ahead on track.</li>
-            <li><b>Sector Delta</b> — per-sector delta against your best lap.</li>
+            <li><b>Faster Cars From Behind</b> — a warning about faster cars closing in from behind.</li>
+            <li><b>Fuel Calculator</b> — consumption, fuel remaining, reserve and pit-stop timing.</li>
+            <li><b>Blind Spot Monitor</b> — cars in your left or right blind spot.</li>
+            <li><b>Garage Cover</b> — a screen cover while you're in the garage.</li>
+            <li><b>Rejoin Indicator</b> — help rejoining the track safely.</li>
+            <li><b>Pitlane Helper</b> — speed, pitbox position and hints on pit entry.</li>
+            <li><b>Tachometer</b> — RPM, shift points and engine temperatures.</li>
+            <li><b>Flag</b> — the session's current flag.</li>
+            <li><b>Twitch Chat</b> — a Twitch chat right on top of the simulator.</li>
+            <li><b>Lap Timer</b> — current, best and previous laps.</li>
+            <li><b>Information Bar</b> — flag, lap number and session time.</li>
+            <li><b>Slow Car Ahead</b> — a warning about a slower car ahead.</li>
+            <li><b>Sector Delta</b> — the delta for each sector.</li>
             <li><b>Heart Rate</b> — your live heart rate via HypeRate.</li>
-            <li><b>Corner Names</b> — the current corner or track section name and progress through it.</li>
+            <li><b>Corner Names</b> — the current corner or track section.</li>
             <li><b>Input Traces</b> — throttle, brake, clutch, steering, gear and speed.</li>
-            <li><b>Telemetry Inspector</b> — a debug widget showing raw session telemetry.</li>
+            <li><b>Telemetry Inspector</b> — a look at the raw telemetry data.</li>
           </ul>
-          <p>Separately from these 23 widgets, the app also has <b>Race Control</b> — a live incident log for the session: crashes, off-track moments and lost-control events are logged automatically, can be flagged, and replayed with a double-click.</p>
+          <p>And that's just what's here now. TU Overlays keeps evolving, so this list will keep changing along with the project and your ideas.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">09</span>What is Race Control?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>Race Control is a separate part of TU Overlays that helps you make sense of what happened out on track.</p>
+          <p>It automatically tracks incidents from telemetry — crashes, off-track moments and lost-control events — collects them in a log, and lets you jump straight to the right moment in the replay.</p>
+          <p>You can look through a specific driver's incident history, flag important moments and come back to them later.</p>
+          <p>It's especially useful after a race, when you want to understand what actually happened instead of relying on memory.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">10</span>What if I found a bug or want to suggest a feature?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>Tell us. It genuinely matters.</p>
+          <p>TU Overlays is still early in its journey, and we're not pretending the project is already perfect. Something might not work quite right somewhere, or a setting you need might be missing — that's exactly why we need your feedback.</p>
+          <p>Join our <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Discord</a>, tell us about issues, suggest ideas and share your experience.</p>
+          <p>The feature you suggest today might show up in TU Overlays tomorrow.</p>
+        </div></div>
+      </div>
+      <div class="qa">
+        <button class="qa-q" aria-expanded="false"><span class="qn">11</span>What if my question isn't here?<span class="qi" aria-hidden="true"></span></button>
+        <div class="qa-a"><div>
+          <p>Message us on <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Discord</a>.</p>
+          <p>If you couldn't find an answer, it might be a question worth adding to this FAQ. And if you bring up something we haven't even thought of yet — even better.</p>
+          <p>TU Overlays is built for the iRacing community. So it matters to us not just to tell you about the project, but to listen to you too.</p>
         </div></div>
       </div>
     </div>
