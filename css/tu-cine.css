@@ -225,7 +225,7 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
 /* On a short viewport the frame's own aspect ratio would push the metric rail
    off the plate, so the shot is allowed to crop rather than the page to break */
 .cine-screen-frame img{
-  display:block;width:100%;height:auto;aspect-ratio:1799/963;object-fit:cover;
+  display:block;width:100%;height:auto;aspect-ratio:1800/1013;object-fit:contain;
   max-height:calc(.46 * var(--vph));
 }
 .cine-screen-foot{

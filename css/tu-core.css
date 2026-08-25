@@ -102,7 +102,7 @@
   --pad:  clamp(20px, 5vw, 40px);
   --sect: clamp(56px, 5vw, 104px);
   --gut:  20px;
-  --maxw: 1180px;
+  --maxw: 1400px;
 
   /* ---- radius: mechanical, never soft ----------------------------------- */
   --r-1: 4px;      /* chips, tags, inputs      */
