@@ -334,6 +334,45 @@ $$('#faqList .qa').forEach(qa => {
   const gated = $$('a.btn[href="download.html"]');
   const ribbon = $('#relRibbon'), cdSr = $('#cdSr');
 
+  /* ---- live countdown clock (fills the .cddown-grid until release) ---- */
+  const cdGrid = cdPanel && $('.cddown-grid', cdPanel);
+  const CD = L.cd || { d: 'дн', h: 'ч', m: 'мин', s: 'сек' };
+  let cdCells = null;
+  function buildGrid() {
+    if (!cdGrid || cdCells) return;
+    cdGrid.textContent = '';
+    cdCells = {};
+    [['d', CD.d], ['h', CD.h], ['m', CD.m], ['s', CD.s]].forEach(([key, lbl], i) => {
+      if (i) {
+        const sep = document.createElement('span');
+        sep.className = 'cddown-sep';
+        sep.textContent = ':';
+        cdGrid.appendChild(sep);
+      }
+      const cell = document.createElement('div');
+      cell.className = 'cddown-cell';
+      const num = document.createElement('span');
+      num.className = 'cddown-num';
+      num.textContent = '00';
+      const l = document.createElement('span');
+      l.className = 'cddown-lbl';
+      l.textContent = lbl;
+      cell.append(num, l);
+      cdGrid.appendChild(cell);
+      cdCells[key] = num;
+    });
+  }
+  function renderCountdown(ms) {
+    buildGrid();
+    if (!cdCells) return;
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const pad = n => String(n).padStart(2, '0');
+    cdCells.d.textContent = String(Math.floor(total / 86400));
+    cdCells.h.textContent = pad(Math.floor(total % 86400 / 3600));
+    cdCells.m.textContent = pad(Math.floor(total % 3600 / 60));
+    cdCells.s.textContent = pad(total % 60);
+  }
+
   // remember each button's own label so unlocking restores the exact wording
   gated.forEach(btn => {
     const label = $('.btn-label', btn);
@@ -407,6 +446,7 @@ $$('#faqList .qa').forEach(qa => {
     if (!Number.isFinite(TARGET)) { lockAll(); return; }
     const ms = TARGET - Date.now();
     if (ms <= 0) { unlock(); return; }
+    renderCountdown(ms);
     lockAll();
   }
   tick();
