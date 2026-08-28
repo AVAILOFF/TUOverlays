@@ -196,9 +196,6 @@
   <div class="relribbon-in wrap">
     <span class="relribbon-tx"><b>TU Overlays</b> release — coming soon</span>
     <a class="relribbon-cta" href="download.html">Available now</a>
-    <button class="relribbon-promo" id="ribbonPromoBtn" type="button" aria-haspopup="dialog" aria-controls="promo">
-      <span aria-hidden="true">🎁</span>Deal of the day
-    </button>
     <button class="relribbon-close" id="ribbonClose" aria-label="Hide banner">
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -756,7 +753,7 @@
       <h2 id="dlHeading">Coming soon — <span class="acc">overlays for iRacing</span></h2>
       <p class="lead" id="dlLead">Installation takes a minute. The Download button unlocks automatically at release — no need to refresh the page.</p>
 
-      <div class="cddown" id="dlCountdown">
+      <div class="cddown" id="dlCountdown" data-target="2026-08-29T12:00:00+03:00">
         <span class="cddown-confetti" aria-hidden="true"></span>
         <div class="cddown-grid" aria-hidden="true">
           <div class="cddown-cell"><span class="cddown-num">Soon</span></div>
@@ -826,33 +823,6 @@
   </svg>
   <span class="fab-txt">Join our Discord</span>
 </a>
-
-<!-- ══════════════════════════ RELEASE-DAY PROMO ══════════════════════════ -->
-<div class="promo" id="promo" hidden role="dialog" aria-modal="true" aria-labelledby="promoTitle">
-  <div class="promo-box">
-    <span class="cddown-confetti" aria-hidden="true"></span>
-    <button class="promo-close" id="promoClose" aria-label="Close">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-    </button>
-    <span class="promo-badge">🎁 Today only, on release day</span>
-    <h3 id="promoTitle">A gift from Shelik</h3>
-    <p class="promo-lead">To mark the release we're giving away the ready-made <b>Shelik</b> overlay preset — the exact widget setup you saw in the gallery. Grab the file while the offer lasts.</p>
-    <a class="btn btn-primary promo-dl" href="../downloads/presets/shelik-preset.json" download="shelik-preset.json">
-      <span class="btn-content">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="btn-label">Download the Shelik preset</span>
-      </span>
-      <span class="btn-arrow" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-    </a>
-    <p class="promo-note">Import the file in TU Overlays settings. The offer runs on August 23 only.</p>
-  </div>
-</div>
 
 <!-- ══════════════════════════ PHOTO LIGHTBOX ══════════════════════════ -->
 <div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Screenshot viewer">

@@ -330,7 +330,6 @@ $$('#faqList .qa').forEach(qa => {
   const cdPanel = $('#dlCountdown');
   const targetStr = cdPanel && cdPanel.dataset.target;
   const TARGET = targetStr ? new Date(targetStr).getTime() : Infinity;
-  const PROMO_END = new Date((cdPanel && cdPanel.dataset.promoEnd) || '2026-08-24T00:00:00+03:00').getTime();
 
   const gated = $$('a.btn[href="download.html"]');
   const ribbon = $('#relRibbon'), cdSr = $('#cdSr');
@@ -397,38 +396,6 @@ $$('#faqList .qa').forEach(qa => {
     if (btn.classList.contains('is-locked')) e.preventDefault();
   }));
 
-  /* ---- release-day promo (preset giveaway) — unlocks with the buttons ---- */
-  const PROMO_PREVIEW = new URLSearchParams(location.search).get('promo') === '1';
-  const promoBtn = $('#ribbonPromoBtn'), promo = $('#promo'), promoClose = $('#promoClose');
-  let promoLastFocus = null;
-
-  const tickPromoVisibility = () => {
-    if (!promoBtn) return;
-    const now = Date.now();
-    promoBtn.style.display = (PROMO_PREVIEW || (now >= TARGET && now < PROMO_END)) ? 'inline-flex' : 'none';
-  };
-  const openPromo = () => {
-    if (!promo) return;
-    promoLastFocus = document.activeElement;
-    const confetti = $('.cddown-confetti', promo);
-    if (confetti) { confetti.replaceChildren(); spawnConfetti(confetti, 18); }
-    promo.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (promoClose) promoClose.focus();
-  };
-  const closePromo = () => {
-    if (!promo) return;
-    promo.hidden = true;
-    document.body.style.overflow = '';
-    if (promoLastFocus) promoLastFocus.focus();
-  };
-  if (promoBtn) promoBtn.addEventListener('click', openPromo);
-  if (promoClose) promoClose.addEventListener('click', closePromo);
-  if (promo) promo.addEventListener('click', e => { if (e.target === promo) closePromo(); });
-  addEventListener('keydown', e => {
-    if (promo && !promo.hidden && e.key === 'Escape') closePromo();
-  });
-
   let locked = false;
   function lockAll() {
     if (locked) return;
@@ -437,7 +404,6 @@ $$('#faqList .qa').forEach(qa => {
   }
 
   function tick() {
-    tickPromoVisibility();
     if (!Number.isFinite(TARGET)) { lockAll(); return; }
     const ms = TARGET - Date.now();
     if (ms <= 0) { unlock(); return; }
