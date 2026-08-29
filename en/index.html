@@ -37,9 +37,86 @@
 <link rel="icon" type="image/png" sizes="512x512" href="../img/favicon-512.png">
 <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 
+<style id="tu-critical">
+/* First-paint + no-CSS fallback for the boot screen. The real stylesheets
+   (loaded right after) override every rule here on tie. This keeps a failed
+   or delayed CSS load looking like a dark loading screen rather than a white
+   page with a black blob where the track outline is. */
+:root{--bg:#02102c}
+html{background:#02102c}
+body{margin:0;background:#02102c;color:#e4ecfb;
+  font-family:'Segoe UI Variable Text','Segoe UI',system-ui,-apple-system,Arial,sans-serif}
+body.is-booting{overflow:hidden}
+.boot{position:fixed;inset:0;z-index:200;background:#02102c;overflow:hidden}
+.boot.is-done{opacity:0;pointer-events:none;transition:opacity .42s}
+.boot-bg,.boot-vignette{position:absolute;inset:0;pointer-events:none}
+.boot-track{position:absolute;left:50%;top:6%;transform:translateX(-50%);
+  width:min(1400px,145vw);opacity:.2}
+.boot-track use{fill:none;stroke:rgba(150,190,250,.16);stroke-width:1.25}
+.boot-center{position:relative;z-index:1;height:100%;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  text-align:center;padding:0 24px}
+.boot-wordmark{margin:0;font-weight:600;letter-spacing:-.03em;color:#e4ecfb;
+  font-size:clamp(2rem,3.4vw,3.2rem);
+  font-family:'Bahnschrift','DIN Alternate','Segoe UI',system-ui,sans-serif}
+.boot-wordmark .boot-acc{color:#ff0066}
+.boot-load{position:absolute;left:50%;bottom:clamp(34px,7vh,64px);
+  transform:translateX(-50%);width:min(460px,calc(100% - 48px));z-index:1}
+.boot-load-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;
+  font:400 11px/1 'Cascadia Mono',Consolas,monospace;letter-spacing:.17em;
+  text-transform:uppercase;color:#7186ad}
+.boot-load-pct{color:#e4ecfb}
+.boot-load-track{position:relative;height:6px;border-radius:999px;overflow:hidden;
+  background:#061a3c;border:1px solid rgba(124,162,224,.22)}
+.boot-load-fill{position:absolute;inset:0;border-radius:999px;
+  background:repeating-linear-gradient(45deg,#ff0066 0 6px,#c8004f 6px 12px);
+  clip-path:inset(0 100% 0 0)}
+.hero-lang,.hero-quicknav{position:fixed;top:22px;z-index:201;margin:0;display:flex;
+  gap:14px;align-items:center;padding:9px 16px;border-radius:999px;
+  background:rgba(2,14,38,.55);
+  font:10px/1 'Cascadia Mono',Consolas,monospace;letter-spacing:.08em;
+  text-transform:uppercase}
+.hero-lang{right:22px}.hero-quicknav{left:22px}
+.hero-lang a,.hero-quicknav a{color:#7186ad;text-decoration:none}
+.hero-lang a.on{color:#e4ecfb}
+</style>
+
 <link rel="stylesheet" href="/css/tu-core.css">
 <link rel="stylesheet" href="/css/tu-home.css">
 <link rel="stylesheet" href="/css/tu-cine.css">
+<script>
+/* Recover a stylesheet that never applied — a transient connection reset,
+   ISP/DPI throttling, or a filter dropping the asset connection all leave
+   link.sheet null. Re-request each missing sheet a few times with a
+   cache-busting query before falling back to #tu-critical above.
+   (Deploy inlines these sheets via scripts/build.mjs, so on the live site
+   there is usually no <link> left for this to act on — it stays as a guard.) */
+(function(){
+  var hrefs=['/css/tu-core.css','/css/tu-home.css','/css/tu-cine.css'];
+  function check(){
+    var links=document.querySelectorAll('link[rel="stylesheet"]');
+    for(var i=0;i<links.length;i++){
+      var l=links[i], base=(l.getAttribute('href')||'').split('?')[0];
+      if(hrefs.indexOf(base)===-1) continue;
+      var tries=+(l.dataset.tuTry||0);
+      if(l.sheet||tries>=4) continue;
+      var fresh=document.createElement('link');
+      fresh.rel='stylesheet';
+      fresh.href=base+'?r='+Date.now();
+      fresh.dataset.tuTry=tries+1;
+      fresh.onerror=function(){setTimeout(check,800);};
+      l.parentNode.insertBefore(fresh,l.nextSibling);
+      l.parentNode.removeChild(l);
+    }
+  }
+  for(var j=0;j<hrefs.length;j++){
+    var el=document.querySelector('link[rel="stylesheet"][href^="'+hrefs[j]+'"]');
+    if(el) el.addEventListener('error',function(){setTimeout(check,300);});
+  }
+  window.addEventListener('load',function(){setTimeout(check,1200);});
+  setTimeout(check,3500);
+})();
+</script>
 
 
 <script type="application/ld+json">
@@ -68,7 +145,7 @@
   <div class="boot-bg" aria-hidden="true">
     <div class="boot-grid"></div>
     <div class="boot-wash"></div>
-    <svg class="boot-track" viewBox="0 0 1200 900" aria-hidden="true">
+    <svg class="boot-track" viewBox="0 0 1200 900" fill="none" aria-hidden="true">
       <use href="#nordschleife"/>
       <use class="t-hot" href="#nordschleife"/>
     </svg>
@@ -278,7 +355,7 @@
     <div class="cine-bg" aria-hidden="true">
       <div class="cine-grid"></div>
       <div class="cine-wash"></div>
-      <svg class="cine-trackline" viewBox="0 0 1200 900" aria-hidden="true">
+      <svg class="cine-trackline" viewBox="0 0 1200 900" fill="none" aria-hidden="true">
         <use href="#nordschleife"/>
         <use class="t-hot" href="#nordschleife"/>
       </svg>
