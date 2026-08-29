@@ -46,20 +46,12 @@
    A — HERO DECK (retired on the home page)
    ----------------------------------------------------------------------------
    The split hero this archetype describes is gone — replaced by the pinned
-   cinematic plate in css/tu-cine.css. Four primitives survive here because
+   cinematic plate in css/tu-cine.css. Three primitives survive here because
    that new hero, and the final CTA below, still borrow them: the download
-   button row, the release badge, the OS/version meta line, and the rotating
-   word. Nothing else from the old archetype is reachable from any page.
+   button row, the OS/version meta line, and the rotating word. Nothing else
+   from the old archetype is reachable from any page.
    ============================================================ */
 .hero-actions{display:flex;gap:var(--s3);flex-wrap:wrap}
-
-.rel-badge{
-  display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;
-  color:var(--tx-2);padding:6px 14px;border-radius:var(--r-pill);
-  background:var(--elev-1);border:1px solid var(--line-2);
-}
-.rel-badge b{color:var(--brand-hi);font-weight:700}
 
 .hero-meta{display:flex;gap:8px 20px;flex-wrap:wrap;
   font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);
@@ -276,11 +268,7 @@
 .cddown-lbl{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
   text-transform:uppercase;color:var(--tx-4)}
 .cddown-sep{font-family:var(--f-mono);font-size:clamp(1.1rem,1.5vw,1.6rem);color:var(--tx-4);transform:translateY(-6px)}
-.cddown-live{display:none;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-block:6px}
-.cddown-live-big{width:26px;height:26px}
-.cddown-live p{font-family:var(--f-display);font-stretch:var(--wd-title);font-weight:600;font-size:17px;color:var(--tx)}
-.cddown.is-live .cddown-grid{display:none}
-.cddown.is-live .cddown-live{display:flex}
+.cddown.is-live{display:none}
 .cddown-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .cddown-confetti span{position:absolute;top:-8%;width:6px;height:11px;border-radius:1px;opacity:0;
   animation-name:confettiBurst;animation-timing-function:var(--e-state);animation-fill-mode:forwards}

@@ -426,9 +426,6 @@ $$('#faqList .qa').forEach(qa => {
     if (heading && u.heading) heading.innerHTML = u.heading;
     if (lead && u.lead) lead.textContent = u.lead;
     if (cdSr && u.sr) cdSr.textContent = u.sr;
-    // every copy of it: the scroll transition mounts a clone of the hero on
-    // the rig's monitor, and both badges have to say the same thing
-    if (u.heroBadge) $$('.rel-badge').forEach(b => { b.innerHTML = u.heroBadge; });
   }
 
   gated.forEach(btn => btn.addEventListener('click', e => {
