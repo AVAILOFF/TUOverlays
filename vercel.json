@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "buildCommand": "node scripts/build.mjs"
+  "buildCommand": "node scripts/build.mjs",
+  "outputDirectory": "."
 }
