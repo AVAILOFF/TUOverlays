@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TU Overlays — telemetry overlays for iRacing</title>
-<meta name="description" content="TU Overlays — deep customization for iRacing overlays: 27 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
+<meta name="description" content="TU Overlays — deep customization for iRacing overlays: 40 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
 <meta name="theme-color" content="#02102c">
 <script src="/scripts/analytics.js" defer></script>
 
@@ -14,14 +14,14 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ru_RU">
 <meta property="og:title" content="TU Overlays — telemetry overlays for iRacing">
-<meta property="og:description" content="TU Overlays — deep customization for iRacing overlays: 27 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
+<meta property="og:description" content="TU Overlays — deep customization for iRacing overlays: 40 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
 <meta property="og:image" content="https://tuoverlays.xyz/img/example-1.jpg">
 <meta property="og:image:width" content="1799">
 <meta property="og:image:height" content="963">
 <meta property="og:image:alt" content="TU Overlays widgets over an iRacing cockpit: standings, track map, weather and inputs">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="TU Overlays — telemetry overlays for iRacing">
-<meta name="twitter:description" content="TU Overlays — deep customization for iRacing overlays: 27 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
+<meta name="twitter:description" content="TU Overlays — deep customization for iRacing overlays: 40 widgets, each tuned to fit you, plus Race Control, a live incident log for the session.">
 <meta name="twitter:image" content="https://tuoverlays.xyz/img/example-1.jpg">
 
 <link rel="canonical" href="https://tuoverlays.xyz/en/">
@@ -397,7 +397,7 @@ body.is-booting{overflow:hidden}
           <div class="cine-copy">
             <p class="cine-wordmark">TU<span>Overlays</span></p>
             <h2>Every session, now showing your <span class="cyc" aria-hidden="true"><span class="cyc-w acc is-on">position</span><span class="cyc-w acc">fuel</span><span class="cyc-w acc">traffic</span><span class="cyc-w acc">weather</span><span class="cyc-w acc">incidents</span></span><span class="sr-only">position</span></h2>
-            <p class="lead">TU Overlays turns iRacing telemetry into 27 separate windows on top of the sim: position in class and overall, gaps to the cars around you, fuel, weather, traffic and your own inputs. Every window is tuned to fit you, and Race&nbsp;Control keeps a live log of every incident — click a row and the replay jumps straight to it.</p>
+            <p class="lead">TU Overlays turns iRacing telemetry into 40 separate windows on top of the sim: position in class and overall, gaps to the cars around you, fuel, weather, traffic and your own inputs. Every window is tuned to fit you, and Race&nbsp;Control keeps a live log of every incident — click a row and the replay jumps straight to it.</p>
           </div>
         </div>
 
@@ -415,7 +415,7 @@ body.is-booting{overflow:hidden}
     <div class="sect-hd">
       <span class="sect-fig" aria-hidden="true" data-tt-hd>01</span>
       <span class="eyebrow" data-reveal data-tt-hd>Features</span>
-      <h2 data-reveal data-tt-hd style="--d:120ms">Twenty-seven widgets.<br>Each one a separate, deeply customizable window.</h2>
+      <h2 data-reveal data-tt-hd style="--d:120ms">Forty widgets.<br>Each one a separate, deeply customizable window.</h2>
       <p class="lead" data-reveal data-tt-hd style="--d:180ms">Turn on only what you need for the current session. Customize every widget to fit you.</p>
     </div>
 
@@ -758,7 +758,7 @@ body.is-booting{overflow:hidden}
       <div class="qa">
         <button class="qa-q" aria-expanded="false"><span class="qn">09</span>What widgets does TU Overlays have?<span class="qi" aria-hidden="true"></span></button>
         <div class="qa-a"><div>
-          <p>There are 27 independent widgets available right now, and each can be toggled, moved, resized and configured on its own:</p>
+          <p>There are 40 independent widgets available right now, and each can be toggled, moved, resized and configured on its own:</p>
           <ul class="wlist">
             <li><b>Standings</b> — positions, gaps, best laps, pit status and classes.</li>
             <li><b>Standings (Compact)</b> — a compact standings table for tight layouts.</li>
@@ -786,6 +786,19 @@ body.is-booting{overflow:hidden}
             <li><b>Heart Rate</b> — your live heart rate via HypeRate.</li>
             <li><b>Corner Names</b> — the current corner or track section.</li>
             <li><b>Input Traces</b> — throttle, brake, clutch, steering, gear and speed.</li>
+            <li><b>Cornering Speed</b> — max and apex speed through the corner against your best pass this session.</li>
+            <li><b>Data Block</b> — a single telemetry value of your choice; duplicate it into a row of readouts.</li>
+            <li><b>Delta Bar</b> — a live delta to the session's best lap, as a bar and a signed number.</li>
+            <li><b>Damage Indicator</b> — a damage and mandatory-repair alert.</li>
+            <li><b>Tires</b> — tire temperature by zone, tread wear and cold pressure.</li>
+            <li><b>G-Force</b> — a traction circle with lateral and longitudinal load, its trail and peaks.</li>
+            <li><b>Undercut / Overcut</b> — whether pitting now beats staying out.</li>
+            <li><b>Balance Meter</b> — live understeer or oversteer.</li>
+            <li><b>Setup Deck</b> — live in-car adjustment positions, highlighted on every change.</li>
+            <li><b>Brake Pressure</b> — per-wheel brake circuit pressure and the real front/rear balance.</li>
+            <li><b>Traffic Ahead</b> — cars you are about to catch, with closing speed.</li>
+            <li><b>Track Wetness</b> — surface wetness on iRacing's scale, its trend and the tyre call.</li>
+            <li><b>Sun &amp; Headlights</b> — where the sun sits relative to the car and the time left to sunset.</li>
             <li><b>Telemetry Inspector</b> — a look at the raw telemetry data.</li>
           </ul>
           <p>And that's just what's here now. TU Overlays keeps evolving, so this list will keep changing along with the project and your ideas.</p>
