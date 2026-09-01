@@ -1,0 +1,70 @@
+# Дублирует changelog с сайта в Discord.
+#
+# changelog.html (и en/changelog.html) читают GitHub Releases этого репозитория
+# живьём через API — то есть опубликованный релиз это ровно то, что видно на
+# сайте. Этот workflow в тот же момент отправляет тот же текст в канал Discord,
+# так что руками копировать ничего не нужно.
+#
+# ── НАСТРОЙКА (один раз) ──────────────────────────────────────────────────────
+# 1. Discord: Настройки сервера → Интеграции → Вебхуки → Новый вебхук,
+#    выбрать канал (напр. #changelog), «Копировать URL вебхука».
+# 2. GitHub, в этом репозитории: Settings → Secrets and variables → Actions
+#      • вкладка Secrets   → New repository secret
+#          имя:      DISCORD_RELEASE_WEBHOOK
+#          значение: URL вебхука из шага 1
+#      • вкладка Variables → New repository variable   (необязательно, для пинга)
+#          имя:      DISCORD_RELEASE_ROLE_ID
+#          значение: ID роли, которую пинговать, напр. 1234567890123456789
+#          (Discord → Настройки пользователя → Расширенные → Режим разработчика,
+#           затем правый клик по роли → Копировать ID роли)
+# 3. Всё. Каждый `scripts/release.ps1` / «Publish release» теперь постит сам.
+#
+# Переотправить старый релиз вручную: вкладка Actions → этот workflow →
+# «Run workflow» → ввести тег (напр. v0.1.0).
+
+name: Announce release in Discord
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Тег уже существующего релиза, который переотправить (напр. v0.1.0)'
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: discord-release-${{ github.event.release.tag_name || github.event.inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Post release notes to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+          DISCORD_ROLE_ID: ${{ vars.DISCORD_RELEASE_ROLE_ID }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DISCORD_WEBHOOK:-}" ]; then
+            echo "::error::Секрет DISCORD_RELEASE_WEBHOOK не задан — задайте его в Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+          # Тот же источник, из которого читает changelog.html: GitHub Releases API.
+          gh release view "$TAG" --repo "$REPO" --json tagName,body,url,publishedAt,isDraft,isPrerelease |
+            node scripts/discord-release.mjs

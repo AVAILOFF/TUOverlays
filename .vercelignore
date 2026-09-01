@@ -2,6 +2,8 @@
 *.md
 downloads/README.md
 scripts/release.ps1
+scripts/discord-release.mjs
+.github/
 
 # Banner source/working files (large, not linked from the site).
 Banners/
