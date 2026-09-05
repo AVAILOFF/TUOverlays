@@ -559,6 +559,37 @@
     syncPreview();
   }
 
+  /* ---------------------------------------------------- google import -- */
+
+  async function importSheet() {
+    const url = $('#import-url').value.trim();
+    const status = $('#import-status');
+    if (!url) {
+      setStatus(status, 'Вставьте ссылку на таблицу', 'err');
+      return;
+    }
+    if (state.board.data.stints.length || state.board.data.drivers.length) {
+      if (!confirm('Импорт заменит текущих пилотов и стинты в этой таблице. Продолжить?')) return;
+    }
+
+    setStatus(status, 'Импорт…', 'pending');
+    $('#import-sheet').disabled = true;
+    try {
+      const res = await call('/api/sheet-import', { boardId: state.board.id, url });
+      state.board.data = res.data;
+      markDirty();
+      renderData();
+      syncPreview();
+      const n = res.data.stints.length;
+      const warn = res.warnings && res.warnings.length ? ' · ' + res.warnings.join(' ') : '';
+      setStatus(status, 'Импортировано стинтов: ' + n + '. Проверьте таблицу и нажмите «Сохранить».' + warn, n ? 'ok' : 'err');
+    } catch (err) {
+      setStatus(status, err.message, 'err');
+    } finally {
+      $('#import-sheet').disabled = false;
+    }
+  }
+
   async function saveData() {
     readMeta();
     const status = $('#data-status');
@@ -926,6 +957,7 @@
       $('#' + id).addEventListener('input', () => { readMeta(); markDirty(); syncPreview(); });
     }
 
+    $('#import-sheet').addEventListener('click', importSheet);
     $('#add-driver').addEventListener('click', addDriver);
     $('#add-stint').addEventListener('click', addStint);
     $('#recalc').addEventListener('click', () => {
