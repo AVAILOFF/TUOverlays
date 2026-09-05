@@ -65,6 +65,9 @@ const HEADER_ALIASES = {
   fuel: ['refuel', 'дозаправка', 'топливо'],
   tyres: ['tyres', 'tires', 'шины', 'резина'],
   note: ['comments', 'comment', 'notes', 'note', 'заметка', 'примечание'],
+  // Only the very first stint's value is read — as the race-start anchor —
+  // so the whole plan lands on the same wall clock as the sheet.
+  start: ['stint start time', 'start time', 'stint start', 'race start', 'начало стинта', 'старт стинта', 'начало', 'start'],
 };
 
 // Derived/analysis columns that must never be picked up even when they
@@ -100,6 +103,20 @@ function matchColumns(headers) {
   return map;
 }
 
+// "10:20:00" / "10:20" -> seconds since midnight, or null when it isn't a
+// clock time. Hours past 24 are wrapped so a "26:00" carried over midnight
+// still lands somewhere sane.
+function parseClock(text) {
+  const raw = String(text || '').trim();
+  const m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(raw);
+  if (!m) return null;
+  const h = Number(m[1]);
+  const mi = Number(m[2]);
+  const s = Number(m[3] || 0);
+  if (mi > 59 || s > 59) return null;
+  return ((h % 24) * 3600) + (mi * 60) + s;
+}
+
 // "0:40:42" / "40:42" -> seconds. A bare number is minutes.
 function parseDur(text) {
   const raw = String(text || '').trim().replace(/^\+/, '');
@@ -122,10 +139,13 @@ const PALETTE = ['#ff0066', '#3fd8e0', '#8b7dff', '#ffb02e', '#35e08d', '#ff5f96
 
 /*
   rows: full CSV grid, header row first.
-  Returns { drivers, stints } in the raw shape schema.normalizeData() expects,
-  chained the same way the panel's "Пересчитать старты подряд" button does —
-  wall-clock start times in the sheet are for humans, not for the offsets we
-  store, and they don't survive a midnight rollover cleanly.
+  Returns { drivers, stints, warnings, raceStartClock }. Stints are chained the
+  same way the panel's "Пересчитать старты подряд" button does — mid-race
+  wall-clock times are for humans, not for the offsets we store, and they don't
+  survive a midnight rollover cleanly. The one wall-clock value we do keep is
+  the first stint's start: raceStartClock (seconds since midnight), which the
+  panel drops onto "Старт гонки" so the imported plan lands on the same clock
+  as the sheet instead of on whatever the board happened to hold.
 */
 export function sheetToBoardData(rows, makeId) {
   if (!rows.length) return { drivers: [], stints: [], warnings: ['Таблица пустая'] };
@@ -150,6 +170,9 @@ export function sheetToBoardData(rows, makeId) {
 
   let cursor = 0;
   const stints = [];
+  let raceStartClock = null;   // seconds since midnight of the first stint's start
+  let prevClock = null;        // running wall clock, for the "uneven gaps" check
+  let unevenGap = false;
   for (const raw of body) {
     const name = cols.driver !== undefined ? String(raw[cols.driver] || '').trim() : '';
     const duration = cols.duration !== undefined ? parseDur(raw[cols.duration]) : 0;
@@ -158,6 +181,20 @@ export function sheetToBoardData(rows, makeId) {
     // A trailing "time left after the finish" row some sheets add has no
     // driver and no length — skip it rather than importing an empty stint.
     if (!name && !duration && !pit) continue;
+
+    const clock = cols.start !== undefined ? parseClock(raw[cols.start]) : null;
+    if (clock != null) {
+      if (raceStartClock == null) raceStartClock = clock;
+      if (prevClock != null) {
+        // Gap the sheet actually left between this start and the previous one,
+        // unwrapped across midnight, vs. what chaining would give it.
+        let gap = clock - prevClock;
+        if (gap < 0) gap += 24 * 3600;
+        const chained = stints.length ? stints[stints.length - 1].plannedDurationSec + stints[stints.length - 1].pitStopDurationSec : 0;
+        if (chained && Math.abs(gap - chained) > 120) unevenGap = true;
+      }
+      prevClock = clock;
+    }
 
     stints.push({
       id: makeId(),
@@ -175,6 +212,9 @@ export function sheetToBoardData(rows, makeId) {
   }
 
   if (!stints.length) warnings.push('В таблице не нашлось ни одной строки со стинтом.');
+  if (unevenGap) {
+    warnings.push('В таблице неравномерные промежутки между стинтами — старты пересчитаны цепочкой, проверьте план и при необходимости поправьте концы стинтов вручную.');
+  }
 
-  return { drivers, stints, warnings };
+  return { drivers, stints, warnings, raceStartClock };
 }

@@ -153,11 +153,42 @@
 
         <div class="panel">
           <h2>Стинты</h2>
-          <p class="hint">Время вводится как <code>55:00</code> или <code>1:01:00</code>; просто число считается минутами.</p>
+          <p class="hint">Время вводится как <code>55:00</code> или <code>1:01:00</code>; просто число считается минутами. «Старт» и «Конец» — от старта гонки; под ними — время суток, если задан старт гонки. «Конец» можно править — меняется длительность стинта.</p>
           <div class="row" style="margin:0 0 14px">
             <button class="btn btn-sm" id="add-stint">Добавить стинт</button>
             <button class="btn btn-sm" id="recalc">Пересчитать старты подряд</button>
+            <button class="btn btn-sm" id="recalc-custom-toggle">Пересчитать по-своему…</button>
+            <label class="check" id="auto-recalc-wrap" style="margin-left:auto">
+              <input type="checkbox" id="auto-recalc">
+              Автопересчёт стартов после правок
+            </label>
           </div>
+
+          <div class="recalc-custom" id="recalc-custom" hidden>
+            <div class="grid cols-3">
+              <div>
+                <label class="lbl" for="rc-from">Откуда пересчитывать</label>
+                <select id="rc-from"></select>
+              </div>
+              <div>
+                <label class="lbl" for="rc-anchor">Старт первого из них</label>
+                <input type="text" id="rc-anchor" placeholder="как есть · напр. 0:00 или 7:45:07">
+              </div>
+              <div>
+                <label class="lbl" for="rc-pit">Пит между стинтами</label>
+                <input type="text" id="rc-pit" placeholder="не менять">
+              </div>
+              <div>
+                <label class="lbl" for="rc-dur">Длительность стинтов</label>
+                <input type="text" id="rc-dur" placeholder="не менять">
+              </div>
+              <div class="row" style="align-items:flex-end">
+                <button class="btn btn-sm btn-primary" id="rc-apply">Пересчитать</button>
+              </div>
+            </div>
+            <p class="hint" style="margin-top:10px">Старт задаётся смещением от старта гонки (<code>7:45:07</code>). Пустые поля «пит» и «длительность» оставляют значения стинтов как есть; заполненные — применяются ко всем пересчитываемым стинтам. Ничего не сохраняется, пока не нажата «Сохранить».</p>
+          </div>
+
           <div class="edwrap">
             <table class="edtable">
               <thead>
@@ -166,6 +197,7 @@
                   <th>Пилот</th>
                   <th>Старт</th>
                   <th>Длительность</th>
+                  <th>Конец</th>
                   <th>Пит</th>
                   <th>Круги</th>
                   <th>Топливо</th>

@@ -3,9 +3,10 @@
 
     POST /api/sheet-import  { boardId, url }   key required (owner or editor)
 
-  Only returns the parsed { drivers, stints } — it never writes to the board.
-  The panel drops the result into the working copy and the operator still has
-  to press "Сохранить", same as if they'd typed the rows in by hand.
+  Only returns the parsed { data, warnings, raceStartClock } — it never writes
+  to the board. The panel drops the result into the working copy (rows plus, if
+  the sheet had a start-time column, the race-start clock) and the operator
+  still has to press "Сохранить", same as if they'd typed the rows in by hand.
 
   The pasted url only ever donates a sheet id; the request always goes to a
   csv export URL we build ourselves, so this can't be turned into a fetch of
@@ -59,10 +60,10 @@ export default async function handler(req, res) {
   }
 
   const rows = parseCsv(csv);
-  const { drivers, stints, warnings } = sheetToBoardData(rows, makeId);
+  const { drivers, stints, warnings, raceStartClock } = sheetToBoardData(rows, makeId);
   const data = normalizeData({ drivers, stints }, makeId);
 
-  return json(res, 200, { ok: true, data, warnings });
+  return json(res, 200, { ok: true, data, warnings, raceStartClock: raceStartClock ?? null });
 }
 
 async function fetchCsv(url) {

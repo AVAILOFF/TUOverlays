@@ -18,6 +18,9 @@
   'use strict';
 
   const STORE_KEY = 'tu-stints-key';
+  // Whether manual edits to a stint's length or pit re-chain the starts of the
+  // stints below it. A per-browser editor preference, not board data.
+  const AUTO_KEY = 'tu-stints-autorecalc';
 
   // Fallback host for viewers who can't reach the main domain (RU ISPs
   // blocking/throttling it are the recurring case) — a Vercel branch preview
@@ -75,6 +78,56 @@
     const parts = raw.split(':').map(p => Number(p) || 0);
     while (parts.length < 3) parts.unshift(0);
     return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+
+  /* -------------------------------------------------- start recalcing -- */
+
+  const autoRecalc = () => {
+    try { return localStorage.getItem(AUTO_KEY) === '1'; } catch { return false; }
+  };
+  const setAutoRecalc = on => {
+    try { localStorage.setItem(AUTO_KEY, on ? '1' : '0'); } catch { /* private mode */ }
+  };
+
+  // Chain the plan in place: each stint starts where the previous one ended,
+  // plus that previous stint's pit. Same rule as the "Пересчитать старты
+  // подряд" button and as the Google import.
+  function chainStarts(list, fromIndex) {
+    const stints = list || (state.board && state.board.data.stints) || [];
+    const from = Math.max(0, fromIndex || 0);
+    let cursor = from > 0
+      ? stints[from - 1].startOffsetSec + stints[from - 1].plannedDurationSec + stints[from - 1].pitStopDurationSec
+      : 0;
+    for (let i = from; i < stints.length; i++) {
+      stints[i].startOffsetSec = cursor;
+      cursor += stints[i].plannedDurationSec + stints[i].pitStopDurationSec;
+    }
+  }
+
+  // Called after a manual edit / row move: only re-chains when the operator
+  // asked for it with the "Автопересчёт" switch.
+  function chainIfAuto(fromIndex) {
+    if (autoRecalc()) chainStarts(null, fromIndex);
+  }
+
+  // Race start as seconds since local midnight, for the clock hints in the
+  // editor. NaN when the board has no race start set.
+  function raceStartSecOfDay() {
+    const iso = state.board && state.board.meta && state.board.meta.raceStartIso;
+    if (!iso) return NaN;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return NaN;
+    return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  }
+
+  // offsetSec from race start -> "18:45" wall clock (24h, seconds dropped),
+  // rolled over midnight. '' when there is no race start to hang it on.
+  function offsetToClock(offsetSec) {
+    const base = raceStartSecOfDay();
+    if (Number.isNaN(base)) return '';
+    let s = Math.round(base + offsetSec) % 86400;
+    if (s < 0) s += 86400;
+    return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60));
   }
 
   // <input type="datetime-local"> speaks local wall time; the board stores UTC.
@@ -303,6 +356,7 @@
     $('#f-car').value = board.meta.car || '';
     $('#f-start').value = isoToLocalInput(board.meta.raceStartIso);
     $('#f-note').value = board.meta.note || '';
+    $('#auto-recalc').checked = autoRecalc();
 
     renderDrivers();
     renderStints();
@@ -392,26 +446,52 @@
       driverCell.appendChild(select);
       tr.appendChild(driverCell);
 
-      const timeField = (value, onChange, title) => {
+      const locked = autoRecalc();
+
+      // opts: { title, clockFor (offsetSec for the wall-clock hint, or null),
+      // readOnly, chainFrom (re-chain from this row index after a change) }
+      const timeField = (value, onChange, opts) => {
+        const o = opts || {};
         const td = el('td', 'num');
-        const input = el('input', 'w-time');
+        const input = el('input', 'w-time' + (o.readOnly ? ' is-locked' : ''));
         input.type = 'text';
         input.value = fmtDur(value);
-        input.title = title;
-        input.addEventListener('change', () => {
-          onChange(parseDur(input.value));
-          input.value = fmtDur(parseDur(input.value));
-          markDirty();
-          renderStints();
-          syncPreview();
-        });
+        if (o.title) input.title = o.title;
+        if (o.readOnly) {
+          input.readOnly = true;
+          input.tabIndex = -1;
+        } else {
+          input.addEventListener('change', () => {
+            onChange(parseDur(input.value));
+            input.value = fmtDur(parseDur(input.value));
+            if (o.chainFrom != null) chainIfAuto(o.chainFrom);
+            markDirty();
+            renderStints();
+            syncPreview();
+          });
+        }
         td.appendChild(input);
+        if (o.clockFor != null) {
+          const clock = offsetToClock(o.clockFor);
+          if (clock) td.appendChild(el('span', 'ed-clock', clock));
+        }
         return td;
       };
 
-      tr.appendChild(timeField(stint.startOffsetSec, v => { stint.startOffsetSec = v; }, 'Время от старта гонки, ч:мм:сс'));
-      tr.appendChild(timeField(stint.plannedDurationSec, v => { stint.plannedDurationSec = v; }, 'Длительность стинта, мм:сс'));
-      tr.appendChild(timeField(stint.pitStopDurationSec, v => { stint.pitStopDurationSec = v; }, 'Время на пит-стоп, мм:сс'));
+      tr.appendChild(timeField(stint.startOffsetSec, v => { stint.startOffsetSec = v; }, {
+        title: locked ? 'Старт считается автоматически — выключите «Автопересчёт», чтобы задать вручную' : 'Время от старта гонки, ч:мм:сс',
+        clockFor: stint.startOffsetSec,
+        readOnly: locked,
+      }));
+      tr.appendChild(timeField(stint.plannedDurationSec, v => { stint.plannedDurationSec = v; }, {
+        title: 'Длительность стинта, мм:сс', chainFrom: i + 1,
+      }));
+      tr.appendChild(timeField(stint.startOffsetSec + stint.plannedDurationSec, v => {
+        stint.plannedDurationSec = Math.max(0, v - stint.startOffsetSec);
+      }, { title: 'Конец стинта = старт + длительность, ч:мм:сс', clockFor: stint.startOffsetSec + stint.plannedDurationSec, chainFrom: i + 1 }));
+      tr.appendChild(timeField(stint.pitStopDurationSec, v => { stint.pitStopDurationSec = v; }, {
+        title: 'Время на пит-стоп, мм:сс', chainFrom: i + 1,
+      }));
 
       const numField = (value, onChange, step) => {
         const td = el('td', 'num');
@@ -451,10 +531,12 @@
         const copy = clone(stint);
         copy.id = newId();
         state.board.data.stints.splice(i + 1, 0, copy);
+        chainIfAuto(i + 1);
         markDirty(); renderStints(); syncPreview();
       }));
       box.appendChild(rowButton('✕', 'Удалить', () => {
         state.board.data.stints.splice(i, 1);
+        chainIfAuto(i);
         markDirty(); renderStints(); syncPreview();
       }, 'btn-danger'));
       acts.appendChild(box);
@@ -466,10 +548,27 @@
     if (!state.board.data.stints.length) {
       const tr = el('tr');
       const td = el('td', 'empty', 'Стинтов пока нет — добавьте первый.');
-      td.colSpan = 10;
+      td.colSpan = 11;
       tr.appendChild(td);
       body.appendChild(tr);
     }
+
+    refreshRecalcFromOptions();
+  }
+
+  // The "откуда пересчитывать" dropdown in the custom-recalc panel — one entry
+  // per stint, rebuilt whenever the list changes.
+  function refreshRecalcFromOptions() {
+    const select = $('#rc-from');
+    if (!select) return;
+    const keep = select.value;
+    select.textContent = '';
+    state.board.data.stints.forEach((_, i) => {
+      const option = el('option', null, i === 0 ? 'С первого стинта' : 'Со стинта ' + pad(i + 1));
+      option.value = String(i);
+      select.appendChild(option);
+    });
+    if (keep && Number(keep) < state.board.data.stints.length) select.value = keep;
   }
 
   function rowButton(glyph, title, onClick, extra) {
@@ -484,6 +583,7 @@
     const target = index + delta;
     if (target < 0 || target >= list.length) return;
     [list[index], list[target]] = [list[target], list[index]];
+    chainIfAuto(Math.min(index, target));
     markDirty();
     renderStints();
     syncPreview();
@@ -525,21 +625,51 @@
       status: 'planned',
       note: '',
     });
+    chainIfAuto(list.length - 1);
     markDirty();
     renderStints();
     syncPreview();
   }
 
-  // Chain the plan: each stint starts where the previous one ended, plus its pit.
+  // "Пересчитать старты подряд" — chain the whole list from zero.
   function recalcStarts() {
-    let cursor = 0;
-    for (const stint of state.board.data.stints) {
-      stint.startOffsetSec = cursor;
-      cursor += stint.plannedDurationSec + stint.pitStopDurationSec;
-    }
+    chainStarts(state.board.data.stints, 0);
     markDirty();
     renderStints();
     syncPreview();
+  }
+
+  // "Пересчитать по-своему" — chain from a chosen stint, optionally forcing a
+  // common stint length and/or pit and a starting point other than 0:00.
+  function applyCustomRecalc() {
+    const list = state.board.data.stints;
+    if (!list.length) return;
+
+    const fromIdx = Math.min(Math.max(0, Number($('#rc-from').value) || 0), list.length - 1);
+    const anchorRaw = $('#rc-anchor').value.trim();
+    const durRaw = $('#rc-dur').value.trim();
+    const pitRaw = $('#rc-pit').value.trim();
+    const fixedDur = durRaw ? parseDur(durRaw) : null;
+    const fixedPit = pitRaw ? parseDur(pitRaw) : null;
+
+    let cursor;
+    if (anchorRaw) cursor = parseDur(anchorRaw);
+    else if (fromIdx === 0) cursor = 0;
+    else cursor = list[fromIdx].startOffsetSec;
+
+    for (let i = fromIdx; i < list.length; i++) {
+      if (fixedDur != null) list[i].plannedDurationSec = fixedDur;
+      if (fixedPit != null) list[i].pitStopDurationSec = fixedPit;
+      list[i].startOffsetSec = cursor;
+      cursor += list[i].plannedDurationSec + list[i].pitStopDurationSec;
+    }
+
+    markDirty();
+    renderStints();
+    syncPreview();
+    setStatus($('#data-status'),
+      'Пересчитано ' + (fromIdx === 0 ? 'с первого стинта' : 'со стинта ' + pad(fromIdx + 1)) +
+      '. Проверьте план и нажмите «Сохранить».', 'pending');
   }
 
   /* ---------------------------------------------------- google import -- */
@@ -560,12 +690,29 @@
     try {
       const res = await call('/api/sheet-import', { boardId: state.board.id, url });
       state.board.data = res.data;
+
+      // Carry the sheet's own race-start clock so the imported plan lands on the
+      // same wall time the sheet shows — without this the offsets are right but
+      // every row is off by however far the board's "Старт гонки" sat from the
+      // sheet's first stint. Keep the board's date, replace only the time.
+      let anchorNote = '';
+      if (Number.isFinite(res.raceStartClock)) {
+        const base = state.board.meta.raceStartIso ? new Date(state.board.meta.raceStartIso) : new Date();
+        if (Number.isNaN(base.getTime())) base.setTime(Date.now());
+        base.setHours(0, 0, 0, 0);
+        const at = new Date(base.getTime() + res.raceStartClock * 1000);
+        state.board.meta.raceStartIso = at.toISOString();
+        anchorNote = ' Старт гонки взят из таблицы: ' +
+          pad(Math.floor(res.raceStartClock / 3600)) + ':' + pad(Math.floor((res.raceStartClock % 3600) / 60)) +
+          ' (проверьте дату и часовой пояс).';
+      }
+
       markDirty();
       renderData();
       syncPreview();
       const n = res.data.stints.length;
       const warn = res.warnings && res.warnings.length ? ' · ' + res.warnings.join(' ') : '';
-      setStatus(status, 'Импортировано стинтов: ' + n + '. Проверьте таблицу и нажмите «Сохранить».' + warn, n ? 'ok' : 'err');
+      setStatus(status, 'Импортировано стинтов: ' + n + '.' + anchorNote + ' Проверьте таблицу и нажмите «Сохранить».' + warn, n ? 'ok' : 'err');
     } catch (err) {
       setStatus(status, err.message, 'err');
     } finally {
@@ -1057,7 +1204,13 @@
     });
 
     for (const id of ['f-title', 'f-track', 'f-car', 'f-start', 'f-note']) {
-      $('#' + id).addEventListener('input', () => { readMeta(); markDirty(); syncPreview(); });
+      $('#' + id).addEventListener('input', () => {
+        readMeta();
+        markDirty();
+        // The editor's wall-clock hints hang off the race start.
+        if (id === 'f-start') renderStints();
+        syncPreview();
+      });
     }
 
     $('#import-sheet').addEventListener('click', importSheet);
@@ -1065,6 +1218,24 @@
     $('#add-stint').addEventListener('click', addStint);
     $('#recalc').addEventListener('click', () => {
       if (confirm('Пересчитать старты подряд: каждый стинт начинается там, где закончился предыдущий, плюс пит-стоп?')) recalcStarts();
+    });
+    $('#recalc-custom-toggle').addEventListener('click', () => {
+      const panel = $('#recalc-custom');
+      panel.hidden = !panel.hidden;
+    });
+    $('#rc-apply').addEventListener('click', applyCustomRecalc);
+    $('#auto-recalc').addEventListener('change', event => {
+      const on = event.target.checked;
+      setAutoRecalc(on);
+      if (on && state.board) {
+        chainStarts(state.board.data.stints, 0);
+        markDirty();
+        syncPreview();
+        setStatus($('#data-status'), 'Автопересчёт включён — старты выстроены подряд. Дальше они будут пересчитываться после каждой правки длительности или пит-стопа.', 'pending');
+      } else {
+        setStatus($('#data-status'), 'Автопересчёт выключен — старты можно задавать вручную.', '');
+      }
+      if (state.board) renderStints();
     });
     $('#save-data').addEventListener('click', saveData);
     $('#reload-board').addEventListener('click', async () => {
