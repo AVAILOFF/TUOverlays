@@ -29,6 +29,8 @@
   --data: #3fd8e0;
   --good: #35e08d;
   --warn: #ffb02e;
+  --custom-bg: #02102c;
+  --custom-tx: #e4ecfb;
 
   --f-display: 'Bahnschrift', 'DIN Alternate', 'DIN Condensed', 'Avenir Next Condensed', 'Segoe UI Variable Display', 'Franklin Gothic Medium', system-ui, sans-serif;
   --f-text: 'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
@@ -110,6 +112,24 @@
   --tx-2: #5a4d38;
   --tx-3: #79694e;
   --tx-4: #8c7c60;
+}
+
+/* Custom: everything below is derived from just the two colours the panel's
+   "Своя" theme controls set (--custom-bg/--custom-tx), so any pair of colours
+   the operator picks produces a coherent set of surfaces and border/text
+   shades — not just the two colours themselves. */
+.st-root[data-theme="custom"] {
+  --bg: var(--custom-bg);
+  --well: color-mix(in srgb, var(--custom-bg) 90%, black);
+  --elev-1: color-mix(in srgb, var(--custom-bg) 82%, white);
+  --elev-2: color-mix(in srgb, var(--custom-bg) 72%, white);
+  --line: color-mix(in srgb, var(--custom-tx) 12%, transparent);
+  --line-2: color-mix(in srgb, var(--custom-tx) 22%, transparent);
+  --line-3: color-mix(in srgb, var(--custom-tx) 38%, transparent);
+  --tx: var(--custom-tx);
+  --tx-2: color-mix(in srgb, var(--custom-tx) 82%, var(--custom-bg));
+  --tx-3: color-mix(in srgb, var(--custom-tx) 58%, var(--custom-bg));
+  --tx-4: color-mix(in srgb, var(--custom-tx) 44%, var(--custom-bg));
 }
 
 .st-root[data-density="compact"] { --row-y: 6px; --row-x: 10px; }

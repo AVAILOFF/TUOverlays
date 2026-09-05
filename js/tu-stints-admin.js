@@ -19,6 +19,11 @@
 
   const STORE_KEY = 'tu-stints-key';
 
+  // Fallback host for viewers who can't reach the main domain (RU ISPs
+  // blocking/throttling it are the recurring case) — a Vercel branch preview
+  // that mirrors main, so it stays live independently of the primary domain.
+  const MIRROR_ORIGIN = 'https://tu-overlays-git-stints-team-unknown2.vercel.app';
+
   const state = {
     key: '',
     role: '',
@@ -239,6 +244,10 @@
     const link = location.origin + '/s/' + id;
     $('#public-link').value = link;
     $('#public-open').href = link;
+
+    const mirrorLink = MIRROR_ORIGIN + '/s/' + id;
+    $('#public-link-mirror').value = mirrorLink;
+    $('#public-open-mirror').href = mirrorLink;
 
     // The preview is the public page itself; it announces itself when ready.
     $('#preview').src = '/s/' + id + '?preview=1';
@@ -598,7 +607,7 @@
   const VIEW_SPEC = [
     { section: 'Шапка', items: [
       { key: 'subtitle', type: 'text', label: 'Подзаголовок', placeholder: 'Команда, класс, дивизион' },
-      { key: 'logoUrl', type: 'text', label: 'Логотип (URL)', placeholder: '/img/logo.png' },
+      { key: 'logoUrl', type: 'image', label: 'Логотип', placeholder: 'https://… или загрузите файл' },
       { key: 'showMeta', type: 'bool', label: 'Показывать трассу, машину и старт' },
       { key: 'showSummary', type: 'bool', label: 'Показывать сводку сверху' },
       { key: 'titleAlign', type: 'select', label: 'Выравнивание шапки', options: [['left', 'Слева'], ['center', 'По центру']] },
@@ -609,7 +618,9 @@
       { key: 'tz', type: 'text', label: 'Часовой пояс', placeholder: 'Europe/Moscow — пусто = как у зрителя' },
     ] },
     { section: 'Оформление', items: [
-      { key: 'theme', type: 'select', label: 'Тема', options: [['dark', 'Тёмная'], ['light', 'Светлая'], ['contrast', 'Контрастная'], ['carbon', 'Карбон'], ['paper', 'Пергамент']] },
+      { key: 'theme', type: 'select', label: 'Тема', options: [['dark', 'Тёмная'], ['light', 'Светлая'], ['contrast', 'Контрастная'], ['carbon', 'Карбон'], ['paper', 'Пергамент'], ['custom', 'Своя']] },
+      { key: 'customBg', type: 'color', label: 'Фон для темы «Своя»' },
+      { key: 'customText', type: 'color', label: 'Текст для темы «Своя»' },
       { key: 'density', type: 'select', label: 'Плотность строк', options: [['compact', 'Плотно'], ['normal', 'Обычно'], ['roomy', 'Просторно']] },
       { key: 'fontScale', type: 'range', label: 'Размер шрифта', min: 80, max: 140, step: 5, unit: '%' },
       { key: 'maxWidth', type: 'range', label: 'Ширина', min: 720, max: 1600, step: 20, unit: 'px' },
@@ -677,7 +688,7 @@
   };
 
   function viewControl(item, view) {
-    const row = el('div', 'vrow' + (item.type === 'text' ? ' wide' : ''));
+    const row = el('div', 'vrow' + (item.type === 'text' || item.type === 'image' ? ' wide' : ''));
     const label = el('label', null, item.label);
     row.appendChild(label);
 
@@ -744,6 +755,68 @@
       return row;
     }
 
+    if (item.type === 'image') {
+      const box = el('div', 'imgctl');
+
+      const thumb = el('img', 'imgctl-thumb');
+      thumb.hidden = !view[item.key];
+      thumb.src = view[item.key] || '';
+      thumb.alt = '';
+      box.appendChild(thumb);
+
+      const input = el('input', 'imgctl-url');
+      input.type = 'text';
+      input.value = view[item.key] || '';
+      if (item.placeholder) input.placeholder = item.placeholder;
+      input.addEventListener('input', () => {
+        onChange(input.value);
+        thumb.src = input.value;
+        thumb.hidden = !input.value;
+      });
+      box.appendChild(input);
+
+      const file = el('input');
+      file.type = 'file';
+      file.accept = 'image/png,image/jpeg,image/webp,image/gif';
+      file.hidden = true;
+      file.addEventListener('change', async () => {
+        const picked = file.files && file.files[0];
+        file.value = '';
+        if (!picked) return;
+        setStatus($('#view-status'), 'Обрабатываю изображение…', 'pending');
+        try {
+          const dataUrl = await fileToLogoDataUrl(picked);
+          input.value = dataUrl;
+          thumb.src = dataUrl;
+          thumb.hidden = false;
+          onChange(dataUrl);
+          setStatus($('#view-status'), 'Изображение готово — не забудьте опубликовать', 'pending');
+        } catch (err) {
+          setStatus($('#view-status'), err.message, 'err');
+        }
+      });
+      box.appendChild(file);
+
+      const upload = el('button', 'btn btn-sm', 'Загрузить с устройства');
+      upload.type = 'button';
+      upload.addEventListener('click', () => file.click());
+      box.appendChild(upload);
+
+      const clear = el('button', 'btn btn-sm btn-icon', '✕');
+      clear.type = 'button';
+      clear.title = 'Убрать логотип';
+      clear.addEventListener('click', () => {
+        input.value = '';
+        thumb.src = '';
+        thumb.hidden = true;
+        onChange('');
+      });
+      box.appendChild(clear);
+
+      row.appendChild(box);
+      return row;
+    }
+
     const input = el('input');
     input.type = 'text';
     input.value = view[item.key] || '';
@@ -751,6 +824,43 @@
     input.addEventListener('input', () => onChange(input.value));
     row.appendChild(input);
     return row;
+  }
+
+  // A phone photo can be several MB at a few thousand px — shrink it to a
+  // small square before it goes anywhere near the board's JSON document.
+  const LOGO_MAX_PX = 160;
+  const LOGO_MAX_SOURCE_BYTES = 8 * 1024 * 1024;
+  const LOGO_MAX_DATA_URL = 260000; // keep in step with api/_lib/schema.js LOGO_DATA_MAX
+
+  function fileToLogoDataUrl(file) {
+    if (!file.type.startsWith('image/')) return Promise.reject(new Error('Файл должен быть изображением'));
+    if (file.size > LOGO_MAX_SOURCE_BYTES) return Promise.reject(new Error('Файл слишком большой (максимум 8 МБ)'));
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Не удалось распознать изображение'));
+        img.onload = () => {
+          const scale = Math.min(1, LOGO_MAX_PX / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/png');
+          if (dataUrl.length > LOGO_MAX_DATA_URL) {
+            reject(new Error('Логотип слишком сложный даже после сжатия — попробуйте другое изображение'));
+            return;
+          }
+          resolve(dataUrl);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   function columnList(view) {
@@ -974,6 +1084,7 @@
 
     $('#key-form').addEventListener('submit', issueKey);
     $('#copy-link').addEventListener('click', () => copyFrom($('#public-link'), $('#copy-link')));
+    $('#copy-link-mirror').addEventListener('click', () => copyFrom($('#public-link-mirror'), $('#copy-link-mirror')));
     $('#copy-issued').addEventListener('click', () => copyFrom($('#issued-link'), $('#copy-issued')));
 
     window.addEventListener('message', event => {

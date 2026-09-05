@@ -28,11 +28,18 @@ const color = (value, fallback) => {
   return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v) ? v : fallback;
 };
 
-// Only same-origin or https images; nothing that could execute (javascript:, data:).
+// Same-origin or https URLs, or a raster image the panel embedded itself as a
+// data URI (uploaded-from-device logos). No SVG data URIs and no javascript:
+// — nothing that could execute.
+const LOGO_DATA_MAX = 260000;
+const isLogoDataUrl = v => /^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/=]+$/i.test(v);
+
 const imageUrl = value => {
-  const v = str(value, 500);
+  const v = (typeof value === 'string' ? value : '').trim();
   if (!v) return '';
-  return /^(https:\/\/|\/)[^\s'"<>]+$/i.test(v) ? v : '';
+  if (v.startsWith('data:')) return isLogoDataUrl(v) && v.length <= LOGO_DATA_MAX ? v : '';
+  const httpUrl = v.slice(0, 500);
+  return /^(https:\/\/|\/)[^\s'"<>]+$/i.test(httpUrl) ? httpUrl : '';
 };
 
 const isoDate = value => {
@@ -57,6 +64,8 @@ export function defaultView() {
   return {
     lang: 'ru',
     theme: 'dark',
+    customBg: '#02102c',
+    customText: '#e4ecfb',
     accent: '#ff0066',
     dataColor: '#3fd8e0',
     goodColor: '#35e08d',
@@ -122,7 +131,9 @@ export function normalizeView(input) {
 
   return {
     lang: pick(src.lang, ['ru', 'en'], base.lang),
-    theme: pick(src.theme, ['dark', 'light', 'contrast', 'carbon', 'paper'], base.theme),
+    theme: pick(src.theme, ['dark', 'light', 'contrast', 'carbon', 'paper', 'custom'], base.theme),
+    customBg: color(src.customBg, base.customBg),
+    customText: color(src.customText, base.customText),
     accent: color(src.accent, base.accent),
     dataColor: color(src.dataColor, base.dataColor),
     goodColor: color(src.goodColor, base.goodColor),
