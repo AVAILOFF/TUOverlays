@@ -12,7 +12,7 @@
 */
 
 import { isConfigured } from './_lib/store.js';
-import { bearer, isOwnerKey, sha256, noteAuthFailure } from './_lib/auth.js';
+import { bearer, isOwnerKey, sha256, noteAuthFailure, ownerConfigured } from './_lib/auth.js';
 import { loadIndex, loadBoard, createBoard, deleteBoard, boardsForKey } from './_lib/boards.js';
 import { LIMITS } from './_lib/schema.js';
 import { json, fail, readJsonBody } from './_lib/http.js';
@@ -39,6 +39,11 @@ export default async function handler(req, res) {
   const mine = owner ? [] : await boardsForKey(hash);
 
   if (!key || (!owner && !mine.length)) {
+    // Tell a misconfigured deployment apart from a wrong key — otherwise the
+    // panel says "ключ не подошёл" for a variable that was never set.
+    if (key && !ownerConfigured()) {
+      return fail(res, 503, 'На сервере не задан STINTS_OWNER_KEY — добавьте переменную в Vercel и сделайте redeploy.');
+    }
     const blocked = await noteAuthFailure(req);
     return fail(res, blocked ? 429 : 401, blocked ? 'Слишком много попыток. Подождите пять минут.' : 'Нужен действующий ключ доступа');
   }

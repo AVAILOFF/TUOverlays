@@ -53,10 +53,15 @@ export async function noteAuthFailure(req) {
   return n > FAIL_LIMIT;
 }
 
-export const ownerConfigured = () => Boolean(process.env.STINTS_OWNER_KEY);
+// Trimmed: pasting a key into a dashboard field often carries a trailing
+// newline, and a key that fails only because of invisible whitespace is a
+// miserable thing to debug.
+const ownerKey = () => (process.env.STINTS_OWNER_KEY || '').trim();
+
+export const ownerConfigured = () => Boolean(ownerKey());
 
 export function isOwnerKey(key) {
-  const owner = process.env.STINTS_OWNER_KEY || '';
+  const owner = ownerKey();
   if (!owner || !key) return false;
   return hexEqual(sha256(key), sha256(owner));
 }
