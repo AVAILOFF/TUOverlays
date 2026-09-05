@@ -1,7 +1,7 @@
 /* Small helpers shared by the stint endpoints: JSON replies and a size-capped
    body reader (Vercel usually pre-parses JSON, but not for every content type). */
 
-const MAX_BODY = 256 * 1024; // a board with 200 stints is ~40 KB; this is slack.
+const MAX_BODY = 768 * 1024; // a board with 200 stints is ~40 KB; an uploaded logo can add ~250 KB.
 
 export function json(res, status, payload, headers = {}) {
   res.statusCode = status;

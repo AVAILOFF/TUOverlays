@@ -157,6 +157,8 @@
     root.style.setProperty('--data', view.dataColor);
     root.style.setProperty('--good', view.goodColor);
     root.style.setProperty('--warn', view.warnColor);
+    root.style.setProperty('--custom-bg', view.customBg);
+    root.style.setProperty('--custom-tx', view.customText);
     root.style.setProperty('--fs', (view.fontScale / 100).toFixed(2));
     root.style.setProperty('--maxw', view.maxWidth + 'px');
     root.style.setProperty('--radius', RADIUS_PX[view.radius] || RADIUS_PX.soft);
