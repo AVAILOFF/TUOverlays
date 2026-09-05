@@ -125,6 +125,16 @@
         </div>
 
         <div class="panel">
+          <h2>Импорт из Google Таблиц</h2>
+          <p class="hint">Ссылка на таблицу с журналом стинтов — доступ должен быть открыт «Всем, у кого есть ссылка». Импорт подставит пилотов и стинты в форму ниже, но ничего не сохраняет — это делает обычная кнопка «Сохранить».</p>
+          <div class="linkline">
+            <input type="url" id="import-url" placeholder="https://docs.google.com/spreadsheets/d/...">
+            <button class="btn btn-sm" id="import-sheet">Импортировать</button>
+          </div>
+          <p class="status" id="import-status"></p>
+        </div>
+
+        <div class="panel">
           <h2>Пилоты</h2>
           <p class="hint">Цвет используется как метка в таблице.</p>
           <div class="drivers" id="drivers"></div>
@@ -152,7 +162,6 @@
                   <th>Круги</th>
                   <th>Топливо</th>
                   <th>Шины</th>
-                  <th>Статус</th>
                   <th>Заметка</th>
                   <th></th>
                 </tr>

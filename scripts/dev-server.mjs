@@ -100,8 +100,8 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // Mirrors the rewrite in vercel.json.
-  if (/^\/s\/[A-Za-z0-9_-]+$/.test(pathname)) pathname = '/stints.html';
+  // Mirrors the rewrite in vercel.json (tryFiles resolves the .html itself).
+  if (/^\/s\/[A-Za-z0-9_-]+$/.test(pathname)) pathname = '/stints';
 
   const file = await tryFiles(pathname === '/' ? '/index.html' : pathname);
   if (!file) return send(res, 404, 'Not found', 'text/plain; charset=utf-8');
