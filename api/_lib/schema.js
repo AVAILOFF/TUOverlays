@@ -58,6 +58,10 @@ export function defaultView() {
     lang: 'ru',
     theme: 'dark',
     accent: '#ff0066',
+    dataColor: '#3fd8e0',
+    goodColor: '#35e08d',
+    warnColor: '#ffb02e',
+    currentGlow: false,
     density: 'normal',
     fontScale: 100,
     maxWidth: 1100,
@@ -86,10 +90,12 @@ export function defaultView() {
     tableBorders: 'row',
     mobileCards: true,
     showRaceProgress: false,
+    showPitState: true,
     pitWarningSec: 0,
     refreshSec: 30,
     showUpdated: true,
     footerNote: '',
+    emptyText: '',
   };
 }
 
@@ -116,8 +122,12 @@ export function normalizeView(input) {
 
   return {
     lang: pick(src.lang, ['ru', 'en'], base.lang),
-    theme: pick(src.theme, ['dark', 'light', 'contrast'], base.theme),
+    theme: pick(src.theme, ['dark', 'light', 'contrast', 'carbon', 'paper'], base.theme),
     accent: color(src.accent, base.accent),
+    dataColor: color(src.dataColor, base.dataColor),
+    goodColor: color(src.goodColor, base.goodColor),
+    warnColor: color(src.warnColor, base.warnColor),
+    currentGlow: bool(src.currentGlow, base.currentGlow),
     density: pick(src.density, ['compact', 'normal', 'roomy'], base.density),
     fontScale: num(src.fontScale, 80, 140, base.fontScale),
     maxWidth: num(src.maxWidth, 720, 1600, base.maxWidth),
@@ -142,10 +152,12 @@ export function normalizeView(input) {
     tableBorders: pick(src.tableBorders, ['row', 'grid', 'none'], base.tableBorders),
     mobileCards: bool(src.mobileCards, base.mobileCards),
     showRaceProgress: bool(src.showRaceProgress, base.showRaceProgress),
+    showPitState: bool(src.showPitState, base.showPitState),
     pitWarningSec: num(src.pitWarningSec, 0, 1800, base.pitWarningSec),
     refreshSec: Number(src.refreshSec) === 0 ? 0 : num(src.refreshSec, 10, 600, base.refreshSec),
     showUpdated: bool(src.showUpdated, base.showUpdated),
     footerNote: str(src.footerNote, 200),
+    emptyText: str(src.emptyText, 80),
   };
 }
 

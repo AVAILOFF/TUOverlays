@@ -19,7 +19,7 @@
       now: 'Сейчас за рулём', next: 'Следующий', toChange: 'До смены', stints: 'Стинтов',
       track: 'Трасса', car: 'Машина', raceStart: 'Старт гонки', nobody: 'Не назначен',
       updated: 'Обновлено', justNow: 'только что', minAgo: 'мин назад', hAgo: 'ч назад',
-      live: 'Автообновление', empty: 'Стинты ещё не добавлены',
+      live: 'Автообновление', empty: 'Стинты ещё не добавлены', inPit: 'В боксах',
       notFound: 'Таблица не найдена', notFoundHint: 'Проверьте ссылку — возможно, таблицу удалили.',
       failed: 'Не удалось загрузить таблицу', retry: 'Повторная попытка через несколько секунд.',
       of: 'из', done_: 'пройдено', ahead: 'впереди',
@@ -30,7 +30,7 @@
       now: 'On track now', next: 'Up next', toChange: 'To change', stints: 'Stints',
       track: 'Track', car: 'Car', raceStart: 'Race start', nobody: 'Unassigned',
       updated: 'Updated', justNow: 'just now', minAgo: 'min ago', hAgo: 'h ago',
-      live: 'Auto refresh', empty: 'No stints yet',
+      live: 'Auto refresh', empty: 'No stints yet', inPit: 'In the pits',
       notFound: 'Board not found', notFoundHint: 'Check the link — the board may have been deleted.',
       failed: 'Could not load the board', retry: 'Retrying in a few seconds.',
       of: 'of', done_: 'done', ahead: 'ahead',
@@ -100,28 +100,42 @@
     const hasClock = !Number.isNaN(raceStart);
     const elapsed = hasClock ? (Date.now() - raceStart) / 1000 : NaN;
 
-    let currentIndex = stints.findIndex(s => s.status === 'running');
-    if (currentIndex === -1 && hasClock) {
-      currentIndex = stints.findIndex(s =>
-        elapsed >= s.startOffsetSec && elapsed < s.startOffsetSec + s.plannedDurationSec);
-    }
+    const currentIndex = hasClock
+      ? stints.findIndex(s => elapsed >= s.startOffsetSec && elapsed < s.startOffsetSec + s.plannedDurationSec)
+      : -1;
 
     const rows = stints.map((stint, i) => {
       const startAt = hasClock ? new Date(raceStart + stint.startOffsetSec * 1000) : null;
       const endAt = hasClock ? new Date(raceStart + (stint.startOffsetSec + stint.plannedDurationSec) * 1000) : null;
-      let state = stint.status;
+      let state = 'planned';
       if (i === currentIndex) state = 'running';
-      else if (state !== 'done' && hasClock && elapsed >= stint.startOffsetSec + stint.plannedDurationSec) state = 'done';
+      else if (hasClock && elapsed >= stint.startOffsetSec + stint.plannedDurationSec) state = 'done';
       return { stint, i, startAt, endAt, state, driver: drivers.get(stint.driverId) || null };
     });
 
     const current = currentIndex >= 0 ? rows[currentIndex] : null;
     const next = rows.find(r => r.i > (current ? current.i : -1) && r.state !== 'done') || null;
-    const changeInSec = current && current.endAt ? (current.endAt - Date.now()) / 1000 : NaN;
+
+    // Between two stints (previous done, next not started) nobody is on
+    // track — worth its own state rather than a blank "now" tile.
+    let pit = null;
+    if (!current && hasClock) {
+      for (let i = 0; i < rows.length - 1; i++) {
+        const a = rows[i], b = rows[i + 1];
+        if (a.state === 'done' && b.state === 'planned' &&
+            elapsed >= a.stint.startOffsetSec + a.stint.plannedDurationSec && elapsed < b.stint.startOffsetSec) {
+          pit = { prev: a, next: b };
+          break;
+        }
+      }
+    }
+
+    const changeAt = current ? current.endAt : (pit ? pit.next.startAt : null);
+    const changeInSec = changeAt ? (changeAt - Date.now()) / 1000 : NaN;
 
     const totalPlannedSec = stints.reduce((max, s) => Math.max(max, s.startOffsetSec + s.plannedDurationSec), 0);
 
-    return { view, rows, current, next, changeInSec, hasClock, raceStart, elapsed, totalPlannedSec, total: rows.length };
+    return { view, rows, current, next, pit, changeAt, changeInSec, hasClock, raceStart, elapsed, totalPlannedSec, total: rows.length };
   }
 
   /* ------------------------------------------------------------ chrome -- */
@@ -138,7 +152,11 @@
     root.dataset.stripe = view.stripedRows ? 'on' : 'off';
     root.dataset.borders = view.tableBorders;
     root.dataset.numbers = view.numbersAlign;
+    root.dataset.glow = view.currentGlow ? 'on' : 'off';
     root.style.setProperty('--accent', view.accent);
+    root.style.setProperty('--data', view.dataColor);
+    root.style.setProperty('--good', view.goodColor);
+    root.style.setProperty('--warn', view.warnColor);
     root.style.setProperty('--fs', (view.fontScale / 100).toFixed(2));
     root.style.setProperty('--maxw', view.maxWidth + 'px');
     root.style.setProperty('--radius', RADIUS_PX[view.radius] || RADIUS_PX.soft);
@@ -223,21 +241,22 @@
   function rail(model, view, t) {
     const rail = el('div', 'st-rail');
 
-    const tile = (label, value, valueClass, sub) => {
+    const tile = (label, value, valueClass, sub, subClass) => {
       const box = el('div', 'st-tile');
       box.appendChild(el('span', 'k', label));
       box.appendChild(el('span', 'v' + (valueClass ? ' ' + valueClass : ''), value));
-      if (sub) box.appendChild(el('span', 's', sub));
+      if (sub) box.appendChild(el('span', 's' + (subClass ? ' ' + subClass : ''), sub));
       return box;
     };
 
     const nameOf = row => (row && row.driver ? row.driver.name : t.nobody);
+    const inPit = model.pit && view.showPitState;
 
     rail.appendChild(tile(
       t.now,
-      model.current ? nameOf(model.current) : '—',
-      'is-accent',
-      model.current ? pad(model.current.i + 1) + ' ' + t.of + ' ' + pad(model.total) : null
+      inPit ? t.inPit : (model.current ? nameOf(model.current) : '—'),
+      inPit ? 'is-warn' : 'is-accent',
+      inPit ? nameOf(model.pit.next) : (model.current ? pad(model.current.i + 1) + ' ' + t.of + ' ' + pad(model.total) : null)
     ));
 
     rail.appendChild(tile(
@@ -248,15 +267,16 @@
     ));
 
     const countdown = tile(t.toChange, Number.isFinite(model.changeInSec) ? fmtDur(model.changeInSec) : '—', 'is-data',
-      model.current && model.current.endAt ? fmtClock(model.current.endAt, view) : null);
+      model.changeAt ? fmtClock(model.changeAt, view) : null);
     const countdownValue = countdown.querySelector('.v');
     countdownValue.dataset.countdown = '1';
-    const soon = view.pitWarningSec > 0 && Number.isFinite(model.changeInSec) && model.changeInSec <= view.pitWarningSec;
+    const soon = !model.pit && view.pitWarningSec > 0 && Number.isFinite(model.changeInSec) && model.changeInSec <= view.pitWarningSec;
     countdownValue.classList.toggle('is-soon', soon);
     rail.appendChild(countdown);
 
     const doneCount = model.rows.filter(r => r.state === 'done').length;
-    rail.appendChild(tile(t.stints, String(model.total), null, doneCount + ' ' + t.done_));
+    const allDone = model.total > 0 && doneCount === model.total;
+    rail.appendChild(tile(t.stints, String(model.total), null, doneCount + ' ' + t.done_, allDone ? 'is-good' : null));
 
     return rail;
   }
@@ -279,7 +299,7 @@
 
     if (!rows.length) {
       const tr = el('tr');
-      const td = el('td', 'st-empty', t.empty);
+      const td = el('td', 'st-empty', view.emptyText || t.empty);
       td.colSpan = Math.max(1, columns.length);
       tr.appendChild(td);
       body.appendChild(tr);
@@ -413,12 +433,12 @@
     // things that have to move between refreshes.
     setInterval(() => {
       if (!model) return;
-      if (model.current && Number.isFinite(model.changeInSec)) {
+      if (model.changeAt && Number.isFinite(model.changeInSec)) {
         const node = root.querySelector('[data-countdown]');
         if (node) {
-          const left = (model.current.endAt - Date.now()) / 1000;
+          const left = (model.changeAt - Date.now()) / 1000;
           node.textContent = left > 0 ? fmtDur(left) : '0:00';
-          const soon = model.view.pitWarningSec > 0 && left <= model.view.pitWarningSec;
+          const soon = !model.pit && model.view.pitWarningSec > 0 && left <= model.view.pitWarningSec;
           node.classList.toggle('is-soon', soon);
         }
       }

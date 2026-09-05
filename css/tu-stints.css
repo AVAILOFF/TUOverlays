@@ -52,6 +52,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+/* --data / --good / --warn aren't redefined per theme below: the panel's
+   colour pickers always set them inline on .st-root, same as --accent, so a
+   value here would never be seen. */
+
 .st-root[data-theme="light"] {
   --bg: #f2f5fa;
   --well: #e8edf6;
@@ -64,9 +68,6 @@
   --tx-2: #3a4c6d;
   --tx-3: #5a6c8c;
   --tx-4: #6d7f9e;
-  --data: #0d7f88;
-  --good: #12805a;
-  --warn: #9a6300;
 }
 
 .st-root[data-theme="contrast"] {
@@ -81,9 +82,34 @@
   --tx-2: #ffffff;
   --tx-3: #e0e0e0;
   --tx-4: #cfcfcf;
-  --data: #6ff0f8;
-  --good: #5cf5a8;
-  --warn: #ffc75a;
+}
+
+.st-root[data-theme="carbon"] {
+  --bg: #121212;
+  --well: #0a0a0a;
+  --elev-1: #1c1c1c;
+  --elev-2: #242424;
+  --line: rgba(255, 255, 255, .08);
+  --line-2: rgba(255, 255, 255, .16);
+  --line-3: rgba(255, 255, 255, .28);
+  --tx: #f0f0f0;
+  --tx-2: #b8b8b8;
+  --tx-3: #8a8a8a;
+  --tx-4: #6e6e6e;
+}
+
+.st-root[data-theme="paper"] {
+  --bg: #faf6ee;
+  --well: #f2ecdf;
+  --elev-1: #ffffff;
+  --elev-2: #fbf8f0;
+  --line: rgba(60, 45, 20, .10);
+  --line-2: rgba(60, 45, 20, .18);
+  --line-3: rgba(60, 45, 20, .30);
+  --tx: #2b2013;
+  --tx-2: #5a4d38;
+  --tx-3: #79694e;
+  --tx-4: #8c7c60;
 }
 
 .st-root[data-density="compact"] { --row-y: 6px; --row-x: 10px; }
@@ -220,10 +246,12 @@
 
 .st-tile .v.is-accent { color: var(--accent); }
 .st-tile .v.is-data { color: var(--data); font-family: var(--f-mono); font-size: calc(25px * var(--fs)); font-stretch: normal; }
+.st-tile .v.is-warn { color: var(--warn); }
 .st-tile .v.is-soon { color: var(--warn); animation: st-pulse 1.1s ease-in-out infinite; }
 
 @keyframes st-pulse { 50% { opacity: .5; } }
 .st-tile .s { display: block; font-size: calc(12.5px * var(--fs)); color: var(--tx-3); margin-top: 5px; }
+.st-tile .s.is-good { color: var(--good); }
 
 /* ---------------------------------------------------------- table (F) --- */
 
@@ -261,6 +289,10 @@
 
 .st-table tbody tr.is-current { background: var(--elev-1); border-left-color: var(--accent); }
 .st-table tbody tr.is-next { border-left-color: var(--data); }
+.st-root[data-glow="on"] .st-table tbody tr.is-current {
+  box-shadow: inset 0 1px 0 var(--line-2), 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 10px 28px -14px var(--accent);
+}
 .st-table tbody tr.is-done { color: var(--tx-3); }
 .st-root[data-finished="dim"] .st-table tbody tr.is-done td { opacity: .62; }
 

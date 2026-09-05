@@ -609,14 +609,20 @@
       { key: 'tz', type: 'text', label: 'Часовой пояс', placeholder: 'Europe/Moscow — пусто = как у зрителя' },
     ] },
     { section: 'Оформление', items: [
-      { key: 'theme', type: 'select', label: 'Тема', options: [['dark', 'Тёмная'], ['light', 'Светлая'], ['contrast', 'Контрастная']] },
-      { key: 'accent', type: 'color', label: 'Акцент' },
+      { key: 'theme', type: 'select', label: 'Тема', options: [['dark', 'Тёмная'], ['light', 'Светлая'], ['contrast', 'Контрастная'], ['carbon', 'Карбон'], ['paper', 'Пергамент']] },
       { key: 'density', type: 'select', label: 'Плотность строк', options: [['compact', 'Плотно'], ['normal', 'Обычно'], ['roomy', 'Просторно']] },
       { key: 'fontScale', type: 'range', label: 'Размер шрифта', min: 80, max: 140, step: 5, unit: '%' },
       { key: 'maxWidth', type: 'range', label: 'Ширина', min: 720, max: 1600, step: 20, unit: 'px' },
       { key: 'lang', type: 'select', label: 'Язык страницы', options: [['ru', 'Русский'], ['en', 'English']] },
       { key: 'radius', type: 'select', label: 'Скругление углов', options: [['sharp', 'Острые'], ['soft', 'Обычные'], ['round', 'Круглые']] },
       { key: 'showBreakNumber', type: 'bool', label: 'Крупный номер текущего стинта фоном' },
+    ] },
+    { section: 'Цвета', items: [
+      { key: 'accent', type: 'color', label: 'Акцент (текущий стинт)' },
+      { key: 'dataColor', type: 'color', label: 'Данные и «следующий»' },
+      { key: 'goodColor', type: 'color', label: 'Готово / пройдено' },
+      { key: 'warnColor', type: 'color', label: 'Предупреждение' },
+      { key: 'currentGlow', type: 'bool', label: 'Свечение вокруг текущей строки' },
     ] },
     { section: 'Строки', items: [
       { key: 'highlightCurrent', type: 'bool', label: 'Выделять текущий стинт' },
@@ -628,9 +634,11 @@
       { key: 'numbersAlign', type: 'select', label: 'Выравнивание чисел', options: [['left', 'Слева'], ['right', 'Справа']] },
       { key: 'tableBorders', type: 'select', label: 'Границы таблицы', options: [['row', 'Только строки'], ['grid', 'Сетка'], ['none', 'Без границ']] },
       { key: 'mobileCards', type: 'bool', label: 'На телефоне — карточки вместо таблицы' },
+      { key: 'emptyText', type: 'text', label: 'Текст, если стинтов нет', placeholder: 'Стинты ещё не добавлены' },
     ] },
     { section: 'Прогресс', items: [
       { key: 'showRaceProgress', type: 'bool', label: 'Полоса прогресса гонки' },
+      { key: 'showPitState', type: 'bool', label: 'Показывать «В боксах» между стинтами' },
       { key: 'pitWarningSec', type: 'select', label: 'Предупреждать до смены', options: [[0, 'Не предупреждать'], [60, 'За 1 минуту'], [120, 'За 2 минуты'], [180, 'За 3 минуты'], [300, 'За 5 минут'], [600, 'За 10 минут']] },
     ] },
     { section: 'Обновление', items: [
