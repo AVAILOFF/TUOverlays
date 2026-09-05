@@ -1,6 +1,7 @@
 {
   "name": "tuoverlays-site",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@vercel/edge": "^1.3.3"
   }

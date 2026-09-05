@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Стинты · Панель — TU Overlays</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#02102c">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/tu-stints-admin.css">
+</head>
+<body>
+
+<!-- ------------------------------------------------------------- gate -- -->
+<div class="gate" id="gate" hidden>
+  <div class="box">
+    <h1>Стинты</h1>
+    <p class="hint">Личный ключ доступа. Если вам прислали ссылку с ключом — просто откройте её, поле заполнять не нужно.</p>
+    <form id="gate-form" autocomplete="off">
+      <label class="lbl" for="gate-key">Ключ</label>
+      <input type="password" id="gate-key" placeholder="tus_…" autocomplete="off">
+      <button type="submit" class="btn btn-primary">Войти</button>
+      <p class="status err" id="gate-err" hidden></p>
+    </form>
+  </div>
+</div>
+
+<!-- -------------------------------------------------------------- app -- -->
+<div id="app" hidden>
+
+  <header class="top">
+    <span class="brand">TU Overlays · Стинты</span>
+    <span class="who" id="who"></span>
+    <span class="spacer"></span>
+    <a class="btn btn-sm" href="/index.html">На сайт</a>
+    <button class="btn btn-sm" id="logout">Выйти</button>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ------------------------------------------------------ list -- -->
+    <section id="screen-list">
+      <div class="crumb"><h1>Таблицы стинтов</h1></div>
+
+      <div class="panel" id="create-panel" hidden>
+        <h2>Новая таблица</h2>
+        <p class="hint">Создаёт страницу с таблицей и её постоянную ссылку. Пилотов и стинты добавите внутри.</p>
+        <form id="create-form" class="grid cols-3" autocomplete="off">
+          <div>
+            <label class="lbl" for="c-title">Название</label>
+            <input type="text" id="c-title" placeholder="Spa 12H — TU Racing" required>
+          </div>
+          <div>
+            <label class="lbl" for="c-track">Трасса</label>
+            <input type="text" id="c-track" placeholder="Circuit de Spa-Francorchamps">
+          </div>
+          <div>
+            <label class="lbl" for="c-start">Старт гонки</label>
+            <input type="datetime-local" id="c-start">
+          </div>
+          <div class="row" style="align-items:flex-end">
+            <button type="submit" class="btn btn-primary">Создать</button>
+          </div>
+        </form>
+        <p class="status" id="create-status"></p>
+      </div>
+
+      <div class="boards" id="boards"></div>
+    </section>
+
+    <!-- ----------------------------------------------------- board -- -->
+    <section id="screen-board" hidden>
+
+      <div class="crumb">
+        <button class="back btn btn-sm" id="to-list">← Все таблицы</button>
+        <h1 id="b-title"></h1>
+      </div>
+
+      <div class="panel">
+        <label class="lbl" for="public-link">Публичная ссылка — её можно давать команде и зрителям</label>
+        <div class="linkline">
+          <input type="text" id="public-link" readonly>
+          <button class="btn btn-sm" id="copy-link">Скопировать</button>
+          <a class="btn btn-sm" id="public-open" target="_blank" rel="noopener">Открыть</a>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="data" aria-selected="true">Стинты</button>
+        <button class="tab" role="tab" data-tab="view" aria-selected="false">Вид</button>
+        <button class="tab" role="tab" data-tab="access" id="tab-access-btn" aria-selected="false">Доступ</button>
+      </div>
+
+      <!-- ------------------------------------------------ tab: data -- -->
+      <div id="tab-data">
+
+        <div class="panel">
+          <h2>Гонка</h2>
+          <div class="grid cols-2">
+            <div>
+              <label class="lbl" for="f-title">Название</label>
+              <input type="text" id="f-title">
+            </div>
+            <div>
+              <label class="lbl" for="f-track">Трасса</label>
+              <input type="text" id="f-track">
+            </div>
+            <div>
+              <label class="lbl" for="f-car">Машина</label>
+              <input type="text" id="f-car">
+            </div>
+            <div>
+              <label class="lbl" for="f-start">Старт гонки (ваше местное время)</label>
+              <input type="datetime-local" id="f-start">
+            </div>
+            <div style="grid-column:1/-1">
+              <label class="lbl" for="f-note">Примечание в шапке</label>
+              <input type="text" id="f-note" placeholder="Например: план на сухую трассу">
+            </div>
+          </div>
+          <p class="hint" style="margin-top:12px">Без времени старта страница покажет только смещения от старта гонки, без часов.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Пилоты</h2>
+          <p class="hint">Цвет используется как метка в таблице.</p>
+          <div class="drivers" id="drivers"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn btn-sm" id="add-driver">Добавить пилота</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Стинты</h2>
+          <p class="hint">Время вводится как <code>55:00</code> или <code>1:01:00</code>; просто число считается минутами.</p>
+          <div class="row" style="margin:0 0 14px">
+            <button class="btn btn-sm" id="add-stint">Добавить стинт</button>
+            <button class="btn btn-sm" id="recalc">Пересчитать старты подряд</button>
+          </div>
+          <div class="edwrap">
+            <table class="edtable">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Пилот</th>
+                  <th>Старт</th>
+                  <th>Длительность</th>
+                  <th>Пит</th>
+                  <th>Круги</th>
+                  <th>Топливо</th>
+                  <th>Шины</th>
+                  <th>Статус</th>
+                  <th>Заметка</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="stints-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel flat row">
+          <button class="btn btn-primary" id="save-data" disabled>Сохранить</button>
+          <button class="btn btn-sm" id="reload-board" hidden>Перезагрузить</button>
+          <p class="status" id="data-status"></p>
+        </div>
+      </div>
+
+      <!-- ------------------------------------------------ tab: view -- -->
+      <div id="tab-view" hidden>
+        <div class="viewgrid">
+          <div class="panel">
+            <h2>Как выглядит страница</h2>
+            <p class="hint">Меняется только оформление публичной страницы — данные стинтов не трогаются.</p>
+            <div id="view-controls"></div>
+            <div class="row" style="margin-top:20px">
+              <button class="btn btn-primary" id="save-view" disabled>Опубликовать</button>
+              <button class="btn btn-sm" id="reset-view">Отменить изменения</button>
+            </div>
+            <p class="status" id="view-status"></p>
+          </div>
+
+          <div class="preview-col">
+            <div class="bar">
+              <span class="lbl" style="margin:0">Предпросмотр</span>
+              <span class="spacer" style="flex:1"></span>
+              <button class="btn btn-sm" data-device="desktop" aria-selected="true">Десктоп</button>
+              <button class="btn btn-sm" data-device="mobile" aria-selected="false">Телефон</button>
+            </div>
+            <div class="preview-frame" id="preview-frame" data-device="desktop">
+              <iframe id="preview" title="Предпросмотр публичной страницы"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------- tab: access -- -->
+      <div id="tab-access" hidden>
+        <div class="panel">
+          <h2>Кто может редактировать</h2>
+          <p class="hint">
+            Ключ выдаётся один раз в виде ссылки — откройте её человеку, и панель у него откроется уже с доступом.
+            Ключ хранится у нас только в виде хэша: посмотреть его повторно нельзя, но можно отозвать и выпустить новый.
+          </p>
+          <form id="key-form" class="grid cols-3" autocomplete="off">
+            <div>
+              <label class="lbl" for="k-label">Кому</label>
+              <input type="text" id="k-label" placeholder="Дима" required>
+            </div>
+            <div>
+              <label class="lbl" for="k-role">Права</label>
+              <select id="k-role">
+                <option value="editor">Только стинты</option>
+                <option value="owner">Стинты и оформление</option>
+              </select>
+            </div>
+            <div class="row" style="align-items:flex-end">
+              <button type="submit" class="btn btn-primary">Выпустить ключ</button>
+            </div>
+          </form>
+
+          <div class="issued" id="issued" hidden>
+            <span class="lbl">Ссылка для <b id="issued-name"></b> — показывается один раз</span>
+            <div class="linkline">
+              <input type="text" id="issued-link" readonly>
+              <button class="btn btn-sm" id="copy-issued">Скопировать</button>
+            </div>
+          </div>
+
+          <p class="status" id="access-status"></p>
+          <div class="keys" id="keys" style="margin-top:16px"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<script src="/js/tu-stints-admin.js"></script>
+</body>
+</html>
