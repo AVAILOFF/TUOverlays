@@ -888,7 +888,9 @@
         await signIn(key);
         start();
       } catch (err) {
-        showGate(err.status === 429 ? 'Слишком много попыток. Подождите пять минут.' : 'Ключ не подошёл');
+        // 401 is a wrong key; anything else (a missing env var, a store that
+        // isn't wired up) is the server explaining itself — pass it through.
+        showGate(err.status === 401 ? 'Ключ не подошёл' : err.message);
       }
     });
 
@@ -1000,6 +1002,7 @@
       await signIn(key);
       start();
     } catch (err) {
+      if (err.status !== 401) return showGate(err.message);
       showGate(stored && !invited ? 'Сохранённый ключ больше не действует' : 'Ключ не подошёл');
     }
   }
