@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /stints-admin.html
+Disallow: /stints.html
+Disallow: /s/
 
 Sitemap: https://tuoverlays.xyz/sitemap.xml

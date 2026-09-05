@@ -7,3 +7,6 @@ scripts/discord-release.mjs
 
 # Banner source/working files (large, not linked from the site).
 Banners/
+
+# Local dev server for the stint API — not part of the deployed site.
+scripts/dev-server.mjs

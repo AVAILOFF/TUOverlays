@@ -31,6 +31,8 @@ const PAGES = [
   'changelog.html',
   'download.html',
   'support.html',
+  'stints.html',
+  'stints-admin.html',
   'en/index.html',
   'en/changelog.html',
   'en/download.html',

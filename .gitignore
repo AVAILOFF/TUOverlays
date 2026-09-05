@@ -1,1 +1,3 @@
 .claude/
+.stints-dev/
+.env*.local
