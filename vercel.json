@@ -5,6 +5,6 @@
   "outputDirectory": ".",
   "regions": ["fra1"],
   "rewrites": [
-    { "source": "/s/:id", "destination": "/stints.html" }
+    { "source": "/s/:id", "destination": "/stints" }
   ]
 }
