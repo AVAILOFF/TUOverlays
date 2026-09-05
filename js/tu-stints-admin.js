@@ -366,8 +366,6 @@
     if (inputs.length) inputs[inputs.length - 1].focus();
   }
 
-  const STATUS_LABELS = { planned: 'План', running: 'В гонке', done: 'Готов' };
-
   function renderStints() {
     const body = $('#stints-body');
     body.textContent = '';
@@ -434,30 +432,6 @@
       };
 
       tr.appendChild(textField(stint.tyres, 'Soft x4', 'w-tyres', v => { stint.tyres = v; }));
-
-      const statusCell = el('td', 'w-status');
-      const status = el('select');
-      for (const key of Object.keys(STATUS_LABELS)) {
-        const option = el('option', null, STATUS_LABELS[key]);
-        option.value = key;
-        if (stint.status === key) option.selected = true;
-        status.appendChild(option);
-      }
-      status.addEventListener('change', () => {
-        // Only one stint can be the running one.
-        if (status.value === 'running') {
-          for (const other of state.board.data.stints) {
-            if (other !== stint && other.status === 'running') other.status = 'done';
-          }
-        }
-        stint.status = status.value;
-        markDirty();
-        renderStints();
-        syncPreview();
-      });
-      statusCell.appendChild(status);
-      tr.appendChild(statusCell);
-
       tr.appendChild(textField(stint.note, '', 'w-note', v => { stint.note = v; }));
 
       const acts = el('td');
@@ -483,7 +457,7 @@
     if (!state.board.data.stints.length) {
       const tr = el('tr');
       const td = el('td', 'empty', 'Стинтов пока нет — добавьте первый.');
-      td.colSpan = 11;
+      td.colSpan = 10;
       tr.appendChild(td);
       body.appendChild(tr);
     }
@@ -627,6 +601,7 @@
       { key: 'logoUrl', type: 'text', label: 'Логотип (URL)', placeholder: '/img/logo.png' },
       { key: 'showMeta', type: 'bool', label: 'Показывать трассу, машину и старт' },
       { key: 'showSummary', type: 'bool', label: 'Показывать сводку сверху' },
+      { key: 'titleAlign', type: 'select', label: 'Выравнивание шапки', options: [['left', 'Слева'], ['center', 'По центру']] },
     ] },
     { section: 'Время', items: [
       { key: 'timeMode', type: 'select', label: 'Формат времени', options: [['both', 'Часы + от старта'], ['local', 'Только часы'], ['race', 'Только от старта']] },
@@ -640,13 +615,23 @@
       { key: 'fontScale', type: 'range', label: 'Размер шрифта', min: 80, max: 140, step: 5, unit: '%' },
       { key: 'maxWidth', type: 'range', label: 'Ширина', min: 720, max: 1600, step: 20, unit: 'px' },
       { key: 'lang', type: 'select', label: 'Язык страницы', options: [['ru', 'Русский'], ['en', 'English']] },
+      { key: 'radius', type: 'select', label: 'Скругление углов', options: [['sharp', 'Острые'], ['soft', 'Обычные'], ['round', 'Круглые']] },
+      { key: 'showBreakNumber', type: 'bool', label: 'Крупный номер текущего стинта фоном' },
     ] },
     { section: 'Строки', items: [
       { key: 'highlightCurrent', type: 'bool', label: 'Выделять текущий стинт' },
+      { key: 'highlightNext', type: 'bool', label: 'Выделять следующий стинт' },
       { key: 'finishedStyle', type: 'select', label: 'Пройденные стинты', options: [['dim', 'Приглушить'], ['normal', 'Как обычные'], ['hide', 'Скрыть']] },
       { key: 'driverColors', type: 'bool', label: 'Цветные метки пилотов' },
       { key: 'groupBy', type: 'select', label: 'Группировка', options: [['none', 'По времени'], ['driver', 'По пилотам']] },
+      { key: 'stripedRows', type: 'bool', label: 'Полосатые строки' },
+      { key: 'numbersAlign', type: 'select', label: 'Выравнивание чисел', options: [['left', 'Слева'], ['right', 'Справа']] },
+      { key: 'tableBorders', type: 'select', label: 'Границы таблицы', options: [['row', 'Только строки'], ['grid', 'Сетка'], ['none', 'Без границ']] },
       { key: 'mobileCards', type: 'bool', label: 'На телефоне — карточки вместо таблицы' },
+    ] },
+    { section: 'Прогресс', items: [
+      { key: 'showRaceProgress', type: 'bool', label: 'Полоса прогресса гонки' },
+      { key: 'pitWarningSec', type: 'select', label: 'Предупреждать до смены', options: [[0, 'Не предупреждать'], [60, 'За 1 минуту'], [120, 'За 2 минуты'], [180, 'За 3 минуты'], [300, 'За 5 минут'], [600, 'За 10 минут']] },
     ] },
     { section: 'Обновление', items: [
       { key: 'refreshSec', type: 'select', label: 'Автообновление', options: [[0, 'Выключено'], [10, 'Каждые 10 с'], [30, 'Каждые 30 с'], [60, 'Каждую минуту'], [300, 'Каждые 5 минут']] },
@@ -679,8 +664,8 @@
   }
 
   const COLUMN_NAMES = {
-    index: 'Номер', driver: 'Пилот', start: 'Старт', duration: 'Длительность', finish: 'Финиш',
-    laps: 'Круги', fuel: 'Топливо', tyres: 'Шины', pit: 'Пит-стоп', status: 'Статус', note: 'Заметка',
+    index: 'Номер', driver: 'Пилот', start: 'Старт', duration: 'Длительность', finish: 'Конец',
+    laps: 'Круги', fuel: 'Топливо', tyres: 'Шины', pit: 'Пит-стоп', note: 'Заметка',
   };
 
   function viewControl(item, view) {

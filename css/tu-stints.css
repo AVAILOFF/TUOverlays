@@ -38,6 +38,7 @@
   --fs: 1;
   --row-y: 11px;
   --row-x: 14px;
+  --radius: 10px;
 
   --ease-state: cubic-bezier(.4, 0, .2, 1);
   --ease-reveal: cubic-bezier(.2, .6, .25, 1);
@@ -126,6 +127,23 @@
 .st-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 26px; }
 .st-head-main { min-width: 0; }
 
+.st-root[data-align="center"] .st-head { flex-direction: column; align-items: center; text-align: center; }
+.st-root[data-align="center"] .st-meta { justify-content: center; }
+.st-root[data-align="center"] .st-logo { margin: 4px auto 0; }
+
+/* ------------------------------------------------------------- progress -- */
+
+.st-progress { height: 4px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 0 0 22px; }
+.st-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s linear;
+}
+
 .st-logo {
   flex: none;
   max-height: 54px;
@@ -168,7 +186,7 @@
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius);
   overflow: hidden;
   margin-bottom: 26px;
 }
@@ -202,11 +220,14 @@
 
 .st-tile .v.is-accent { color: var(--accent); }
 .st-tile .v.is-data { color: var(--data); font-family: var(--f-mono); font-size: calc(25px * var(--fs)); font-stretch: normal; }
+.st-tile .v.is-soon { color: var(--warn); animation: st-pulse 1.1s ease-in-out infinite; }
+
+@keyframes st-pulse { 50% { opacity: .5; } }
 .st-tile .s { display: block; font-size: calc(12.5px * var(--fs)); color: var(--tx-3); margin-top: 5px; }
 
 /* ---------------------------------------------------------- table (F) --- */
 
-.st-tablewrap { overflow-x: auto; border: 1px solid var(--line-2); border-radius: 10px; background: var(--bg); }
+.st-tablewrap { overflow-x: auto; border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--bg); }
 
 .st-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 
@@ -239,8 +260,25 @@
 .st-table tbody tr:first-child td { border-top: 0; }
 
 .st-table tbody tr.is-current { background: var(--elev-1); border-left-color: var(--accent); }
+.st-table tbody tr.is-next { border-left-color: var(--data); }
 .st-table tbody tr.is-done { color: var(--tx-3); }
 .st-root[data-finished="dim"] .st-table tbody tr.is-done td { opacity: .62; }
+
+.st-root[data-stripe="on"] .st-table tbody tr:nth-child(even):not(.is-current) { background: var(--well); }
+
+.st-root[data-borders="none"] .st-table td { border-top: 0; }
+.st-root[data-borders="grid"] .st-table th,
+.st-root[data-borders="grid"] .st-table td { border-left: 1px solid var(--line); }
+.st-root[data-borders="grid"] .st-table th:first-child,
+.st-root[data-borders="grid"] .st-table td:first-child { border-left: 0; }
+
+.st-root[data-numbers="right"] .c-num { text-align: right; }
+.st-root[data-numbers="right"] .st-table th.h-start,
+.st-root[data-numbers="right"] .st-table th.h-duration,
+.st-root[data-numbers="right"] .st-table th.h-finish,
+.st-root[data-numbers="right"] .st-table th.h-pit,
+.st-root[data-numbers="right"] .st-table th.h-laps,
+.st-root[data-numbers="right"] .st-table th.h-fuel { text-align: right; }
 
 .st-group td {
   background: var(--elev-1);
@@ -261,21 +299,6 @@
 .st-driver .n { overflow: hidden; text-overflow: ellipsis; }
 
 .st-sub-time { display: block; font-family: var(--f-mono); font-size: calc(11.5px * var(--fs)); color: var(--tx-4); margin-top: 3px; }
-
-.st-chip {
-  display: inline-block;
-  font-family: var(--f-mono);
-  font-size: calc(9.5px * var(--fs));
-  letter-spacing: .17em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid var(--line-2);
-  color: var(--tx-3);
-  white-space: nowrap;
-}
-.st-chip.is-running { border-color: var(--accent); color: var(--accent); }
-.st-chip.is-done { border-color: var(--line); color: var(--tx-4); }
 
 /* ----------------------------------------------------------- foot/state -- */
 
@@ -321,7 +344,7 @@
   .st-root[data-cards="on"] .st-table tbody tr {
     border: 1px solid var(--line-2);
     border-left-width: 2px;
-    border-radius: 10px;
+    border-radius: var(--radius);
     padding: 4px 0;
     margin-bottom: 10px;
     background: var(--bg);
@@ -370,4 +393,5 @@
 @media (prefers-reduced-motion: reduce) {
   .st-reveal { animation: none; }
   .st-table tbody tr { transition: none; }
+  .st-tile .v.is-soon { animation: none; }
 }

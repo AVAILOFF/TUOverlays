@@ -46,10 +46,10 @@ export const LIMITS = { drivers: 40, stints: 250, keys: 40, boards: 60 };
 
 export const COLUMN_KEYS = [
   'index', 'driver', 'start', 'duration', 'finish',
-  'laps', 'fuel', 'tyres', 'pit', 'status', 'note',
+  'laps', 'fuel', 'tyres', 'pit', 'note',
 ];
 
-const DEFAULT_COLUMNS = ['index', 'driver', 'start', 'duration', 'finish', 'laps', 'fuel', 'tyres', 'status', 'note'];
+const DEFAULT_COLUMNS = ['index', 'driver', 'start', 'duration', 'finish', 'laps', 'fuel', 'tyres', 'note'];
 
 export const STINT_STATUSES = ['planned', 'running', 'done'];
 
@@ -65,6 +65,9 @@ export function defaultView() {
     logoUrl: '',
     showMeta: true,
     showSummary: true,
+    titleAlign: 'left',
+    radius: 'soft',
+    showBreakNumber: true,
     timeMode: 'both',
     clock24: true,
     tz: '',
@@ -74,12 +77,18 @@ export function defaultView() {
       visible: DEFAULT_COLUMNS.includes(key),
     })),
     highlightCurrent: true,
+    highlightNext: false,
     finishedStyle: 'dim',
     driverColors: true,
     groupBy: 'none',
+    stripedRows: false,
+    numbersAlign: 'left',
+    tableBorders: 'row',
+    mobileCards: true,
+    showRaceProgress: false,
+    pitWarningSec: 0,
     refreshSec: 30,
     showUpdated: true,
-    mobileCards: true,
     footerNote: '',
   };
 }
@@ -116,17 +125,26 @@ export function normalizeView(input) {
     logoUrl: imageUrl(src.logoUrl),
     showMeta: bool(src.showMeta, base.showMeta),
     showSummary: bool(src.showSummary, base.showSummary),
+    titleAlign: pick(src.titleAlign, ['left', 'center'], base.titleAlign),
+    radius: pick(src.radius, ['sharp', 'soft', 'round'], base.radius),
+    showBreakNumber: bool(src.showBreakNumber, base.showBreakNumber),
     timeMode: pick(src.timeMode, ['race', 'local', 'both'], base.timeMode),
     clock24: bool(src.clock24, base.clock24),
     tz: str(src.tz, 60),
     columns,
     highlightCurrent: bool(src.highlightCurrent, base.highlightCurrent),
+    highlightNext: bool(src.highlightNext, base.highlightNext),
     finishedStyle: pick(src.finishedStyle, ['dim', 'normal', 'hide'], base.finishedStyle),
     driverColors: bool(src.driverColors, base.driverColors),
     groupBy: pick(src.groupBy, ['none', 'driver'], base.groupBy),
+    stripedRows: bool(src.stripedRows, base.stripedRows),
+    numbersAlign: pick(src.numbersAlign, ['left', 'right'], base.numbersAlign),
+    tableBorders: pick(src.tableBorders, ['row', 'grid', 'none'], base.tableBorders),
+    mobileCards: bool(src.mobileCards, base.mobileCards),
+    showRaceProgress: bool(src.showRaceProgress, base.showRaceProgress),
+    pitWarningSec: num(src.pitWarningSec, 0, 1800, base.pitWarningSec),
     refreshSec: Number(src.refreshSec) === 0 ? 0 : num(src.refreshSec, 10, 600, base.refreshSec),
     showUpdated: bool(src.showUpdated, base.showUpdated),
-    mobileCards: bool(src.mobileCards, base.mobileCards),
     footerNote: str(src.footerNote, 200),
   };
 }

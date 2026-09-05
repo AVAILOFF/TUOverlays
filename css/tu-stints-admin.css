@@ -242,7 +242,6 @@ textarea { min-height: 72px; resize: vertical; }
 .w-n { width: 74px; }
 .w-tyres { min-width: 120px; }
 .w-note { min-width: 190px; }
-.w-status { width: 118px; }
 
 .drivers { display: grid; gap: 8px; }
 .driver-row { display: flex; gap: 8px; align-items: center; }
