@@ -23,9 +23,10 @@
   const AUTO_KEY = 'tu-stints-autorecalc';
 
   // Fallback host for viewers who can't reach the main domain (RU ISPs
-  // blocking/throttling it are the recurring case) — a Vercel branch preview
-  // that mirrors main, so it stays live independently of the primary domain.
-  const MIRROR_ORIGIN = 'https://tu-overlays-git-stints-team-unknown2.vercel.app';
+  // blocking/throttling it are the recurring case) — Vercel's own domain for
+  // the production deploy, so it serves the same build without a login wall
+  // and stays reachable independently of the primary domain.
+  const MIRROR_ORIGIN = 'https://tu-overlays.vercel.app';
 
   const state = {
     key: '',
