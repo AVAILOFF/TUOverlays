@@ -45,22 +45,12 @@
 .stage-in{position:relative;z-index:1}
 .stage-copy{display:flex;flex-direction:column;gap:14px;max-width:66ch}
 
-/* three readouts on one hairline — the page's only numerals at display size */
-.stats{display:flex;flex-wrap:wrap;gap:0 var(--s7);margin-top:var(--s5);
-  border-top:1px solid var(--line);padding-top:var(--s4)}
-.stat{display:flex;flex-direction:column;gap:2px}
-.stat b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:var(--t-num);
-  font-weight:600;line-height:1;letter-spacing:-.03em;color:var(--tx)}
-.stat b u{text-decoration:none;color:var(--brand)}
-.stat span{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
-  text-transform:uppercase;color:var(--tx-4)}
-
 /* ── filter bar ───────────────────────────────────────────────────────────
    Sticks to the top of the viewport so the filter is reachable from anywhere
    in a 40-card list. backdrop-filter is allowed here for the same reason it is
    allowed on the home page header: this is the sticky chrome layer. */
 .tools{position:sticky;top:0;z-index:30;padding-block:var(--s3);
-  background:rgba(2,16,44,.82);border-bottom:1px solid var(--line);
+  background:rgba(2,16,44,.82);border-block:1px solid var(--line);
   backdrop-filter:blur(20px) saturate(1.35);-webkit-backdrop-filter:blur(20px) saturate(1.35)}
 .tools-in{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
 
@@ -188,7 +178,6 @@
   .chip{flex:none}
 }
 @media (max-width:560px){
-  .stats{gap:0 var(--s5)}
   .wgrid{grid-template-columns:1fr}
 }
 </style>
@@ -222,11 +211,6 @@
       <span class="eyebrow">Каталог</span>
       <h1>Все <span class="acc">виджеты</span></h1>
       <p class="lead">Каждый виджет — отдельное окно: включается, перемещается, масштабируется и настраивается само по себе. Здесь весь список — 38 штук, с коротким описанием и фильтром по назначению.</p>
-    </div>
-    <div class="stats">
-      <span class="stat"><b>38</b><span>Виджетов</span></span>
-      <span class="stat"><b>07</b><span>Групп</span></span>
-      <span class="stat"><b>27</b><span>Со скриншотом</span></span>
     </div>
   </div>
 </section>

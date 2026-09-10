@@ -174,7 +174,6 @@ const T = {
     eyebrow: 'Каталог',
     h1a: 'Все ', h1b: 'виджеты',
     lead: `Каждый виджет — отдельное окно: включается, перемещается, масштабируется и настраивается само по себе. Здесь весь список — ${TOTAL} штук, с коротким описанием и фильтром по назначению.`,
-    statTotal: 'Виджетов', statCats: 'Групп', statShots: 'Со скриншотом',
     toolbarAria: 'Фильтр каталога',
     searchLabel: 'Поиск по виджетам',
     searchPh: 'Поиск: топливо, radar…',
@@ -210,7 +209,6 @@ const T = {
     eyebrow: 'Catalogue',
     h1a: 'Every ', h1b: 'widget',
     lead: `Every widget is its own window: toggle it, move it, resize it and configure it on its own. This is the whole list — ${TOTAL} of them, each with a one-line description and a filter by what it is for.`,
-    statTotal: 'Widgets', statCats: 'Groups', statShots: 'With a shot',
     toolbarAria: 'Catalogue filter',
     searchLabel: 'Search widgets',
     searchPh: 'Search: fuel, radar…',
@@ -323,22 +321,12 @@ const page = (L) => `<!doctype html>
 .stage-in{position:relative;z-index:1}
 .stage-copy{display:flex;flex-direction:column;gap:14px;max-width:66ch}
 
-/* three readouts on one hairline — the page's only numerals at display size */
-.stats{display:flex;flex-wrap:wrap;gap:0 var(--s7);margin-top:var(--s5);
-  border-top:1px solid var(--line);padding-top:var(--s4)}
-.stat{display:flex;flex-direction:column;gap:2px}
-.stat b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:var(--t-num);
-  font-weight:600;line-height:1;letter-spacing:-.03em;color:var(--tx)}
-.stat b u{text-decoration:none;color:var(--brand)}
-.stat span{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
-  text-transform:uppercase;color:var(--tx-4)}
-
 /* ── filter bar ───────────────────────────────────────────────────────────
    Sticks to the top of the viewport so the filter is reachable from anywhere
    in a 40-card list. backdrop-filter is allowed here for the same reason it is
    allowed on the home page header: this is the sticky chrome layer. */
 .tools{position:sticky;top:0;z-index:30;padding-block:var(--s3);
-  background:rgba(2,16,44,.82);border-bottom:1px solid var(--line);
+  background:rgba(2,16,44,.82);border-block:1px solid var(--line);
   backdrop-filter:blur(20px) saturate(1.35);-webkit-backdrop-filter:blur(20px) saturate(1.35)}
 .tools-in{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
 
@@ -466,7 +454,6 @@ const page = (L) => `<!doctype html>
   .chip{flex:none}
 }
 @media (max-width:560px){
-  .stats{gap:0 var(--s5)}
   .wgrid{grid-template-columns:1fr}
 }
 </style>
@@ -501,11 +488,6 @@ const page = (L) => `<!doctype html>
       <span class="eyebrow">${L.eyebrow}</span>
       <h1>${L.h1a}<span class="acc">${L.h1b}</span></h1>
       <p class="lead">${L.lead}</p>
-    </div>
-    <div class="stats">
-      <span class="stat"><b>${TOTAL}</b><span>${L.statTotal}</span></span>
-      <span class="stat"><b>${pad(CATS.length)}</b><span>${L.statCats}</span></span>
-      <span class="stat"><b>${pad(SHOTS)}</b><span>${L.statShots}</span></span>
     </div>
   </div>
 </section>
