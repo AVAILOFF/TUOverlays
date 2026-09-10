@@ -31,12 +31,14 @@ const PAGES = [
   'changelog.html',
   'download.html',
   'support.html',
+  'widgets.html',
   'stints.html',
   'stints-admin.html',
   'en/index.html',
   'en/changelog.html',
   'en/download.html',
   'en/support.html',
+  'en/widgets.html',
 ];
 
 // Read an asset that a page pulls in. `spec` is the href/src as written in the

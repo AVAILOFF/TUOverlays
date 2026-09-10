@@ -109,6 +109,13 @@
   letter-spacing:.12em;margin-left:auto;flex:none}
 .fcard p{font-size:13.8px;line-height:1.55;color:var(--tx-2d);margin-top:8px}
 
+/* the way out of block 01: a hairline, a count and one ghost action. The grid
+   only shows eight of the forty widgets — /widgets holds the rest. */
+.fmore{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;
+  margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--line)}
+.fmore .lbl{color:var(--tx-3)}
+.fmore .btn{margin-left:auto}
+
 /* ============================================================
    C — STICKY LOG  (race control: a log, presented as a log)
    ============================================================ */
@@ -434,6 +441,10 @@ body.is-booting{overflow:hidden}
      1/-1. */
   .fgrid{grid-template-columns:1fr}
   .fcard,.fcard.is-lead{grid-column:auto}
+  /* the catalogue link stacks under its own caption instead of hanging off
+     the right edge of a 320px column */
+  .fmore{gap:var(--s3)}
+  .fmore .btn{margin-left:0;width:100%}
   .gpair{grid-template-columns:1fr}
   .mrail{grid-template-columns:1fr}
   .mitem,.mitem + .mitem{padding-left:0;padding-right:0}

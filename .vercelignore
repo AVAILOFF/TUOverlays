@@ -3,6 +3,7 @@
 downloads/README.md
 scripts/release.ps1
 scripts/discord-release.mjs
+scripts/gen-widgets.mjs
 .github/
 
 # Banner source/working files (large, not linked from the site).

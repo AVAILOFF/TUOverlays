@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All TU Overlays widgets — a catalogue of 38 iRacing overlays</title>
+<meta name="description" content="The full TU Overlays widget catalogue: 38 independent iRacing overlays — standings, relative, track map, fuel, telemetry, weather and stream widgets.">
+<meta name="theme-color" content="#02102c">
+<script src="/scripts/analytics.js" defer></script>
+<link rel="canonical" href="https://tuoverlays.xyz/en/widgets">
+<link rel="alternate" hreflang="ru" href="https://tuoverlays.xyz/widgets">
+<link rel="alternate" hreflang="en" href="https://tuoverlays.xyz/en/widgets">
+<link rel="alternate" hreflang="x-default" href="https://tuoverlays.xyz/widgets">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="../img/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../img/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../img/favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../img/favicon-512.png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+
+<link rel="stylesheet" href="/css/tu-core.css">
+<style>
+/* ── header ────────────────────────────────────────────────────────────────
+   Like every other secondary page: this one doesn't run the scroll-driven
+   .stuck toggle from js/tu-home.js, so the header stays in normal flow and
+   the filter bar below it is the only sticky element. */
+.hdr{position:static;padding-block:18px;border-bottom:1px solid var(--line)}
+.hdr-in{display:flex;align-items:center;gap:14px;height:auto}
+.hdr-back{margin-left:auto;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  transition:color var(--d-1) var(--e-state)}
+.hdr-back:hover{color:var(--tx)}
+.lang-switch{display:flex;margin-left:0}
+
+/* ── hero ──────────────────────────────────────────────────────────────── */
+.stage{position:relative;overflow:hidden;padding-block:clamp(52px,8vw,84px) clamp(24px,3vw,36px)}
+.glow{position:absolute;border-radius:50%;filter:blur(100px);opacity:.34;pointer-events:none;
+  width:min(900px,120vw);height:480px;left:50%;top:-240px;transform:translateX(-50%);
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
+/* .stage-in is also the .wrap, so it must not carry its own max-width: that
+   would override --maxw and centre the hero away from the left edge every
+   other band on the page starts at. The copy column is constrained instead. */
+.stage-in{position:relative;z-index:1}
+.stage-copy{display:flex;flex-direction:column;gap:14px;max-width:66ch}
+
+/* three readouts on one hairline — the page's only numerals at display size */
+.stats{display:flex;flex-wrap:wrap;gap:0 var(--s7);margin-top:var(--s5);
+  border-top:1px solid var(--line);padding-top:var(--s4)}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:var(--t-num);
+  font-weight:600;line-height:1;letter-spacing:-.03em;color:var(--tx)}
+.stat b u{text-decoration:none;color:var(--brand)}
+.stat span{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4)}
+
+/* ── filter bar ───────────────────────────────────────────────────────────
+   Sticks to the top of the viewport so the filter is reachable from anywhere
+   in a 40-card list. backdrop-filter is allowed here for the same reason it is
+   allowed on the home page header: this is the sticky chrome layer. */
+.tools{position:sticky;top:0;z-index:30;padding-block:var(--s3);
+  background:rgba(2,16,44,.82);border-bottom:1px solid var(--line);
+  backdrop-filter:blur(20px) saturate(1.35);-webkit-backdrop-filter:blur(20px) saturate(1.35)}
+.tools-in{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
+
+/* 260px is what's left over once the seven chips and the count have taken
+   their share of a 1920-wide desktop; below that the row wraps. */
+.srch{position:relative;flex:0 1 260px;max-width:100%}
+.srch svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--tx-4);pointer-events:none}
+.srch input{
+  width:100%;height:40px;padding:0 34px 0 36px;border-radius:var(--r-pill);
+  background:var(--elev-1);border:1px solid var(--line-2);color:var(--tx);
+  font-family:var(--f-text);font-size:14px;
+  transition:border-color var(--d-1) var(--e-state),background var(--d-1) var(--e-state);
+}
+.srch input::placeholder{color:var(--tx-4)}
+.srch input:hover{border-color:var(--line-3)}
+.srch input:focus{outline:none;border-color:var(--brand);background:var(--elev-2)}
+.srch input:focus-visible{outline:2px solid var(--data);outline-offset:2px}
+.srch-x{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;display:none;align-items:center;justify-content:center;border-radius:50%;
+  color:var(--tx-3);transition:color var(--d-1) var(--e-state)}
+.srch-x:hover{color:var(--brand-hi)}
+.srch.has-q .srch-x{display:flex}
+
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;
+  border:1px solid var(--line-2);border-radius:var(--r-pill);
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tx-3);white-space:nowrap;
+  transition:color var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state),background var(--d-1) var(--e-state);
+}
+.chip:hover{color:var(--tx);border-color:var(--line-3)}
+.chip-n{font-size:var(--t-lbl-s);color:var(--tx-4);transition:color var(--d-1) var(--e-state)}
+.chip.is-on{color:var(--tx);border-color:var(--line-hot);background:var(--brand-dim)}
+.chip.is-on .chip-n{color:var(--brand-hi)}
+
+.count{margin-left:auto;font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;color:var(--tx-4);white-space:nowrap}
+.count b{color:var(--tx);font-weight:400}
+
+/* ── catalogue ─────────────────────────────────────────────────────────── */
+/* html carries zoom:1.5, so the track floor is in layout px, not screen px:
+   258px lands 3 columns on a 1366-wide laptop and 4 on a 1920 desktop. */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:var(--gut);
+  align-items:start;padding-block:var(--s6) var(--s7)}
+.wcard{display:flex;flex-direction:column;gap:6px;padding:var(--s4) var(--s4) var(--s5);overflow:hidden;
+  transition:background var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state),
+             opacity var(--d-3) var(--e-enter),transform var(--d-3) var(--e-enter)}
+.wcard[hidden]{display:none}
+.wcard:hover{background:var(--elev-2);border-color:var(--line-3)}
+/* same hover affordance as the feature cards on the home page: a hairline
+   drawing itself left to right, never a lift */
+.wcard::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:var(--brand);
+  transform:scaleX(0);transform-origin:left;transition:transform var(--d-2) var(--e-state)}
+.wcard:hover::after{transform:scaleX(1)}
+
+.wc-hd{display:flex;align-items:baseline;gap:10px;margin-bottom:var(--s2)}
+.wc-tag{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
+  text-transform:uppercase;color:var(--tx-4)}
+.wc-n{margin-left:auto;font-size:var(--t-lbl-s);letter-spacing:.12em;color:var(--tx-4);flex:none}
+.wcard h3{color:var(--tx)}
+.wc-gloss{font-size:var(--t-lbl);letter-spacing:.04em;color:var(--tx-3)}
+.wc-d{font-size:13.8px;line-height:1.55;color:var(--tx-2d);margin-top:6px}
+
+/* the preview well — same construction as the feature cards on the home page:
+   a recessed well, the shot letterboxed inside it with a deterministic inset
+   so a portrait screenshot and a wide one get the same margin */
+.wc-mv{position:relative;display:flex;align-items:center;justify-content:center;
+  height:124px;padding:10px;margin-bottom:var(--s3);border-radius:var(--r-1);
+  overflow:hidden;border:1px solid var(--line);background:var(--well)}
+/* auto + max-*, not object-fit:contain: "contain" also scales an image UP to
+   fill the box, and several of these overlays are genuinely tiny (Corner Names
+   ships at 95x20) — blowing one up to fill the well only makes it soft. Big
+   shots shrink to fit, small ones stay crisp at native size, and the wall
+   keeps the widgets' real size relative to each other. */
+.wc-mv img{width:auto;height:auto;max-width:100%;max-height:100%;cursor:zoom-in}
+.wc-mv img[src$=".svg"]{max-height:74%}
+/* the enlarge affordance only announces itself on hover — the shot is already
+   readable without it */
+.wc-zoom{position:absolute;top:7px;right:7px;width:22px;height:22px;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;border-radius:var(--r-1);
+  background:rgba(2,16,44,.72);border:1px solid var(--line-2);color:var(--tx-3);
+  opacity:0;transition:opacity var(--d-1) var(--e-state),color var(--d-1) var(--e-state)}
+.wcard:hover .wc-zoom,.wc-mv img:focus-visible + .wc-zoom{opacity:1;color:var(--brand-hi)}
+
+/* mark: highlights the matched substring during a search */
+.wcard mark{background:rgba(255,0,102,.22);color:var(--tx);border-radius:2px}
+
+.empty{display:none;padding:var(--s7) var(--s5);text-align:center}
+.empty.on{display:block}
+.empty h3{font-size:19px}
+.empty p{color:var(--tx-2d);font-size:var(--t-sm);margin:10px auto var(--s5);max-width:52ch}
+
+/* ── closing plate ─────────────────────────────────────────────────────── */
+.cta{position:relative;overflow:hidden;border-radius:var(--r-3);border:1px solid var(--line-2);
+  background:var(--elev-1);padding:clamp(28px,4vw,48px);margin-bottom:var(--s8)}
+.cta::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:var(--brand)}
+.cta h2{margin-top:10px}
+.cta p{color:var(--tx-2);font-size:var(--t-lead);line-height:var(--lh-lead);max-width:56ch;margin-top:12px}
+.cta-actions{display:flex;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s5)}
+
+/* ── footer ────────────────────────────────────────────────────────────── */
+.ftr{border-top:1px solid var(--line);padding-block:36px}
+.ftr-in{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:center}
+.ftr-links{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto}
+.ftr-links a{font-size:var(--t-xs);color:var(--tx-3);transition:color var(--d-1) var(--e-state)}
+.ftr-links a:hover{color:var(--tx)}
+.disc{width:100%;color:var(--tx-4);font-size:var(--t-xs);line-height:1.6;max-width:74ch;
+  padding-top:22px;margin-top:4px;border-top:1px solid var(--line)}
+.disc b{color:var(--tx-3);font-weight:500}
+
+@media (max-width:900px){
+  .tools-in{gap:var(--s3)}
+  /* the field and the tally share one line so the sticky bar costs a phone two
+     rows, not three */
+  .srch{order:-1;flex:1 1 120px;min-width:0}
+  .count{order:0;flex:none;margin-left:0}
+  /* seven chips wrapped onto four rows would leave a phone with a sticky bar
+     taller than the cards under it: run them as one scrolling rail instead,
+     bled to the screen edges so the overflow reads as scrollable */
+  .chips{order:1;flex:1 1 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
+    width:calc(100% + var(--pad) * 2);margin-inline:calc(var(--pad) * -1);padding-inline:var(--pad);
+    scrollbar-width:none;-ms-overflow-style:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+}
+@media (max-width:560px){
+  .stats{gap:0 var(--s5)}
+  .wgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="logo" href="index.html" aria-label="TU Overlays — home">
+      <img class="logo-mk" src="../img/logo.png" alt="" width="26" height="28" decoding="async">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <div class="lang-switch" aria-label="Language">
+      <a href="../widgets.html">RU</a>
+      <a class="on" href="widgets.html" aria-current="true">EN</a>
+    </div>
+    <a class="hdr-back" href="index.html">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back home
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="stage">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap stage-in">
+    <div class="stage-copy">
+      <span class="eyebrow">Catalogue</span>
+      <h1>Every <span class="acc">widget</span></h1>
+      <p class="lead">Every widget is its own window: toggle it, move it, resize it and configure it on its own. This is the whole list — 38 of them, each with a one-line description and a filter by what it is for.</p>
+    </div>
+    <div class="stats">
+      <span class="stat"><b>38</b><span>Widgets</span></span>
+      <span class="stat"><b>07</b><span>Groups</span></span>
+      <span class="stat"><b>27</b><span>With a shot</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FILTER ══════════════════════════ -->
+<div class="tools">
+  <div class="wrap tools-in" role="search" aria-label="Catalogue filter">
+    <div class="srch" id="srch">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search: fuel, radar…" aria-label="Search widgets">
+      <button class="srch-x" id="qx" type="button" aria-label="Clear search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="chips" id="chips">
+        <button class="chip is-on" type="button" data-cat="all" aria-pressed="true">All <span class="chip-n mono">38</span></button>
+        <button class="chip" type="button" data-cat="race" aria-pressed="false">Positions &amp; pace <span class="chip-n mono">8</span></button>
+        <button class="chip" type="button" data-cat="safety" aria-pressed="false">Traffic <span class="chip-n mono">6</span></button>
+        <button class="chip" type="button" data-cat="strategy" aria-pressed="false">Strategy <span class="chip-n mono">4</span></button>
+        <button class="chip" type="button" data-cat="car" aria-pressed="false">Telemetry <span class="chip-n mono">9</span></button>
+        <button class="chip" type="button" data-cat="track" aria-pressed="false">Track <span class="chip-n mono">4</span></button>
+        <button class="chip" type="button" data-cat="weather" aria-pressed="false">Weather <span class="chip-n mono">4</span></button>
+        <button class="chip" type="button" data-cat="stream" aria-pressed="false">Stream <span class="chip-n mono">3</span></button>
+    </div>
+    <p class="count" aria-label="Widgets found"><b id="cNow">38</b> of 38</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CATALOGUE ══════════════════════════ -->
+<section class="wrap">
+  <div class="wgrid" id="grid">
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="standings турнирная таблица positions, gaps, best laps, pit status and classes. позиции и темп positions &amp; pace" data-name="Standings" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/standings.png" alt="The Standings widget as it looks in game" width="845" height="418" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">01</span>
+      </div>
+      <h3>Standings</h3>
+      <p class="wc-d">Positions, gaps, best laps, pit status and classes.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="relative относительные позиции the cars around you and live intervals to them. позиции и темп positions &amp; pace" data-name="Relative" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/relative.png" alt="The Relative widget as it looks in game" width="584" height="307" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">02</span>
+      </div>
+      <h3>Relative</h3>
+      <p class="wc-d">The cars around you and live intervals to them.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="track" data-keys="track map карта трассы a track map with every driver's live position. трасса track" data-name="Track Map" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/track-map.png" alt="The Track Map widget as it looks in game" width="480" height="320" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Track</span>
+        <span class="wc-n mono">03</span>
+      </div>
+      <h3>Track Map</h3>
+      <p class="wc-d">A track map with every driver&#8217;s live position.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="track" data-keys="flat track map плоская карта трассы a compact, horizontal version of the map. трасса track" data-name="Flat Track Map" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/flat-track-map.png" alt="The Flat Track Map widget as it looks in game" width="852" height="74" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Track</span>
+        <span class="wc-n mono">04</span>
+      </div>
+      <h3>Flat Track Map</h3>
+      <p class="wc-d">A compact, horizontal version of the map.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="weather" data-keys="weather погода track and air temperature, humidity and track state. погода weather" data-name="Weather" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/weather.png" alt="The Weather widget as it looks in game" width="232" height="295" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Weather</span>
+        <span class="wc-n mono">05</span>
+      </div>
+      <h3>Weather</h3>
+      <p class="wc-d">Track and air temperature, humidity and track state.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="weather" data-keys="weather forecast прогноз погоды a weather forecast for the rest of the session. погода weather" data-name="Weather Forecast" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/weather-forecast.png" alt="The Weather Forecast widget as it looks in game" width="640" height="125" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Weather</span>
+        <span class="wc-n mono">06</span>
+      </div>
+      <h3>Weather Forecast</h3>
+      <p class="wc-d">A weather forecast for the rest of the session.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="weather" data-keys="wind ветер wind direction and speed. погода weather" data-name="Wind" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/wind.png" alt="The Wind widget as it looks in game" width="397" height="389" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Weather</span>
+        <span class="wc-n mono">07</span>
+      </div>
+      <h3>Wind</h3>
+      <p class="wc-d">Wind direction and speed.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="safety" data-keys="faster cars from behind быстрые машины сзади a warning about faster cars closing in from behind. трафик traffic" data-name="Faster Cars From Behind" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/faster-cars-from-behind.png" alt="The Faster Cars From Behind widget as it looks in game" width="621" height="163" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">08</span>
+      </div>
+      <h3>Faster Cars From Behind</h3>
+      <p class="wc-d">A warning about faster cars closing in from behind.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="strategy" data-keys="fuel calculator калькулятор топлива consumption, fuel remaining, reserve and pit-stop timing. стратегия strategy" data-name="Fuel Calculator" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/fuel-calculator.png" alt="The Fuel Calculator widget as it looks in game" width="423" height="234" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Strategy</span>
+        <span class="wc-n mono">09</span>
+      </div>
+      <h3>Fuel Calculator</h3>
+      <p class="wc-d">Consumption, fuel remaining, reserve and pit-stop timing.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="safety" data-keys="blind spot monitor контроль слепых зон cars in your left or right blind spot. трафик traffic" data-name="Blind Spot Monitor" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/blind-spot-monitor.png" alt="The Blind Spot Monitor widget as it looks in game" width="842" height="526" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">10</span>
+      </div>
+      <h3>Blind Spot Monitor</h3>
+      <p class="wc-d">Cars in your left or right blind spot.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="safety" data-keys="radar радар a close-range radar of the cars around you and their lanes. трафик traffic" data-name="Radar" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/radar.png" alt="The Radar widget as it looks in game" width="656" height="611" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">11</span>
+      </div>
+      <h3>Radar</h3>
+      <p class="wc-d">A close-range radar of the cars around you and their lanes.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="safety" data-keys="rejoin indicator индикатор возврата на трассу help rejoining the track safely. трафик traffic" data-name="Rejoin Indicator" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/rejoin-indicator.png" alt="The Rejoin Indicator widget as it looks in game" width="852" height="110" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">12</span>
+      </div>
+      <h3>Rejoin Indicator</h3>
+      <p class="wc-d">Help rejoining the track safely.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="strategy" data-keys="pitlane helper помощник на пит-лейн speed, pitbox position and hints on pit entry. стратегия strategy" data-name="Pitlane Helper" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/pitlane-helper.png" alt="The Pitlane Helper widget as it looks in game" width="354" height="292" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Strategy</span>
+        <span class="wc-n mono">13</span>
+      </div>
+      <h3>Pitlane Helper</h3>
+      <p class="wc-d">Speed, pitbox position and hints on pit entry.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="tachometer тахометр rpm, shift points and engine temperatures. телеметрия telemetry" data-name="Tachometer" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/tachometer.png" alt="The Tachometer widget as it looks in game" width="710" height="159" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">14</span>
+      </div>
+      <h3>Tachometer</h3>
+      <p class="wc-d">RPM, shift points and engine temperatures.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="abs abs an abs activation indicator. телеметрия telemetry" data-name="ABS" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/abs-icon.svg" alt="The ABS widget as it looks in game" width="150" height="105" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">15</span>
+      </div>
+      <h3>ABS</h3>
+      <p class="wc-d">An ABS activation indicator.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="flag флаги the session's current flag. позиции и темп positions &amp; pace" data-name="Flag" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/flag.png" alt="The Flag widget as it looks in game" width="274" height="277" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">16</span>
+      </div>
+      <h3>Flag</h3>
+      <p class="wc-d">The session&#8217;s current flag.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="lap timer журнал кругов current, best and previous laps. позиции и темп positions &amp; pace" data-name="Lap Timer" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/lap-timer.png" alt="The Lap Timer widget as it looks in game" width="294" height="131" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">17</span>
+      </div>
+      <h3>Lap Timer</h3>
+      <p class="wc-d">Current, best and previous laps.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="information bar информационная панель flag, lap number and session time. позиции и темп positions &amp; pace" data-name="Information Bar" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/information-bar.png" alt="The Information Bar widget as it looks in game" width="890" height="67" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">18</span>
+      </div>
+      <h3>Information Bar</h3>
+      <p class="wc-d">Flag, lap number and session time.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="safety" data-keys="slow car ahead медленная машина впереди a warning about a slower car ahead. трафик traffic" data-name="Slow Car Ahead" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/slow-car-ahead.png" alt="The Slow Car Ahead widget as it looks in game" width="469" height="51" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">19</span>
+      </div>
+      <h3>Slow Car Ahead</h3>
+      <p class="wc-d">A warning about a slower car ahead.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="race" data-keys="sector delta дельта по секторам the delta for each sector. позиции и темп positions &amp; pace" data-name="Sector Delta" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/sector-delta.png" alt="The Sector Delta widget as it looks in game" width="456" height="55" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">20</span>
+      </div>
+      <h3>Sector Delta</h3>
+      <p class="wc-d">The delta for each sector.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="track" data-keys="corner names названия поворотов the current corner or track section. трасса track" data-name="Corner Names" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/corner-names.png" alt="The Corner Names widget as it looks in game" width="95" height="20" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Track</span>
+        <span class="wc-n mono">21</span>
+      </div>
+      <h3>Corner Names</h3>
+      <p class="wc-d">The current corner or track section.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="input traces педали и руль throttle, brake, clutch, steering, gear and speed. телеметрия telemetry" data-name="Input Traces" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/inputs.png" alt="The Input Traces widget as it looks in game" width="453" height="102" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">22</span>
+      </div>
+      <h3>Input Traces</h3>
+      <p class="wc-d">Throttle, brake, clutch, steering, gear and speed.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="track" data-keys="cornering speed скорость в повороте max and apex speed through the corner against your best pass this session. трасса track" data-name="Cornering Speed" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/cornering-speed.png" alt="The Cornering Speed widget as it looks in game" width="304" height="114" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Track</span>
+        <span class="wc-n mono">23</span>
+      </div>
+      <h3>Cornering Speed</h3>
+      <p class="wc-d">Max and apex speed through the corner against your best pass this session.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="data block блок данных a single telemetry value of your choice; duplicate it into a row of readouts. телеметрия telemetry" data-name="Data Block" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/data-block.png" alt="The Data Block widget as it looks in game" width="203" height="63" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">24</span>
+      </div>
+      <h3>Data Block</h3>
+      <p class="wc-d">A single telemetry value of your choice; duplicate it into a row of readouts.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="tires шины tire temperature by zone, tread wear and cold pressure. телеметрия telemetry" data-name="Tires" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/tires.png" alt="The Tires widget as it looks in game" width="301" height="188" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">25</span>
+      </div>
+      <h3>Tires</h3>
+      <p class="wc-d">Tire temperature by zone, tread wear and cold pressure.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="car" data-keys="g-force перегрузки a traction circle with lateral and longitudinal load, its trail and peaks. телеметрия telemetry" data-name="G-Force" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/g-force.png" alt="The G-Force widget as it looks in game" width="417" height="444" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">26</span>
+      </div>
+      <h3>G-Force</h3>
+      <p class="wc-d">A traction circle with lateral and longitudinal load, its trail and peaks.</p>
+    </article>
+    <article class="panel brk wcard has-mv" data-cat="strategy" data-keys="undercut / overcut андеркат / оверкат whether pitting now beats staying out. стратегия strategy" data-name="Undercut / Overcut" data-reveal>
+      <div class="wc-mv">
+        <img src="../img/undercut-overcut.png" alt="The Undercut / Overcut widget as it looks in game" width="380" height="153" loading="lazy" decoding="async">
+        <span class="wc-zoom" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+      <div class="wc-hd">
+        <span class="wc-tag">Strategy</span>
+        <span class="wc-n mono">27</span>
+      </div>
+      <h3>Undercut / Overcut</h3>
+      <p class="wc-d">Whether pitting now beats staying out.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="race" data-keys="standings (compact) турнирная таблица (компакт) a compact standings table for tight layouts. позиции и темп positions &amp; pace" data-name="Standings (Compact)" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">28</span>
+      </div>
+      <h3>Standings (Compact)</h3>
+      <p class="wc-d">A compact standings table for tight layouts.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="stream" data-keys="garage cover заставка гаража a screen cover while you're in the garage. стрим stream" data-name="Garage Cover" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Stream</span>
+        <span class="wc-n mono">29</span>
+      </div>
+      <h3>Garage Cover</h3>
+      <p class="wc-d">A screen cover while you&#8217;re in the garage.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="stream" data-keys="twitch chat чат twitch a twitch chat right on top of the simulator. стрим stream" data-name="Twitch Chat" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Stream</span>
+        <span class="wc-n mono">30</span>
+      </div>
+      <h3>Twitch Chat</h3>
+      <p class="wc-d">A Twitch chat right on top of the simulator.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="stream" data-keys="heart rate пульс your live heart rate via hyperate. стрим stream" data-name="Heart Rate" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Stream</span>
+        <span class="wc-n mono">31</span>
+      </div>
+      <h3>Heart Rate</h3>
+      <p class="wc-d">Your live heart rate via HypeRate.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="race" data-keys="delta bar полоса дельты a live delta to the session's best lap, as a bar and a signed number. позиции и темп positions &amp; pace" data-name="Delta Bar" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Positions &amp; pace</span>
+        <span class="wc-n mono">32</span>
+      </div>
+      <h3>Delta Bar</h3>
+      <p class="wc-d">A live delta to the session&#8217;s best lap, as a bar and a signed number.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="strategy" data-keys="damage indicator индикатор повреждений a damage and mandatory-repair alert. стратегия strategy" data-name="Damage Indicator" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Strategy</span>
+        <span class="wc-n mono">33</span>
+      </div>
+      <h3>Damage Indicator</h3>
+      <p class="wc-d">A damage and mandatory-repair alert.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="car" data-keys="balance meter баланс машины live understeer or oversteer. телеметрия telemetry" data-name="Balance Meter" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">34</span>
+      </div>
+      <h3>Balance Meter</h3>
+      <p class="wc-d">Live understeer or oversteer.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="car" data-keys="setup deck панель настроек live in-car adjustment positions, highlighted on every change. телеметрия telemetry" data-name="Setup Deck" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">35</span>
+      </div>
+      <h3>Setup Deck</h3>
+      <p class="wc-d">Live in-car adjustment positions, highlighted on every change.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="car" data-keys="brake pressure давление в тормозах per-wheel brake circuit pressure and the real front/rear balance. телеметрия telemetry" data-name="Brake Pressure" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Telemetry</span>
+        <span class="wc-n mono">36</span>
+      </div>
+      <h3>Brake Pressure</h3>
+      <p class="wc-d">Per-wheel brake circuit pressure and the real front/rear balance.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="safety" data-keys="traffic ahead трафик впереди cars you are about to catch, with closing speed. трафик traffic" data-name="Traffic Ahead" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Traffic</span>
+        <span class="wc-n mono">37</span>
+      </div>
+      <h3>Traffic Ahead</h3>
+      <p class="wc-d">Cars you are about to catch, with closing speed.</p>
+    </article>
+    <article class="panel brk wcard" data-cat="weather" data-keys="track wetness влажность трассы surface wetness on iracing's scale, its trend and the tyre call. погода weather" data-name="Track Wetness" data-reveal>
+      <div class="wc-hd">
+        <span class="wc-tag">Weather</span>
+        <span class="wc-n mono">38</span>
+      </div>
+      <h3>Track Wetness</h3>
+      <p class="wc-d">Surface wetness on iRacing&#8217;s scale, its trend and the tyre call.</p>
+    </article>
+  </div>
+
+  <div class="panel empty" id="empty">
+    <h3>Nothing matched</h3>
+    <p>Try another word or reset the filter. If the widget you need is not on the list, tell us on Discord — the list grows on requests.</p>
+    <button class="btn btn-ghost btn-sm" type="button" id="reset">Reset the filter</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════ CLOSING PLATE ══════════════════════════ -->
+<section class="wrap">
+  <div class="cta">
+    <span class="eyebrow">Next</span>
+    <h2>The list keeps growing</h2>
+    <p>TU Overlays evolves with the community: tell us which widget you are missing and it may well ship in the next release.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="download.html">
+        <span class="btn-content">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="btn-label">Download TU Overlays</span>
+        </span>
+        <span class="btn-arrow" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <a class="btn btn-ghost" href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Request a widget on Discord</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <a class="logo" href="index.html">
+      <img class="logo-mk" src="../img/logo.png" alt="" aria-hidden="true" width="26" height="28" loading="lazy" decoding="async">
+      <span class="logo-tx"><b>TU</b> <span>Overlays</span></span>
+    </a>
+    <nav class="ftr-links" aria-label="More">
+      <a href="index.html#features">Features</a>
+      <a href="widgets.html">All widgets</a>
+      <a href="download.html">Download</a>
+      <a href="support.html">Support the project</a>
+      <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Discord</a>
+    </nav>
+    <p class="disc"><b>TU Overlays is an independent project.</b> The app is not affiliated with, developed, or endorsed by iRacing.com Motorsport Simulations, LLC. AI-assisted tools were used in building the app and this site. © 2026 TU Overlays.</p>
+  </div>
+</footer>
+
+<!-- screenshot viewer — the same photo lightbox the home page gallery uses -->
+<div class="plb" id="plb" hidden role="dialog" aria-modal="true" aria-label="Widget screenshot viewer">
+  <div class="plb-box">
+    <div class="plb-frame"><img id="plbImg" src="" alt="" width="1" height="1"></div>
+    <div class="lb-bar">
+      <h3 id="plbTitle">—</h3>
+      <div class="lb-nav">
+        <button id="plbPrev" type="button" aria-label="Previous">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="plbNext" type="button" aria-label="Next">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <button class="lb-close" id="plbClose" type="button" aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ── scroll reveal ──────────────────────────────────────────────────────
+     tu-home.js isn't loaded here, so the page runs its own copy of the one
+     reveal in the system: 420ms, 60ms stagger, opacity + 14px. */
+  const reveal = () => {
+    const items = [...document.querySelectorAll('[data-reveal]')];
+    if (!('IntersectionObserver' in window) ||
+        matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      items.forEach(el => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      let n = 0;
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        // cap the cascade: a whole screen of cards entering at once must not
+        // run a two-second staircase
+        e.target.style.setProperty('--d', (Math.min(n++, 7) * 60) + 'ms');
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .05 });
+    items.forEach(el => io.observe(el));
+  };
+  reveal();
+
+  /* ── filter ──────────────────────────────────────────────────────────── */
+  const cards  = [...document.querySelectorAll('.wcard')];
+  const chips  = [...document.querySelectorAll('.chip')];
+  const q      = document.getElementById('q');
+  const srch   = document.getElementById('srch');
+  const qx     = document.getElementById('qx');
+  const cNow   = document.getElementById('cNow');
+  const empty  = document.getElementById('empty');
+  const reset  = document.getElementById('reset');
+
+  let cat = 'all';
+
+  // Cache each title's original markup so highlighting can be undone without
+  // re-reading a string we have already wrapped in <mark>.
+  cards.forEach((c) => { c._h3 = c.querySelector('h3'); c._name = c.dataset.name; });
+
+  const mark = (card, term) => {
+    const name = card._name;
+    if (!term) { card._h3.textContent = name; return; }
+    const i = name.toLowerCase().indexOf(term);
+    if (i < 0) { card._h3.textContent = name; return; }
+    card._h3.textContent = '';
+    card._h3.append(
+      name.slice(0, i),
+      Object.assign(document.createElement('mark'), { textContent: name.slice(i, i + term.length) }),
+      name.slice(i + term.length)
+    );
+  };
+
+  const apply = () => {
+    const term = q.value.trim().toLowerCase();
+    let n = 0;
+    cards.forEach((c) => {
+      const hit = (cat === 'all' || c.dataset.cat === cat) &&
+                  (!term || c.dataset.keys.includes(term));
+      c.hidden = !hit;
+      if (hit) { n++; mark(c, term); }
+    });
+    cNow.textContent = n;
+    empty.classList.toggle('on', n === 0);
+    srch.classList.toggle('has-q', q.value !== '');
+  };
+
+  chips.forEach((b) => b.addEventListener('click', () => {
+    cat = b.dataset.cat;
+    chips.forEach((o) => {
+      const on = o === b;
+      o.classList.toggle('is-on', on);
+      o.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    apply();
+  }));
+
+  q.addEventListener('input', apply);
+  qx.addEventListener('click', () => { q.value = ''; q.focus(); apply(); });
+  reset.addEventListener('click', () => {
+    q.value = '';
+    chips[0].click();
+    q.focus();
+  });
+  // Esc clears the field before the browser's own search-input reset kicks in
+  q.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && q.value) { e.preventDefault(); q.value = ''; apply(); }
+  });
+
+  /* ── screenshot viewer ───────────────────────────────────────────────── */
+  const plb   = document.getElementById('plb');
+  const img   = document.getElementById('plbImg');
+  const title = document.getElementById('plbTitle');
+  // the previews in the cards are the triggers: the shot is already on screen,
+  // clicking it only blows it up
+  const shots = [...document.querySelectorAll('.wc-mv img')];
+  // prev/next walks the shots the filter is currently showing, so arrowing
+  // through "weather" never lands on a widget the visitor filtered out
+  let reel = shots, at = 0, last = null;
+
+  const show = (i) => {
+    at = (i + reel.length) % reel.length;
+    const b = reel[at];
+    const card = b.closest('.wcard');
+    img.src = b.currentSrc || b.src;
+    img.width = b.getAttribute('width');
+    img.height = b.getAttribute('height');
+    img.alt = b.alt;
+    title.textContent = card.dataset.name;
+  };
+
+  const open = (b) => {
+    last = b;
+    reel = shots.filter((s) => !s.closest('.wcard').hidden);
+    if (!reel.length) reel = shots;
+    show(Math.max(0, reel.indexOf(b)));
+    plb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('plbClose').focus();
+  };
+
+  const close = () => {
+    plb.hidden = true;
+    document.body.style.overflow = '';
+    if (last) last.focus();
+  };
+
+  // an <img> is not focusable on its own; promote it the same way the home
+  // page's gallery does so the preview stays reachable from the keyboard
+  shots.forEach((b) => {
+    b.setAttribute('role', 'button');
+    b.setAttribute('tabindex', '0');
+    b.addEventListener('click', () => open(b));
+    b.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(b); }
+    });
+  });
+  document.getElementById('plbClose').addEventListener('click', close);
+  document.getElementById('plbPrev').addEventListener('click', () => show(at - 1));
+  document.getElementById('plbNext').addEventListener('click', () => show(at + 1));
+  plb.addEventListener('click', (e) => { if (e.target === plb) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (plb.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(at - 1);
+    if (e.key === 'ArrowRight') show(at + 1);
+  });
+})();
+</script>
+
+</body>
+</html>
