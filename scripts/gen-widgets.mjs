@@ -538,7 +538,7 @@ ${WIDGETS.map((w, i) => card(w, i, L)).join('\n')}
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a class="btn btn-ghost" href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">${L.ctaDs}</a>
+      <a class="btn btn-ghost" href="https://discord.gg/abSH8PHSY" target="_blank" rel="noopener">${L.ctaDs}</a>
     </div>
   </div>
 </section>
@@ -554,7 +554,7 @@ ${WIDGETS.map((w, i) => card(w, i, L)).join('\n')}
     </a>
     <nav class="ftr-links" aria-label="${L.ftrAria}">
 ${L.ftrLinks.map(([h, t]) => `      <a href="${h}">${t}</a>`).join('\n')}
-      <a href="https://discord.gg/8nys62n7M" target="_blank" rel="noopener">Discord</a>
+      <a href="https://discord.gg/abSH8PHSY" target="_blank" rel="noopener">Discord</a>
     </nav>
     <p class="disc">${L.disc}</p>
   </div>
