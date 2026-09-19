@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Калькулятор стинтов — TU Overlays</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#02102c">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/tu-stints-admin.css">
+<link rel="stylesheet" href="/css/tu-stints-calc.css">
+</head>
+<body>
+
+<!-- ------------------------------------------------------------- gate -- -->
+<div class="gate" id="gate" hidden>
+  <div class="box">
+    <h1>Калькулятор стинтов</h1>
+    <p class="hint">Тот же личный ключ, что и для панели стинтов. Если вам прислали ссылку с ключом — просто откройте её.</p>
+    <form id="gate-form" autocomplete="off">
+      <label class="lbl" for="gate-key">Ключ</label>
+      <input type="password" id="gate-key" placeholder="tus_…" autocomplete="off">
+      <button type="submit" class="btn btn-primary">Войти</button>
+      <p class="status err" id="gate-err" hidden></p>
+    </form>
+  </div>
+</div>
+
+<!-- -------------------------------------------------------------- app -- -->
+<div id="app" hidden>
+
+  <header class="top">
+    <span class="brand">TU Overlays · Калькулятор</span>
+    <select id="board-select" class="board-select" aria-label="Таблица стинтов"></select>
+    <a class="btn btn-sm" id="back" href="/stints-admin">← К таблице стинтов</a>
+    <span class="spacer"></span>
+    <span class="status" id="save-status"></span>
+    <button class="btn btn-sm" id="reload" hidden>Загрузить версию с сервера</button>
+    <button class="btn btn-sm" id="import-board" title="Подставить пилотов из таблицы стинтов в столбец «Driver»">Пилоты из таблицы</button>
+    <button class="btn btn-sm" id="apply" title="Записать результат расчёта в таблицу стинтов">Применить к стинтам…</button>
+    <button class="btn btn-primary btn-sm" id="save" disabled>Сохранить</button>
+    <button class="btn btn-sm" id="logout">Выйти</button>
+  </header>
+
+  <main class="calc-wrap">
+
+    <section class="calc-main">
+      <div class="issues" id="issues" hidden></div>
+
+      <div class="totals" id="totals"></div>
+
+      <div class="fbar">
+        <span class="fbar-name mono" id="cell-name">—</span>
+        <input type="text" id="cell-input" class="mono" placeholder="Значение или =формула" autocomplete="off" spellcheck="false">
+        <span class="fbar-val mono" id="cell-val"></span>
+      </div>
+
+      <div class="gridwrap" id="gridwrap" tabindex="0" aria-label="Таблица расчёта">
+        <table class="calc-grid" id="grid"></table>
+      </div>
+
+      <div class="row grid-tools">
+        <button class="btn btn-sm" id="add-row">+ Строка</button>
+        <button class="btn btn-sm" id="insert-row">Вставить под выбранной</button>
+        <button class="btn btn-sm btn-danger" id="del-row">Удалить строку</button>
+        <button class="btn btn-sm" id="add-col">+ Столбец</button>
+        <span class="spacer" style="flex:1"></span>
+        <button class="btn btn-sm" id="reset-doc">Шаблон команды…</button>
+      </div>
+      <p class="hint" style="margin-top:10px">Стрелки — перемещение, <code>Enter</code> — править ячейку, <code>Delete</code> — вернуть формулу столбца, <code>Ctrl+S</code> — сохранить. В любую ячейку можно вписать своё число или <code>=формулу</code> — она заменит формулу столбца только в этой строке.</p>
+    </section>
+
+    <aside class="calc-side">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="col" aria-selected="true">Столбец</button>
+        <button class="tab" role="tab" data-tab="params" aria-selected="false">Параметры</button>
+        <button class="tab" role="tab" data-tab="summary" aria-selected="false">Итоги</button>
+        <button class="tab" role="tab" data-tab="help" aria-selected="false">Справка</button>
+      </div>
+      <div id="side-body"></div>
+    </aside>
+
+  </main>
+</div>
+
+<!-- ------------------------------------------------------------ apply -- -->
+<dialog id="apply-dlg">
+  <form method="dialog" id="apply-form">
+    <h2>Применить к таблице стинтов</h2>
+    <p class="hint" id="apply-intro"></p>
+    <div class="grid cols-2" id="apply-map"></div>
+    <label class="check" style="margin-top:14px"><input type="checkbox" id="apply-skip" checked> Пропускать строки с нулевой длительностью (после финиша)</label>
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="apply-floor" checked> Круги — только целые (округлять вниз)</label>
+    <p class="hint" id="apply-summary" style="margin-top:14px"></p>
+    <p class="status" id="apply-status"></p>
+    <div class="row end" style="margin-top:12px">
+      <button type="button" class="btn" id="apply-cancel">Закрыть</button>
+      <button type="button" class="btn btn-primary" id="apply-go">Заменить стинты в таблице</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/js/tu-calc-engine.js"></script>
+<script src="/js/tu-stints-calc.js"></script>
+</body>
+</html>

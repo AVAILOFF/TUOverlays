@@ -7,12 +7,12 @@
   lands in a cache or a log. "list" is also how the panel learns who the caller
   is: the reply carries the role, which decides which tabs it renders.
 
-  Creating and deleting boards stays with the key from STINTS_OWNER_KEY. Keys
-  issued to other people are scoped to the boards they were issued for.
+  Creating and deleting boards is for full access: the key from STINTS_OWNER_KEY
+  or a team key. Keys issued for one board are scoped to that board.
 */
 
 import { isConfigured } from './_lib/store.js';
-import { bearer, isOwnerKey, sha256, noteAuthFailure, ownerConfigured } from './_lib/auth.js';
+import { bearer, fullAccess, sha256, noteAuthFailure, ownerConfigured } from './_lib/auth.js';
 import { loadIndex, loadBoard, createBoard, deleteBoard, boardsForKey } from './_lib/boards.js';
 import { LIMITS } from './_lib/schema.js';
 import { json, fail, readJsonBody } from './_lib/http.js';
@@ -34,7 +34,9 @@ export default async function handler(req, res) {
   }
 
   const key = bearer(req);
-  const owner = isOwnerKey(key);
+  // The owner key or a team key: both see and do everything.
+  const full = await fullAccess(key);
+  const owner = Boolean(full);
   const hash = key ? sha256(key) : '';
   const mine = owner ? [] : await boardsForKey(hash);
 
@@ -52,7 +54,7 @@ export default async function handler(req, res) {
 
   if (op === 'list') {
     const boards = owner ? await ownerBoards() : await editorBoards(mine, hash);
-    return json(res, 200, { role: owner ? 'owner' : 'editor', boards });
+    return json(res, 200, { role: owner ? 'owner' : 'editor', root: Boolean(full && full.root), team: Boolean(full && full.team), boards });
   }
 
   if (!owner) return fail(res, 403, 'Доступно только владельцу');

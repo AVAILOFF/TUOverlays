@@ -34,6 +34,7 @@ const PAGES = [
   'widgets.html',
   'stints.html',
   'stints-admin.html',
+  'stints-calc.html',
   'en/index.html',
   'en/changelog.html',
   'en/download.html',

@@ -69,6 +69,36 @@
       </div>
 
       <div class="boards" id="boards"></div>
+
+      <div class="panel" id="team-panel" hidden style="margin-top:26px">
+        <h2>Командный доступ</h2>
+        <p class="hint">
+          Ключ на всё сразу: все таблицы, создание и удаление таблиц, оформление, доступы и калькулятор.
+          Подходит для своих — стратега, инженера, тренера. Ссылка показывается один раз, отозвать ключ можно в любой момент.
+          Командные ключи выдаёт и отзывает только владелец, сам командный ключ выдавать другие командные не может.
+        </p>
+        <form id="team-form" class="grid cols-3" autocomplete="off">
+          <div>
+            <label class="lbl" for="t-label">Кому</label>
+            <input type="text" id="t-label" placeholder="Стратег" required>
+          </div>
+          <div class="row" style="align-items:flex-end">
+            <button type="submit" class="btn btn-primary">Выдать командный ключ</button>
+          </div>
+        </form>
+
+        <div class="issued" id="team-issued" hidden>
+          <span class="lbl">Ссылка для <b id="team-issued-name"></b> — показывается один раз</span>
+          <div class="linkline">
+            <input type="text" id="team-issued-link" readonly>
+            <button class="btn btn-sm" id="copy-team">Скопировать</button>
+          </div>
+          <p class="hint" style="margin-top:8px">Открывает панель стинтов; тот же ключ работает и в калькуляторе.</p>
+        </div>
+
+        <p class="status" id="team-status"></p>
+        <div class="keys" id="team-keys" style="margin-top:16px"></div>
+      </div>
     </section>
 
     <!-- ----------------------------------------------------- board -- -->
@@ -77,6 +107,7 @@
       <div class="crumb">
         <button class="back btn btn-sm" id="to-list">← Все таблицы</button>
         <h1 id="b-title"></h1>
+        <a class="btn btn-sm" id="open-calc" href="/stints-calc">Калькулятор →</a>
       </div>
 
       <div class="panel">

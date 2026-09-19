@@ -1,0 +1,248 @@
+/*
+  The stint calculator — layered on tu-stints-admin.css, which supplies the
+  Instrument Deck tokens, buttons, tabs and form controls. This sheet only adds
+  what a spreadsheet surface needs: the grid, the formula bar, the side panel.
+  Hairlines do the containing; the one magenta mark is the "this cell overrides
+  its column's formula" corner.
+*/
+
+.board-select { width: auto; min-width: 200px; max-width: 320px; height: 30px; padding-top: 0; padding-bottom: 0; font-size: 13px; }
+
+.top .status { max-width: 320px; text-align: right; }
+
+/* -------------------------------------------------------------- layout -- */
+
+.calc-wrap {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+  padding: 18px clamp(12px, 2vw, 26px) 70px;
+}
+@media (min-width: 1180px) {
+  .calc-wrap { grid-template-columns: minmax(0, 1fr) 400px; }
+  .calc-side { position: sticky; top: 70px; max-height: calc(100vh - 86px); overflow-y: auto; padding-right: 2px; }
+}
+.calc-main { min-width: 0; }
+.calc-side .tabs { margin: 0 0 16px; }
+
+.issues {
+  border: 1px solid var(--bad);
+  border-radius: 6px;
+  background: rgba(255, 85, 119, .07);
+  color: var(--bad);
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.issues p { margin: 2px 0; }
+
+/* ------------------------------------------------------------- totals --- */
+
+.totals { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.total {
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  background: var(--elev-1);
+  padding: 8px 14px;
+  min-width: 150px;
+}
+.total .k { display: block; font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--tx-4); }
+.total .v { display: block; font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: 20px; color: var(--tx); margin-top: 2px; }
+.total .v.is-err { color: var(--bad); font-size: 14px; }
+
+/* --------------------------------------------------------- formula bar -- */
+
+.fbar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.fbar-name {
+  flex: none;
+  min-width: 96px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--well);
+  color: var(--tx-3);
+  font-size: 12.5px;
+  text-align: center;
+}
+.fbar input { font-size: 13px; flex: 1; min-width: 0; }
+.fbar-val { flex: none; max-width: 38%; font-size: 12.5px; color: var(--data); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fbar-val.is-err { color: var(--bad); }
+
+/* --------------------------------------------------------------- grid --- */
+
+.gridwrap {
+  overflow: auto;
+  max-height: calc(100vh - 290px);
+  min-height: 260px;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--well);
+  outline: none;
+}
+.gridwrap:focus-visible { border-color: var(--data); }
+
+.calc-grid { border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 100%; }
+
+.calc-grid th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--elev-1);
+  border-bottom: 1px solid var(--line-2);
+  border-right: 1px solid var(--line);
+  padding: 7px 10px 6px;
+  text-align: left;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  vertical-align: bottom;
+}
+.calc-grid th:hover { background: var(--elev-2); }
+.calc-grid th .th-l { display: block; font-size: 12.5px; color: var(--tx-2); }
+.calc-grid th .th-id { display: block; margin-top: 1px; font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .1em; color: var(--tx-4); }
+.calc-grid th.is-sel { background: var(--elev-2); box-shadow: inset 0 -2px 0 var(--data); }
+.calc-grid th.is-sel .th-l { color: var(--tx); }
+.calc-grid th.has-err .th-id { color: var(--bad); }
+
+.calc-grid .rn {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 38px;
+  padding: 0 8px;
+  background: var(--elev-1);
+  border-right: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line);
+  color: var(--tx-4);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+}
+.calc-grid thead .rn { z-index: 3; cursor: default; }
+.calc-grid tr.is-sel-row .rn { color: var(--tx); background: var(--elev-2); }
+
+.calc-grid td {
+  position: relative;
+  height: 30px;
+  padding: 0 10px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  cursor: cell;
+  color: var(--tx);
+}
+.calc-grid td.r { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.calc-grid td.is-in { background: rgba(124, 162, 224, .05); }
+.calc-grid td.is-err { color: var(--bad); font-family: var(--f-mono); font-size: 12px; }
+.calc-grid td.is-sel { outline: 2px solid var(--data); outline-offset: -2px; background: rgba(63, 216, 224, .09); }
+
+/* A cell that replaces its column's formula with its own. */
+.calc-grid td.is-ovr::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-style: solid;
+  border-width: 0 8px 8px 0;
+  border-color: transparent var(--brand) transparent transparent;
+}
+
+.calc-grid td.is-editing { padding: 0; outline: 2px solid var(--brand); outline-offset: -2px; }
+.calc-grid td input {
+  display: block;
+  width: 100%;
+  min-width: 90px;
+  height: 100%;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  background: var(--elev-2);
+  font-family: var(--f-mono);
+  font-size: 13px;
+}
+
+.grid-tools { margin-top: 12px; }
+
+/* ---------------------------------------------------------- side panel -- */
+
+.card { border: 1px solid var(--line-2); border-radius: 10px; padding: 16px; background: var(--elev-1); margin-bottom: 14px; }
+.card > h3 { margin-bottom: 10px; }
+.card .lbl:not(:first-child) { margin-top: 12px; }
+
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+textarea.formula {
+  min-height: 92px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  tab-size: 2;
+}
+.formula-msg { min-height: 1.3em; margin: 6px 0 0; font-family: var(--f-mono); font-size: 12px; color: var(--good); }
+.formula-msg.is-err { color: var(--bad); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  appearance: none;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--well);
+  color: var(--tx-2);
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--line-3); color: var(--tx); }
+.chip.is-fn { color: var(--data); }
+
+.stack { display: grid; gap: 8px; }
+.stack .row { gap: 8px; }
+
+.item {
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  background: var(--well);
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+.item input, .item select { font-size: 13px; padding: 6px 8px; }
+.item .mono-in { font-family: var(--f-mono); }
+.item .live { font-family: var(--f-mono); font-size: 12px; color: var(--data); }
+.item .live.is-err { color: var(--bad); }
+.item .top-line { display: flex; gap: 8px; align-items: center; }
+.item .top-line input { flex: 1; }
+
+.help h3 { margin: 18px 0 6px; font-size: 15px; }
+.help h3:first-child { margin-top: 0; }
+.help p, .help li { color: var(--tx-2); font-size: 13.5px; line-height: 1.6; margin: 6px 0; }
+.help ul { padding-left: 18px; margin: 6px 0; }
+.help code, .help kbd { font-family: var(--f-mono); font-size: 12px; background: rgba(255, 255, 255, .06); padding: 1px 5px; border-radius: 4px; color: var(--tx); }
+.fn-list { display: grid; gap: 8px; margin-top: 8px; }
+.fn-list div { border-top: 1px solid var(--line); padding-top: 8px; }
+.fn-list code { display: inline-block; color: var(--data); background: none; padding: 0; }
+.fn-list span { display: block; color: var(--tx-3); font-size: 12.5px; margin-top: 2px; }
+
+/* -------------------------------------------------------------- dialog -- */
+
+dialog {
+  background: var(--elev-1);
+  color: var(--tx);
+  border: 1px solid var(--line-3);
+  border-radius: 10px;
+  padding: 24px;
+  width: min(620px, calc(100% - 28px));
+}
+dialog::backdrop { background: rgba(1, 8, 24, .72); }
+dialog h2 { margin-bottom: 6px; }
+
+@media (max-width: 720px) {
+  /* The toolbar wraps to several lines here; pinned, it would eat a third of the screen. */
+  .top { position: static; }
+  .fbar-val { display: none; }
+  .duo, .trio { grid-template-columns: 1fr; }
+  .gridwrap { max-height: 60vh; }
+}

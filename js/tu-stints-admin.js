@@ -31,6 +31,8 @@
   const state = {
     key: '',
     role: '',
+    root: false,      // the STINTS_OWNER_KEY itself — the only one that manages team keys
+    team: false,      // a team key: full access, minus managing team keys
     boards: [],
     board: null,      // the board being edited (working copy)
     saved: null,      // last state confirmed by the server, for "отменить"
@@ -196,6 +198,8 @@
     try {
       const res = await call('/api/boards', { op: 'list' });
       state.role = res.role;
+      state.root = Boolean(res.root);
+      state.team = Boolean(res.team);
       state.boards = res.boards;
       localStorage.setItem(STORE_KEY, key);
       return true;
@@ -226,13 +230,17 @@
   async function refreshBoards() {
     const res = await call('/api/boards', { op: 'list' });
     state.role = res.role;
+    state.root = Boolean(res.root);
+    state.team = Boolean(res.team);
     state.boards = res.boards;
     renderBoards();
   }
 
   function renderBoards() {
-    $('#who').textContent = state.role === 'owner' ? 'Владелец' : 'Редактор';
+    $('#who').textContent = state.root ? 'Владелец' : state.team ? 'Команда' : state.role === 'owner' ? 'Владелец' : 'Редактор';
     $('#create-panel').hidden = state.role !== 'owner';
+    $('#team-panel').hidden = !state.root;
+    if (state.root) renderTeam();
 
     const host = $('#boards');
     host.textContent = '';
@@ -264,6 +272,10 @@
       view.target = '_blank';
       view.rel = 'noopener';
       acts.appendChild(view);
+
+      const calc = el('a', 'btn btn-sm', 'Калькулятор');
+      calc.href = '/stints-calc?b=' + encodeURIComponent(item.id);
+      acts.appendChild(calc);
 
       if (state.role === 'owner') {
         const del = el('button', 'btn btn-sm btn-danger', 'Удалить');
@@ -298,6 +310,7 @@
     const link = location.origin + '/s/' + id;
     $('#public-link').value = link;
     $('#public-open').href = link;
+    $('#open-calc').href = '/stints-calc?b=' + encodeURIComponent(id);
 
     const mirrorLink = MIRROR_ORIGIN + '/s/' + id;
     $('#public-link-mirror').value = mirrorLink;
@@ -1150,6 +1163,62 @@
     }
   }
 
+  /* ------------------------------------------------------- team access -- */
+
+  async function renderTeam() {
+    const host = $('#team-keys');
+    try {
+      const res = await call('/api/keys', { scope: 'team', op: 'list' });
+      host.textContent = '';
+      if (!res.keys.length) {
+        host.appendChild(el('p', 'empty', 'Командных ключей пока нет.'));
+        return;
+      }
+      for (const entry of res.keys) host.appendChild(teamRow(entry));
+    } catch (err) {
+      setStatus($('#team-status'), err.message, 'err');
+    }
+  }
+
+  function teamRow(entry) {
+    const row = el('div', 'key');
+    row.appendChild(el('span', 'name', entry.label));
+    row.appendChild(el('span', 'role is-owner', 'Команда'));
+    row.appendChild(el('span', 'grow'));
+    row.appendChild(el('span', 'when', 'выдан ' + relTime(entry.createdAt)));
+
+    const revoke = el('button', 'btn btn-sm btn-danger', 'Отозвать');
+    revoke.addEventListener('click', async () => {
+      if (!confirm('Отозвать командный доступ «' + entry.label + '»? Ссылка сразу перестанет работать.')) return;
+      try {
+        await call('/api/keys', { scope: 'team', op: 'revoke', hash: entry.hash });
+        renderTeam();
+      } catch (err) {
+        setStatus($('#team-status'), err.message, 'err');
+      }
+    });
+    row.appendChild(revoke);
+    return row;
+  }
+
+  async function issueTeamKey(event) {
+    event.preventDefault();
+    const label = $('#t-label').value.trim();
+    if (!label) return;
+    setStatus($('#team-status'), 'Выпуск ключа…', 'pending');
+    try {
+      const res = await call('/api/keys', { scope: 'team', op: 'issue', label });
+      $('#t-label').value = '';
+      $('#team-issued').hidden = false;
+      $('#team-issued-name').textContent = label;
+      $('#team-issued-link').value = location.origin + '/stints-admin#k=' + encodeURIComponent(res.key);
+      setStatus($('#team-status'), 'Ключ выпущен — ссылка показывается один раз', 'ok');
+      renderTeam();
+    } catch (err) {
+      setStatus($('#team-status'), err.message, 'err');
+    }
+  }
+
   /* --------------------------------------------------------------- wire -- */
 
   function copyFrom(input, button) {
@@ -1258,6 +1327,8 @@
     $('#copy-link').addEventListener('click', () => copyFrom($('#public-link'), $('#copy-link')));
     $('#copy-link-mirror').addEventListener('click', () => copyFrom($('#public-link-mirror'), $('#copy-link-mirror')));
     $('#copy-issued').addEventListener('click', () => copyFrom($('#issued-link'), $('#copy-issued')));
+    $('#team-form').addEventListener('submit', issueTeamKey);
+    $('#copy-team').addEventListener('click', () => copyFrom($('#team-issued-link'), $('#copy-team')));
 
     window.addEventListener('message', event => {
       if (event.origin !== location.origin) return;
@@ -1296,6 +1367,13 @@
     $('#gate').hidden = true;
     $('#app').hidden = false;
     renderBoards();
+
+    // The calculator links back here with ?b=<boardId>.
+    const wanted = new URLSearchParams(location.search).get('b');
+    if (wanted && state.boards.some(b => b.id === wanted)) {
+      history.replaceState(null, '', location.pathname);
+      openBoard(wanted).catch(() => {});
+    }
   }
 
   async function boot() {

@@ -3,6 +3,7 @@
 
   Layout in the store:
     stints:board:<id>   one board — title, meta, data, view, access
+    stints:calc:<id>    that board's calculator — params, columns, formulas, rows
     stints:index        [{ id, title, createdAt, updatedAt }] for the owner's list
     stints:key:<hash>   [boardId, ...] the boards one issued key can reach
 
@@ -15,6 +16,7 @@ import { newId } from './auth.js';
 import { defaultView, normalizeMeta, normalizeTitle, LIMITS } from './schema.js';
 
 const boardKey = id => 'stints:board:' + id;
+const calcKey = id => 'stints:calc:' + id;
 const keyIndexKey = hash => 'stints:key:' + hash;
 const INDEX_KEY = 'stints:index';
 
@@ -65,11 +67,30 @@ export async function createBoard({ title, meta }) {
   return board;
 }
 
+export async function loadCalc(boardId) {
+  return kvGet(calcKey(boardId));
+}
+
+// The calculator is a sibling document of the board, saved on its own so that a
+// spreadsheet-sized payload never rides along with every stint edit.
+export async function saveCalc(boardId, doc, updatedBy) {
+  const previous = await loadCalc(boardId);
+  const saved = {
+    ...doc,
+    rev: (previous ? Number(previous.rev) || 0 : 0) + 1,
+    updatedAt: new Date().toISOString(),
+    updatedBy: updatedBy || '',
+  };
+  await kvSet(calcKey(boardId), saved);
+  return saved;
+}
+
 export async function deleteBoard(board) {
   for (const entry of board.access?.keys || []) {
     await unlinkKey(entry.hash, board.id);
   }
   await kvDel(boardKey(board.id));
+  await kvDel(calcKey(board.id));
   const list = await loadIndex();
   await kvSet(INDEX_KEY, list.filter(item => item.id !== board.id));
 }

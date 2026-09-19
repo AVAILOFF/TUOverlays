@@ -42,7 +42,7 @@ export default async function handler(req, res) {
   const board = await loadBoard(body.boardId);
   if (!board) return fail(res, 404, 'Таблица не найдена');
 
-  const who = identify(bearer(req), board);
+  const who = await identify(bearer(req), board);
   if (!who) {
     const blocked = await noteAuthFailure(req);
     return fail(res, blocked ? 429 : 401, blocked ? 'Слишком много попыток. Подождите пять минут.' : 'Нужен действующий ключ доступа');

@@ -4,6 +4,9 @@
   Two kinds of caller:
     owner  — holds STINTS_OWNER_KEY (set in Vercel env). Full access, including
              issuing keys and editing how the public page looks.
+    team   — holds a team key the owner issued. The same full access over every
+             board (create, delete, appearance, calculator, per-board keys) —
+             the one thing it cannot do is issue or revoke team keys.
     editor — holds a key this tool issued. Only the stint data of the boards
              their key is listed on.
 
@@ -13,7 +16,7 @@
 */
 
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
-import { kvIncr } from './store.js';
+import { kvIncr, kvGet, kvSet } from './store.js';
 
 export const sha256 = value => createHash('sha256').update(String(value)).digest('hex');
 
@@ -67,16 +70,51 @@ export function isOwnerKey(key) {
 }
 
 /*
-  Resolve a key against a board. `board` may be null when the caller only needs
-  to know whether this is the owner (board list, board creation).
+  Team keys — full access to every board, issued by the owner. Kept as a single
+  list of { hash, label, createdAt } under one store key; like every issued key,
+  only the SHA-256 is stored.
 */
-export function identify(key, board) {
+const TEAM_KEY = 'stints:team';
+export const TEAM_LIMIT = 20;
+
+export async function loadTeam() {
+  const list = await kvGet(TEAM_KEY);
+  return Array.isArray(list) ? list : [];
+}
+
+export const saveTeam = list => kvSet(TEAM_KEY, list.slice(0, TEAM_LIMIT));
+
+async function findTeamKey(key) {
   if (!key) return null;
-  if (isOwnerKey(key)) return { role: 'owner', label: 'Владелец', hash: null };
+  const hash = sha256(key);
+  const list = await loadTeam();
+  return list.find(entry => hexEqual(entry.hash, hash)) || null;
+}
+
+/*
+  Full access, or null: the owner key, or a team key. `root` is true only for
+  the owner key — it alone may manage team keys.
+*/
+export async function fullAccess(key) {
+  if (!key) return null;
+  if (isOwnerKey(key)) return { role: 'owner', label: 'Владелец', hash: null, root: true, team: false };
+  const entry = await findTeamKey(key);
+  if (!entry) return null;
+  return { role: 'owner', label: entry.label || 'Команда', hash: entry.hash, root: false, team: true };
+}
+
+/*
+  Resolve a key against a board. `board` may be null when the caller only needs
+  to know whether this is full access (board list, board creation).
+*/
+export async function identify(key, board) {
+  if (!key) return null;
+  const full = await fullAccess(key);
+  if (full) return full;
   if (!board) return null;
 
   const hash = sha256(key);
   const entry = (board.access?.keys || []).find(k => hexEqual(k.hash, hash));
   if (!entry) return null;
-  return { role: entry.role === 'owner' ? 'owner' : 'editor', label: entry.label || 'Без имени', hash };
+  return { role: entry.role === 'owner' ? 'owner' : 'editor', label: entry.label || 'Без имени', hash, root: false, team: false };
 }
