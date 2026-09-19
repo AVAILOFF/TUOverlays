@@ -1,9 +1,11 @@
-# Дублирует changelog с сайта в Discord.
+# Дублирует changelog с сайта в Discord — ТОЛЬКО ПО РУЧНОМУ ЗАПУСКУ.
 #
 # changelog.html (и en/changelog.html) читают GitHub Releases этого репозитория
 # живьём через API — то есть опубликованный релиз это ровно то, что видно на
-# сайте. Этот workflow в тот же момент отправляет тот же текст в канал Discord,
-# так что руками копировать ничего не нужно.
+# сайте. Этот workflow отправляет тот же текст в канал Discord.
+#
+# Автоматической отправки при публикации релиза НЕТ: объявление уходит только
+# тогда, когда его запускают вручную (см. «Отправить уведомление» ниже).
 #
 # ── НАСТРОЙКА (один раз) ──────────────────────────────────────────────────────
 # 1. Discord: Настройки сервера → Интеграции → Вебхуки → Новый вебхук,
@@ -17,27 +19,27 @@
 #          значение: ID роли, которую пинговать, напр. 1234567890123456789
 #          (Discord → Настройки пользователя → Расширенные → Режим разработчика,
 #           затем правый клик по роли → Копировать ID роли)
-# 3. Всё. Каждый `scripts/release.ps1` / «Publish release» теперь постит сам.
 #
-# Переотправить старый релиз вручную: вкладка Actions → этот workflow →
-# «Run workflow» → ввести тег (напр. v0.1.0).
+# ── ОТПРАВИТЬ УВЕДОМЛЕНИЕ ─────────────────────────────────────────────────────
+# Вкладка Actions → «Announce release in Discord» → «Run workflow» → ввести тег
+# релиза (напр. v0.1.5). Или из терминала:
+#   gh workflow run discord-release.yml --repo AVAILOFF/TUOverlays -f tag=v0.1.5
 
 name: Announce release in Discord
 
 on:
-  release:
-    types: [published]
+  # Никакого `release: published` — публикация релиза в Discord ничего не шлёт.
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Тег уже существующего релиза, который переотправить (напр. v0.1.0)'
+        description: 'Тег релиза, который объявить в Discord (напр. v0.1.5)'
         required: true
 
 permissions:
   contents: read
 
 concurrency:
-  group: discord-release-${{ github.event.release.tag_name || github.event.inputs.tag }}
+  group: discord-release-${{ github.event.inputs.tag }}
   cancel-in-progress: false
 
 jobs:
@@ -56,7 +58,7 @@ jobs:
           DISCORD_ROLE_ID: ${{ vars.DISCORD_RELEASE_ROLE_ID }}
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+          TAG: ${{ github.event.inputs.tag }}
         run: |
           set -euo pipefail
 

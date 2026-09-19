@@ -6,9 +6,10 @@
   edited by hand after this script finishes - version badges, download links, file
   sizes, SHA-256 and the changelog all update themselves within a minute or two.
 
-  The same release also lands in Discord: .github/workflows/discord-release.yml
-  posts the release notes to the #changelog channel on every published release.
-  Nothing to do here for that - see -Discord below for the manual fallback.
+  Discord is NOT notified automatically. Announce a release only when you decide
+  to: Actions tab -> "Announce release in Discord" -> Run workflow -> tag, or
+    gh workflow run discord-release.yml --repo AVAILOFF/TUOverlays -f tag=v<Version>
+  or pass -Discord to this script (see below).
 
   Publishing goes through the "gh" CLI (GitHub API over HTTPS, using your saved
   "gh auth login" token) - NOT git push. No git remote needs to be configured or
@@ -36,11 +37,10 @@
 .PARAMETER Discord
   Also announce the release in Discord from this machine (off by default).
 
-  You normally do NOT need this. The .github/workflows/discord-release.yml Action
-  in this repo already posts every published release to the #changelog channel,
-  including releases created in the GitHub web UI, and it runs whether or not this
-  script was involved. Use -Discord only if that Action is not set up yet - turning
-  on both puts the same notes in the channel twice.
+  Nothing is posted to Discord unless you ask for it: the
+  .github/workflows/discord-release.yml Action only runs when started by hand.
+  Pass -Discord to announce straight from this machine instead - just don't also
+  run the Action for the same tag, or the notes land in the channel twice.
 
   Needs a webhook URL: pass -DiscordWebhook, or set TU_DISCORD_WEBHOOK once with
   [Environment]::SetEnvironmentVariable("TU_DISCORD_WEBHOOK", "https://discord.com/api/webhooks/...", "User")
@@ -224,14 +224,16 @@ if ($Draft) {
   Write-Host "`nCreated as DRAFT - not live yet. Review it on GitHub, then run:"
   Write-Host "  gh release edit $tag --repo $Repo --draft=false"
   Write-Host "CHANGELOG.unreleased.md left untouched (only cleared on a real publish)."
-  Write-Host "Discord is not notified for a draft - the announcement fires when you publish it."
+  Write-Host "Discord is not notified - announce it by hand once published (Actions -> 'Announce release in Discord')."
 } else {
   Write-Host "`nDone. Site will pick up $tag automatically (index.html, download.html, changelog.html all read GitHub Releases live)."
   Write-Host "https://github.com/$Repo/releases/tag/$tag"
 
-  # Discord. Normally handled by .github/workflows/discord-release.yml, which
-  # fires on the "release published" event a second from now; -Discord is the
-  # manual fallback for when that Action is not configured. Do not use both.
+  # Discord. Never automatic: either -Discord here, or run the
+  # .github/workflows/discord-release.yml Action by hand later. Do not use both.
+  if (-not $Discord) {
+    Write-Host "Discord NOT notified. When ready: gh workflow run discord-release.yml --repo $Repo -f tag=$tag"
+  }
   if ($Discord) {
     $webhook = if ($DiscordWebhook) { $DiscordWebhook } else { $env:TU_DISCORD_WEBHOOK }
     $roleId  = if ($DiscordRoleId)  { $DiscordRoleId }  else { $env:TU_DISCORD_ROLE_ID }
