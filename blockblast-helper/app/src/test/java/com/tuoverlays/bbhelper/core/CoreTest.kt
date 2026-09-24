@@ -219,3 +219,42 @@ class StabilizerTest {
         assertNull(st.push(Snapshot(0L, listOf(b, null, a))))
     }
 }
+
+class ContrastTest {
+
+    private class Canvas(override val width: Int, override val height: Int, bg: Int) : PixelSource {
+        val px = IntArray(width * height) { bg }
+        override fun rgb(x: Int, y: Int) = px[y * width + x]
+        fun fill(l: Int, t: Int, r: Int, b: Int, c: Int) {
+            for (y in t until b) for (x in l until r) px[y * width + x] = c
+        }
+    }
+
+    @Test
+    fun contrastModeCatchesDimPieces() {
+        // Тусклые блоки: отличаются от фона слабее фиксированного порога.
+        val bg = 0x3C5AA8
+        val dim = 0x5E78B8
+        val cv = Canvas(1080, 2000, bg)
+        for (r in 0 until 8) for (c in 0 until 8) cv.fill(60 + c * 120 + 3, 300 + r * 120 + 3, 60 + c * 120 + 117, 300 + r * 120 + 117, 0x1E2850)
+        cv.fill(60 + 3, 300 + 3, 60 + 117, 300 + 117, 0x3A4A80)
+        for (i in 0 until 3) cv.fill(100 + i * 64, 1450, 100 + (i + 1) * 64 - 4, 1510, dim)
+        val board = Box(60f, 300f, 1020f, 1260f)
+        val tray = Box(0f, 1300f, 1080f, 1700f)
+
+        val normal = Vision.read(cv, board, tray)
+        assertNull(normal.pieces[0])
+
+        val contrast = Vision.read(cv, board, tray, contrast = true)
+        assertEquals(Board.bit(0, 0), contrast.board)
+        assertEquals(Piece.parse("###"), contrast.pieces[0])
+        assertNull(contrast.pieces[1])
+    }
+
+    @Test
+    fun emptyBoardStaysEmpty() {
+        val cv = Canvas(1080, 2000, 0x3C5AA8)
+        for (r in 0 until 8) for (c in 0 until 8) cv.fill(60 + c * 120 + 3, 300 + r * 120 + 3, 60 + c * 120 + 117, 300 + r * 120 + 117, 0x1E2850 + (r + c) % 3)
+        assertEquals(0L, Vision.readBoard(cv, Box(60f, 300f, 1020f, 1260f), contrast = true))
+    }
+}

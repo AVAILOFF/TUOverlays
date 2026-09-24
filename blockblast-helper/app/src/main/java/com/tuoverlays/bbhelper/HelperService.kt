@@ -70,7 +70,8 @@ class HelperService : Service() {
     private var workerHandler: Handler? = null
 
     private var hints: HintOverlayView? = null
-    private var bubble: TextView? = null
+    private var bubble: View? = null
+    private var bubbleMain: TextView? = null
     private var calibration: View? = null
 
     private var screen = Point()
@@ -79,9 +80,17 @@ class HelperService : Service() {
     @Volatile private var paused = false
     @Volatile private var enabled = true
     @Volatile private var snapshotRequested = false
+    @Volatile private var forceRequested = false
 
     // Трогаются только из потока worker.
     private val stabilizer = Stabilizer()
+    // Последний кадр держим открытым: на статичном экране новые кадры не приходят, а считать надо.
+    private var held: Image? = null
+    private var lastRaw: Snapshot? = null
+    private var lastVoted: Snapshot? = null
+    // После ручного анализа не перетираем его результат, пока картинка не изменится.
+    private var forcedHold = false
+    private var holdBase: Snapshot? = null
     private var solvedSnapshot: Snapshot? = null
     private var scale = TrayScale()
 
@@ -130,7 +139,7 @@ class HelperService : Service() {
         }, main)
 
         screen = screenSize()
-        val ir = ImageReader.newInstance(screen.x, screen.y, PixelFormat.RGBA_8888, 2)
+        val ir = ImageReader.newInstance(screen.x, screen.y, PixelFormat.RGBA_8888, 3)
         reader = ir
         display = mp.createVirtualDisplay(
             "bb-helper", screen.x, screen.y, resources.displayMetrics.densityDpi,
@@ -155,6 +164,8 @@ class HelperService : Service() {
         listOfNotNull(hints, bubble, calibration).forEach { runCatching { wm.removeView(it) } }
         hints = null; bubble = null; calibration = null
         display?.release()
+        runCatching { held?.close() }
+        held = null
         reader?.close()
         projection?.stop()
         worker?.quitSafely()
@@ -176,29 +187,64 @@ class HelperService : Service() {
     }
 
     private fun step() {
-        val image = reader?.acquireLatestImage() ?: return
-        try {
-            val b = board
-            val t = tray
-            if (b == null || t == null) return
-            if (snapshotRequested) {
-                snapshotRequested = false
-                saveFrame(image, b, t)
+        val fresh = reader?.acquireLatestImage()
+        if (fresh != null) { held?.close(); held = fresh }
+        val image = held ?: return
+        val b = board
+        val t = tray
+        if (b == null || t == null) return
+        if (snapshotRequested) {
+            snapshotRequested = false
+            saveFrame(image, b, t)
+        }
+        if (paused) return
+        if (forceRequested) {
+            forceRequested = false
+            forceAnalysis(image, b, t)
+            return
+        }
+        if (!enabled) return
+
+        val snap = if (fresh != null || lastRaw == null) Vision.read(ImageSource(image), b, t, scale) else lastRaw!!
+        lastRaw = snap
+        scale.ratio?.let { if (it != prefs.trayRatio) prefs.trayRatio = it }
+
+        // Голосование по последним кадрам: пережидаем анимации и перетаскивание фигуры.
+        val voted = stabilizer.push(snap) ?: return
+        lastVoted = voted
+        if (forcedHold) {
+            if (holdBase == null) { holdBase = voted; return }
+            if (voted == holdBase) return
+            forcedHold = false
+        }
+        if (voted == solvedSnapshot) return
+        solvedSnapshot = voted
+
+        var plan = if (voted.hasPieces) Solver.solve(voted.board, voted.pieces) else null
+        var prefix: String? = null
+        // Не нашли фигур или ходов — перепроверяем тот же кадр в контрастном режиме.
+        if (plan == null || plan.moves.isEmpty()) {
+            val c = Vision.read(ImageSource(image), b, t, scale, contrast = true)
+            if (c.hasPieces) {
+                val p2 = Solver.solve(c.board, c.pieces)
+                if (p2 != null && p2.moves.isNotEmpty()) { plan = p2; prefix = "контраст" }
             }
-            if (paused || !enabled) return
-            val snap = Vision.read(ImageSource(image), b, t, scale)
-            scale.ratio?.let { if (it != prefs.trayRatio) prefs.trayRatio = it }
+        }
+        if (plan == null) { main.post { hints?.clear() }; return }
+        val result = plan
+        main.post { if (enabled) hints?.show(result, b, t, prefix) }
+    }
 
-            // Голосование по последним кадрам: пережидаем анимации и перетаскивание фигуры.
-            val voted = stabilizer.push(snap) ?: return
-            if (voted == solvedSnapshot) return
-
-            solvedSnapshot = voted
-            if (!voted.hasPieces) { main.post { hints?.clear() }; return }
-            val plan = Solver.solve(voted.board, voted.pieces)
-            main.post { if (enabled) hints?.show(plan, b, t) }
-        } finally {
-            image.close()
+    /** Кнопка ⟳: разбор текущего кадра в контрастном режиме и принудительный расчёт ходов. */
+    private fun forceAnalysis(image: Image, b: Box, t: Box) {
+        val c = Vision.read(ImageSource(image), b, t, scale, contrast = true)
+        val plan = if (c.hasPieces) Solver.solve(c.board, c.pieces) else null
+        forcedHold = true
+        holdBase = lastVoted
+        solvedSnapshot = null
+        main.post {
+            hints?.show(plan, b, t, "Анализ")
+            hints?.showPreview(c, b, t)
         }
     }
 
@@ -297,15 +343,22 @@ class HelperService : Service() {
     private fun addBubble() {
         val d = resources.displayMetrics.density
         val size = (46 * d).toInt()
-        val v = TextView(this).apply {
-            text = "BB"
+        fun circle(label: String, color: Int) = TextView(this).apply {
+            text = label
             gravity = Gravity.CENTER
             setTextColor(0xFFFFFFFF.toInt())
             textSize = 14f
-            background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(BUBBLE_ON) }
+            background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(color) }
+        }
+        val mainBtn = circle("BB", BUBBLE_ON)
+        val force = circle("⟳", BUBBLE_FORCE).apply { textSize = 20f }
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(mainBtn, LinearLayout.LayoutParams(size, size))
+            addView(force, LinearLayout.LayoutParams(size, size).apply { topMargin = (8 * d).toInt() })
         }
         val lp = WindowManager.LayoutParams(
-            size, size,
+            WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT,
@@ -314,46 +367,57 @@ class HelperService : Service() {
             x = prefs.bubbleX; y = prefs.bubbleY
         }
 
-        var downX = 0f; var downY = 0f; var startX = 0; var startY = 0; var downAt = 0L; var dragged = false
-        v.setOnTouchListener { _, e ->
-            when (e.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = e.rawX; downY = e.rawY; startX = lp.x; startY = lp.y
-                    downAt = SystemClock.uptimeMillis(); dragged = false
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    val dx = e.rawX - downX; val dy = e.rawY - downY
-                    if (dragged || abs(dx) > 12 * d || abs(dy) > 12 * d) {
-                        dragged = true
-                        lp.x = startX + dx.toInt(); lp.y = startY + dy.toInt()
-                        wm.updateViewLayout(v, lp)
+        fun attach(v: View, onTap: () -> Unit, onLong: () -> Unit) {
+            var downX = 0f; var downY = 0f; var startX = 0; var startY = 0; var downAt = 0L; var dragged = false
+            v.setOnTouchListener { _, e ->
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        downX = e.rawX; downY = e.rawY; startX = lp.x; startY = lp.y
+                        downAt = SystemClock.uptimeMillis(); dragged = false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        val dx = e.rawX - downX; val dy = e.rawY - downY
+                        if (dragged || abs(dx) > 12 * d || abs(dy) > 12 * d) {
+                            dragged = true
+                            lp.x = startX + dx.toInt(); lp.y = startY + dy.toInt()
+                            wm.updateViewLayout(box, lp)
+                        }
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        if (dragged) {
+                            prefs.bubbleX = lp.x; prefs.bubbleY = lp.y
+                        } else if (SystemClock.uptimeMillis() - downAt > 600) {
+                            onLong()
+                        } else {
+                            onTap()
+                        }
                     }
                 }
-                MotionEvent.ACTION_UP -> {
-                    if (dragged) {
-                        prefs.bubbleX = lp.x; prefs.bubbleY = lp.y
-                    } else if (SystemClock.uptimeMillis() - downAt > 600) {
-                        openCalibration()
-                    } else {
-                        toggle()
-                    }
-                }
+                true
             }
-            true
         }
-        wm.addView(v, lp)
-        bubble = v
+        attach(mainBtn, ::toggle, ::openCalibration)
+        attach(force, ::requestForce, ::requestForce)
+
+        wm.addView(box, lp)
+        bubble = box
+        bubbleMain = mainBtn
+    }
+
+    private fun requestForce() {
+        forceRequested = true
+        Toast.makeText(this, "Анализ поля…", Toast.LENGTH_SHORT).show()
     }
 
     private fun toggle() {
         enabled = !enabled
-        (bubble?.background as? GradientDrawable)?.setColor(if (enabled) BUBBLE_ON else BUBBLE_OFF)
+        (bubbleMain?.background as? GradientDrawable)?.setColor(if (enabled) BUBBLE_ON else BUBBLE_OFF)
         if (enabled) resetState() else hints?.clear()
         Toast.makeText(this, if (enabled) "Подсказки включены" else "Подсказки выключены", Toast.LENGTH_SHORT).show()
     }
 
     private fun resetState() {
-        workerHandler?.post { stabilizer.reset(); solvedSnapshot = null }
+        workerHandler?.post { stabilizer.reset(); solvedSnapshot = null; lastRaw = null; forcedHold = false }
     }
 
     private fun openCalibration() {
@@ -458,6 +522,7 @@ class HelperService : Service() {
         private const val INTERVAL_MS = 200L
         private const val BUBBLE_ON = 0xCC2E7D32.toInt()
         private const val BUBBLE_OFF = 0xCC616161.toInt()
+        private const val BUBBLE_FORCE = 0xCC1565C0.toInt()
 
         const val EXTRA_CODE = "code"
         const val EXTRA_DATA = "data"
