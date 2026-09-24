@@ -104,7 +104,9 @@ data class Weights(
     val fitLoss: Double = 3.0,
     val mobility: Double = 0.0,
     /** Вес доли случайных будущих наборов фигур, которые удастся поставить целиком. */
-    val lookahead: Double = 0.0,
+    val lookahead: Double = 32.0,
+    val lookaheadTop: Int = 10,
+    val lookaheadSamples: Int = 32,
 )
 
 /**
@@ -122,8 +124,6 @@ object Solver {
     private const val ROW7 = 0xFFL shl 56
     private const val NOT_ROW7 = 0x00FFFFFFFFFFFFFFL
     private const val TOP_K = 96
-    private const val LOOKAHEAD_TOP = 10
-    private const val LOOKAHEAD_SAMPLES = 32
 
     fun solve(
         board: Long,
@@ -164,8 +164,8 @@ object Solver {
             if (w.lookahead > 0) {
                 // Одни и те же будущие наборы для всех кандидатов — честное сравнение.
                 val rnd = kotlin.random.Random(start xor 0x5DEECE66DL)
-                val trays = List(LOOKAHEAD_SAMPLES) { List(3) { Pieces.ALL[rnd.nextInt(Pieces.ALL.size)] } }
-                val head = ranked.take(LOOKAHEAD_TOP)
+                val trays = List(w.lookaheadSamples) { List(3) { Pieces.ALL[rnd.nextInt(Pieces.ALL.size)] } }
+                val head = ranked.take(w.lookaheadTop)
                 for (l in head) l.score += w.lookahead * 100.0 * trays.count { canPlaceAll(l.board, it) } / trays.size
                 ranked = head.sortedByDescending { it.score }
             }
