@@ -192,3 +192,30 @@ class TrayScaleTest {
         assertEquals(unit, scale.update(dims(unit, Piece.parse("##", "##"), Piece.parse("##"), Piece.parse("####"))), 0.01f)
     }
 }
+
+class StabilizerTest {
+
+    private val a = Piece.parse("##", "##")
+    private val b = Piece.parse("###")
+
+    @Test
+    fun ignoresFlickeringCell() {
+        val st = Stabilizer()
+        val base = Board.parse("########", "", "", "", "", "", "", "#.......")
+        val flicker = base or Board.bit(4, 4)
+        var out: Snapshot? = null
+        for (board in listOf(base, flicker, base, flicker, base, flicker, base)) {
+            out = st.push(Snapshot(board, listOf(a, b, null))) ?: out
+        }
+        assertEquals(base, out!!.board)
+        assertEquals(listOf(a, b, null), out.pieces)
+    }
+
+    @Test
+    fun waitsWhilePieceIsMoving() {
+        val st = Stabilizer()
+        assertNull(st.push(Snapshot(0L, listOf(a, b, null))))
+        assertNull(st.push(Snapshot(0L, listOf(null, b, a))))
+        assertNull(st.push(Snapshot(0L, listOf(b, null, a))))
+    }
+}

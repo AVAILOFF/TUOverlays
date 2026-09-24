@@ -47,6 +47,7 @@ import com.tuoverlays.bbhelper.core.Box
 import com.tuoverlays.bbhelper.core.PixelSource
 import com.tuoverlays.bbhelper.core.Snapshot
 import com.tuoverlays.bbhelper.core.Solver
+import com.tuoverlays.bbhelper.core.Stabilizer
 import com.tuoverlays.bbhelper.core.TrayScale
 import com.tuoverlays.bbhelper.core.Vision
 import java.io.File
@@ -80,7 +81,7 @@ class HelperService : Service() {
     @Volatile private var snapshotRequested = false
 
     // Трогаются только из потока worker.
-    private var lastSnapshot: Snapshot? = null
+    private val stabilizer = Stabilizer()
     private var solvedSnapshot: Snapshot? = null
     private var scale = TrayScale()
 
@@ -188,17 +189,13 @@ class HelperService : Service() {
             val snap = Vision.read(ImageSource(image), b, t, scale)
             scale.ratio?.let { if (it != prefs.trayRatio) prefs.trayRatio = it }
 
-            // Ждём, пока картинка устоится (анимации, перетаскивание фигуры).
-            val stable = snap == lastSnapshot
-            lastSnapshot = snap
-            if (snap != solvedSnapshot) {
-                if (solvedSnapshot != null) { solvedSnapshot = null; main.post { hints?.clear() } }
-            }
-            if (!stable || snap == solvedSnapshot) return
+            // Голосование по последним кадрам: пережидаем анимации и перетаскивание фигуры.
+            val voted = stabilizer.push(snap) ?: return
+            if (voted == solvedSnapshot) return
 
-            solvedSnapshot = snap
-            if (!snap.hasPieces) { main.post { hints?.clear() }; return }
-            val plan = Solver.solve(snap.board, snap.pieces)
+            solvedSnapshot = voted
+            if (!voted.hasPieces) { main.post { hints?.clear() }; return }
+            val plan = Solver.solve(voted.board, voted.pieces)
             main.post { if (enabled) hints?.show(plan, b, t) }
         } finally {
             image.close()
@@ -356,7 +353,7 @@ class HelperService : Service() {
     }
 
     private fun resetState() {
-        workerHandler?.post { lastSnapshot = null; solvedSnapshot = null }
+        workerHandler?.post { stabilizer.reset(); solvedSnapshot = null }
     }
 
     private fun openCalibration() {
@@ -458,7 +455,7 @@ class HelperService : Service() {
         private const val TAG = "BBHelper"
         private const val CHANNEL = "helper"
         private const val NOTIFICATION_ID = 1
-        private const val INTERVAL_MS = 300L
+        private const val INTERVAL_MS = 200L
         private const val BUBBLE_ON = 0xCC2E7D32.toInt()
         private const val BUBBLE_OFF = 0xCC616161.toInt()
 
