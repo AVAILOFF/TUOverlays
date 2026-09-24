@@ -1,0 +1,164 @@
+package com.tuoverlays.bbhelper.core
+
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.roundToInt
+
+/** Источник пикселей (кадр с экрана). rgb = 0xRRGGBB. */
+interface PixelSource {
+    val width: Int
+    val height: Int
+    fun rgb(x: Int, y: Int): Int
+}
+
+/** Прямоугольник в пикселях экрана. */
+data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
+    val width get() = right - left
+    val height get() = bottom - top
+}
+
+/** Что распознано на кадре: поле и фигуры в трёх слотах лотка. */
+data class Snapshot(val board: Long, val pieces: List<Piece?>) {
+    val hasPieces get() = pieces.any { it != null }
+}
+
+object Vision {
+
+    /** Насколько цвет должен отличаться от фона (сумма |dR|+|dG|+|dB|), чтобы считаться блоком. */
+    var colorThreshold = 110
+
+    fun read(src: PixelSource, board: Box, tray: Box): Snapshot =
+        Snapshot(readBoard(src, board), readTray(src, tray, board.width / Board.SIZE))
+
+    fun readBoard(src: PixelSource, board: Box): Long {
+        val cell = board.width / Board.SIZE
+        val colors = IntArray(64)
+        for (r in 0 until Board.SIZE) for (c in 0 until Board.SIZE) {
+            // Берём только центр клетки: там не рисуются рамки подсказок.
+            colors[r * 8 + c] = averageColor(
+                src,
+                board.left + (c + 0.5f) * cell,
+                board.top + (r + 0.5f) * cell,
+                cell * 0.15f,
+            )
+        }
+        // Самая тёмная клетка почти наверняка пустая — это эталон фона поля.
+        val empty = colors.minBy { luma(it) }
+        var mask = 0L
+        for (i in 0 until 64) if (dist(colors[i], empty) > colorThreshold) mask = mask or (1L shl i)
+        return mask
+    }
+
+    fun readTray(src: PixelSource, tray: Box, boardCell: Float): List<Piece?> {
+        val slotW = tray.width / 3
+        val blobs = (0 until 3).map { findBlob(src, Box(tray.left + it * slotW, tray.top, tray.left + (it + 1) * slotW, tray.bottom)) }
+        val found = blobs.filterNotNull()
+        if (found.isEmpty()) return listOf(null, null, null)
+        val unit = estimateUnit(found, boardCell)
+        return blobs.map { blob -> blob?.let { toPiece(src, it, unit) } }
+    }
+
+    private class Blob(val box: Box, val bg: Int)
+
+    private fun findBlob(src: PixelSource, slot: Box): Blob? {
+        val bg = borderColor(src, slot)
+        val step = max(1f, slot.width / 90f)
+        val cols = ((slot.width) / step).toInt()
+        val rows = ((slot.height) / step).toInt()
+        if (cols <= 0 || rows <= 0) return null
+        val rowHits = IntArray(rows)
+        val colHits = IntArray(cols)
+        var total = 0
+        for (j in 0 until rows) for (i in 0 until cols) {
+            val c = sample(src, slot.left + (i + 0.5f) * step, slot.top + (j + 0.5f) * step)
+            if (dist(c, bg) > colorThreshold) { rowHits[j]++; colHits[i]++; total++ }
+        }
+        if (total < 8) return null
+        val minHits = 2
+        val r0 = rowHits.indexOfFirst { it >= minHits }
+        val r1 = rowHits.indexOfLast { it >= minHits }
+        val c0 = colHits.indexOfFirst { it >= minHits }
+        val c1 = colHits.indexOfLast { it >= minHits }
+        if (r0 < 0 || c0 < 0) return null
+        return Blob(
+            Box(slot.left + c0 * step, slot.top + r0 * step, slot.left + (c1 + 1) * step, slot.top + (r1 + 1) * step),
+            bg,
+        )
+    }
+
+    /**
+     * Размер клетки фигур в лотке неизвестен (они мельче, чем на поле).
+     * Ищем размер, при котором ширина и высота всех фигур кратны ему; при равенстве — больший.
+     */
+    private fun estimateUnit(blobs: List<Blob>, boardCell: Float): Float {
+        var best = boardCell
+        var bestErr = Float.MAX_VALUE
+        var s = boardCell * 0.3f
+        while (s <= boardCell * 1.1f) {
+            var err = 0f
+            for (b in blobs) {
+                for (len in floatArrayOf(b.box.width, b.box.height)) {
+                    val n = len / s
+                    val k = n.roundToInt()
+                    err += if (k < 1 || k > 5) 1f else (n - k) * (n - k)
+                }
+            }
+            err += 0.002f * boardCell / s
+            if (err < bestErr) { bestErr = err; best = s }
+            s += 0.5f
+        }
+        return best
+    }
+
+    private fun toPiece(src: PixelSource, blob: Blob, unit: Float): Piece? {
+        val nc = (blob.box.width / unit).roundToInt().coerceIn(1, 5)
+        val nr = (blob.box.height / unit).roundToInt().coerceIn(1, 5)
+        val cw = blob.box.width / nc
+        val ch = blob.box.height / nr
+        val cells = mutableListOf<Cell>()
+        for (r in 0 until nr) for (c in 0 until nc) {
+            val cx = blob.box.left + (c + 0.5f) * cw
+            val cy = blob.box.top + (r + 0.5f) * ch
+            var hits = 0
+            for (dy in -1..1) for (dx in -1..1) {
+                if (dist(sample(src, cx + dx * cw * 0.2f, cy + dy * ch * 0.2f), blob.bg) > colorThreshold) hits++
+            }
+            if (hits >= 5) cells += Cell(r, c)
+        }
+        return Piece.of(cells)
+    }
+
+    private fun borderColor(src: PixelSource, b: Box): Int {
+        val rs = ArrayList<Int>(); val gs = ArrayList<Int>(); val bs = ArrayList<Int>()
+        fun add(c: Int) { rs += (c shr 16) and 0xFF; gs += (c shr 8) and 0xFF; bs += c and 0xFF }
+        val n = 24
+        for (i in 0..n) {
+            val x = b.left + (b.width - 1) * i / n
+            val y = b.top + (b.height - 1) * i / n
+            add(sample(src, x, b.top + 1)); add(sample(src, x, b.bottom - 2))
+            add(sample(src, b.left + 1, y)); add(sample(src, b.right - 2, y))
+        }
+        rs.sort(); gs.sort(); bs.sort()
+        val m = rs.size / 2
+        return (rs[m] shl 16) or (gs[m] shl 8) or bs[m]
+    }
+
+    private fun averageColor(src: PixelSource, cx: Float, cy: Float, radius: Float): Int {
+        var r = 0; var g = 0; var b = 0; var n = 0
+        for (dy in -2..2) for (dx in -2..2) {
+            val c = sample(src, cx + dx * radius / 2, cy + dy * radius / 2)
+            r += (c shr 16) and 0xFF; g += (c shr 8) and 0xFF; b += c and 0xFF; n++
+        }
+        return ((r / n) shl 16) or ((g / n) shl 8) or (b / n)
+    }
+
+    private fun sample(src: PixelSource, x: Float, y: Float): Int =
+        src.rgb(x.toInt().coerceIn(0, src.width - 1), y.toInt().coerceIn(0, src.height - 1))
+
+    fun dist(a: Int, b: Int): Int =
+        abs(((a shr 16) and 0xFF) - ((b shr 16) and 0xFF)) +
+            abs(((a shr 8) and 0xFF) - ((b shr 8) and 0xFF)) +
+            abs((a and 0xFF) - (b and 0xFF))
+
+    private fun luma(c: Int): Int = ((c shr 16) and 0xFF) * 3 + ((c shr 8) and 0xFF) * 6 + (c and 0xFF)
+}
