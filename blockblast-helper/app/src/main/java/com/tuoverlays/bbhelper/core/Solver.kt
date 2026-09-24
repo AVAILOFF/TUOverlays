@@ -105,8 +105,8 @@ data class Weights(
     val mobility: Double = 0.0,
     /** Вес доли случайных будущих наборов фигур, которые удастся поставить целиком. */
     val lookahead: Double = 32.0,
-    val lookaheadTop: Int = 10,
-    val lookaheadSamples: Int = 32,
+    val lookaheadTop: Int = 16,
+    val lookaheadSamples: Int = 64,
 )
 
 /**
