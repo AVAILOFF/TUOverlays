@@ -44,6 +44,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.tuoverlays.bbhelper.core.Board
 import com.tuoverlays.bbhelper.core.Box
+import com.tuoverlays.bbhelper.core.ComboTracker
 import com.tuoverlays.bbhelper.core.PixelSource
 import com.tuoverlays.bbhelper.core.Snapshot
 import com.tuoverlays.bbhelper.core.Solver
@@ -84,6 +85,7 @@ class HelperService : Service() {
 
     // Трогаются только из потока worker.
     private val stabilizer = Stabilizer()
+    private val combo = ComboTracker()
     // Последний кадр держим открытым: на статичном экране новые кадры не приходят, а считать надо.
     private var held: Image? = null
     private var lastRaw: Snapshot? = null
@@ -219,15 +221,16 @@ class HelperService : Service() {
         }
         if (voted == solvedSnapshot) return
         solvedSnapshot = voted
+        combo.update(voted)
 
-        var plan = if (voted.hasPieces) Solver.solve(voted.board, voted.pieces) else null
-        var prefix: String? = null
+        var plan = if (voted.hasPieces) Solver.solve(voted.board, voted.pieces, combo.state) else null
+        var prefix: String? = if (combo.state.combo > 0) "комбо ${combo.state.combo}" else null
         // Не нашли фигур или ходов — перепроверяем тот же кадр в контрастном режиме.
         if (plan == null || plan.moves.isEmpty()) {
             val c = Vision.read(ImageSource(image), b, t, scale, contrast = true)
             if (c.hasPieces) {
-                val p2 = Solver.solve(c.board, c.pieces)
-                if (p2 != null && p2.moves.isNotEmpty()) { plan = p2; prefix = "контраст" }
+                val p2 = Solver.solve(c.board, c.pieces, combo.state)
+                if (p2 != null && p2.moves.isNotEmpty()) { plan = p2; prefix = listOfNotNull(prefix, "контраст").joinToString(" · ") }
             }
         }
         if (plan == null) { main.post { hints?.clear() }; return }
@@ -238,7 +241,7 @@ class HelperService : Service() {
     /** Кнопка ⟳: разбор текущего кадра в контрастном режиме и принудительный расчёт ходов. */
     private fun forceAnalysis(image: Image, b: Box, t: Box) {
         val c = Vision.read(ImageSource(image), b, t, scale, contrast = true)
-        val plan = if (c.hasPieces) Solver.solve(c.board, c.pieces) else null
+        val plan = if (c.hasPieces) Solver.solve(c.board, c.pieces, combo.state) else null
         forcedHold = true
         holdBase = lastVoted
         solvedSnapshot = null

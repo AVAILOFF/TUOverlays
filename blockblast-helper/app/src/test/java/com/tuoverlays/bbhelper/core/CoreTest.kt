@@ -258,3 +258,26 @@ class ContrastTest {
         assertEquals(0L, Vision.readBoard(cv, Box(60f, 300f, 1020f, 1260f), contrast = true))
     }
 }
+
+class ComboTrackerTest {
+
+    private val line3 = Piece.parse("###")
+    private val dot = Piece.parse("#")
+
+    @Test
+    fun countsClearsAndBreaks() {
+        val t = ComboTracker()
+        val almost = Board.parse("#####...")
+        t.update(Snapshot(almost, listOf(line3, dot, dot)))
+        // Поставили 1×3 и закрыли строку.
+        t.update(Snapshot(0L, listOf(null, dot, dot)))
+        assertEquals(ComboState(1, 0), t.state)
+        // Две точки без очистки, лоток обновился после последней.
+        t.update(Snapshot(Board.bit(3, 3), listOf(null, null, dot)))
+        t.update(Snapshot(Board.bit(3, 3) or Board.bit(5, 5), listOf(dot, dot, dot)))
+        assertEquals(ComboState(1, 2), t.state)
+        // Третья постановка без очистки — комбо сгорает.
+        t.update(Snapshot(Board.bit(3, 3) or Board.bit(5, 5) or Board.bit(0, 0), listOf(null, dot, dot)))
+        assertEquals(0, t.state.combo)
+    }
+}
