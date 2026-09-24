@@ -10,7 +10,13 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.graphics.Typeface
 import android.graphics.Point
 import android.graphics.drawable.GradientDrawable
 import android.hardware.display.DisplayManager
@@ -24,7 +30,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
+import android.os.Environment
 import android.os.SystemClock
+import android.provider.MediaStore
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -34,11 +42,14 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.tuoverlays.bbhelper.core.Board
 import com.tuoverlays.bbhelper.core.Box
 import com.tuoverlays.bbhelper.core.PixelSource
 import com.tuoverlays.bbhelper.core.Snapshot
 import com.tuoverlays.bbhelper.core.Solver
+import com.tuoverlays.bbhelper.core.TrayScale
 import com.tuoverlays.bbhelper.core.Vision
+import java.io.File
 import java.nio.ByteBuffer
 import kotlin.math.abs
 
@@ -66,10 +77,12 @@ class HelperService : Service() {
     @Volatile private var tray: Box? = null
     @Volatile private var paused = false
     @Volatile private var enabled = true
+    @Volatile private var snapshotRequested = false
 
     // Трогаются только из потока worker.
     private var lastSnapshot: Snapshot? = null
     private var solvedSnapshot: Snapshot? = null
+    private var scale = TrayScale()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -82,6 +95,10 @@ class HelperService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
             stopSelf()
+            return START_NOT_STICKY
+        }
+        if (intent?.action == ACTION_SNAPSHOT) {
+            snapshotRequested = true
             return START_NOT_STICKY
         }
         if (intent?.action == ACTION_CALIBRATE) {
@@ -121,6 +138,7 @@ class HelperService : Service() {
 
         board = prefs.board
         tray = prefs.tray
+        scale = TrayScale(prefs.trayRatio)
         addHints()
         addBubble()
         if (board == null || tray == null) openCalibration()
@@ -161,8 +179,14 @@ class HelperService : Service() {
         try {
             val b = board
             val t = tray
-            if (paused || !enabled || b == null || t == null) return
-            val snap = Vision.read(ImageSource(image), b, t)
+            if (b == null || t == null) return
+            if (snapshotRequested) {
+                snapshotRequested = false
+                saveFrame(image, b, t)
+            }
+            if (paused || !enabled) return
+            val snap = Vision.read(ImageSource(image), b, t, scale)
+            scale.ratio?.let { if (it != prefs.trayRatio) prefs.trayRatio = it }
 
             // Ждём, пока картинка устоится (анимации, перетаскивание фигуры).
             val stable = snap == lastSnapshot
@@ -178,6 +202,54 @@ class HelperService : Service() {
             main.post { if (enabled) hints?.show(plan, b, t) }
         } finally {
             image.close()
+        }
+    }
+
+    /** Сохраняет кадр и то, что по нему распознано, в Pictures/BBHelper — для отладки распознавания. */
+    private fun saveFrame(image: Image, b: Box, t: Box) {
+        val snap = Vision.read(ImageSource(image), b, t, scale)
+        val plane = image.planes[0]
+        val padded = plane.rowStride / plane.pixelStride
+        val raw = Bitmap.createBitmap(padded, image.height, Bitmap.Config.ARGB_8888)
+        plane.buffer.rewind()
+        raw.copyPixelsFromBuffer(plane.buffer)
+
+        val lines = buildList {
+            add("board=${b}")
+            add("tray=${t}")
+            add("trayRatio=${scale.ratio}")
+            addAll(Board.toString(snap.board).lines())
+            snap.pieces.forEachIndexed { i, p -> add("slot $i:"); addAll(p?.toString()?.lines() ?: listOf("-")) }
+        }
+        val ts = image.width / 40f
+        val out = Bitmap.createBitmap(image.width, image.height + ((lines.size + 1) * ts * 1.25f).toInt(), Bitmap.Config.ARGB_8888)
+        val c = Canvas(out)
+        c.drawColor(Color.BLACK)
+        c.drawBitmap(raw, 0f, 0f, null)
+        raw.recycle()
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE; textSize = ts; typeface = Typeface.MONOSPACE
+        }
+        lines.forEachIndexed { i, line -> c.drawText(line, ts, image.height + (i + 1) * ts * 1.25f, paint) }
+
+        val name = "bb_${System.currentTimeMillis()}.png"
+        val ok = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, name)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/BBHelper")
+                }
+                val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)!!
+                contentResolver.openOutputStream(uri)!!.use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            } else {
+                val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+                File(dir, name).outputStream().use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            }
+        }.isSuccess
+        out.recycle()
+        main.post {
+            Toast.makeText(this, if (ok) "Снимок сохранён: Pictures/BBHelper/$name" else "Не удалось сохранить снимок", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -323,8 +395,14 @@ class HelperService : Service() {
         }
 
         save.setOnClickListener {
+            val old = board
             board = view.board; tray = view.tray
             prefs.board = view.board; prefs.tray = view.tray
+            // Масштаб лотка считается от размера клетки поля — если поле изменилось, учим заново.
+            if (old == null || abs(old.width - view.board.width) > old.width * 0.02f) {
+                prefs.trayRatio = null
+                workerHandler?.post { scale = TrayScale() }
+            }
             closeCalibration()
         }
         stop.setOnClickListener { stopSelf() }
@@ -356,6 +434,7 @@ class HelperService : Service() {
         nm.createNotificationChannel(NotificationChannel(CHANNEL, "Помощник Block Blast", NotificationManager.IMPORTANCE_LOW))
         val flags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val stopPi = PendingIntent.getService(this, 1, Intent(this, HelperService::class.java).setAction(ACTION_STOP), flags)
+        val shotPi = PendingIntent.getService(this, 3, Intent(this, HelperService::class.java).setAction(ACTION_SNAPSHOT), flags)
         val calPi = PendingIntent.getService(this, 2, Intent(this, HelperService::class.java).setAction(ACTION_CALIBRATE), flags)
         val openPi = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), flags)
         val n = Notification.Builder(this, CHANNEL)
@@ -364,6 +443,7 @@ class HelperService : Service() {
             .setContentText("Нажмите «BB», чтобы вкл/выкл подсказки, удерживайте — разметка")
             .setContentIntent(openPi)
             .addAction(Notification.Action.Builder(null as android.graphics.drawable.Icon?, "Разметка", calPi).build())
+            .addAction(Notification.Action.Builder(null as android.graphics.drawable.Icon?, "Снимок", shotPi).build())
             .addAction(Notification.Action.Builder(null as android.graphics.drawable.Icon?, "Стоп", stopPi).build())
             .setOngoing(true)
             .build()
@@ -386,6 +466,7 @@ class HelperService : Service() {
         const val EXTRA_DATA = "data"
         const val ACTION_STOP = "com.tuoverlays.bbhelper.STOP"
         const val ACTION_CALIBRATE = "com.tuoverlays.bbhelper.CALIBRATE"
+        const val ACTION_SNAPSHOT = "com.tuoverlays.bbhelper.SNAPSHOT"
 
         @Volatile var running = false
 

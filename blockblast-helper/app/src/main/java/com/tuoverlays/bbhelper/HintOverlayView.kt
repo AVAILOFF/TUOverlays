@@ -74,11 +74,11 @@ class HintOverlayView(context: Context) : View(context) {
                 rect.set(x + inset, y + inset, x + cell - inset, y + cell - inset)
                 canvas.drawRoundRect(rect, cell * 0.12f, cell * 0.12f, stroke)
             }
-            // Номер хода — в углу первой клетки фигуры.
+            // Номер хода — в самом углу первой клетки фигуры, чтобы не попасть в зону замера цвета (центр ±12%).
             val first = m.piece.cells.first()
-            val bx = b.left + (m.col + first.col) * cell + cell * 0.22f
-            val by = b.top + (m.row + first.row) * cell + cell * 0.22f
-            drawBadge(canvas, bx, by, cell * 0.17f, color, (i + 1).toString())
+            val bx = b.left + (m.col + first.col) * cell + cell * 0.2f
+            val by = b.top + (m.row + first.row) * cell + cell * 0.2f
+            drawBadge(canvas, bx, by, cell * 0.12f, color, (i + 1).toString())
 
             // Тот же номер над фигурой в лотке, чтобы было видно, какую брать.
             tray?.let { t ->

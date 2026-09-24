@@ -15,6 +15,11 @@ class Prefs(context: Context) {
         get() = readBox("tray")
         set(v) = writeBox("tray", v)
 
+    /** Выученный масштаб фигур в лотке относительно клетки поля. */
+    var trayRatio: Float?
+        get() = if (sp.contains("trayRatio")) sp.getFloat("trayRatio", 0f) else null
+        set(v) = sp.edit().apply { if (v == null) remove("trayRatio") else putFloat("trayRatio", v) }.apply()
+
     var bubbleX: Int
         get() = sp.getInt("bubbleX", 0)
         set(v) = sp.edit().putInt("bubbleX", v).apply()

@@ -27,19 +27,19 @@ object Vision {
     /** Насколько цвет должен отличаться от фона (сумма |dR|+|dG|+|dB|), чтобы считаться блоком. */
     var colorThreshold = 110
 
-    fun read(src: PixelSource, board: Box, tray: Box): Snapshot =
-        Snapshot(readBoard(src, board), readTray(src, tray, board.width / Board.SIZE))
+    fun read(src: PixelSource, board: Box, tray: Box, scale: TrayScale = TrayScale()): Snapshot =
+        Snapshot(readBoard(src, board), readTray(src, tray, board.width / Board.SIZE, scale))
 
     fun readBoard(src: PixelSource, board: Box): Long {
         val cell = board.width / Board.SIZE
         val colors = IntArray(64)
         for (r in 0 until Board.SIZE) for (c in 0 until Board.SIZE) {
-            // Берём только центр клетки: там не рисуются рамки подсказок.
+            // Берём только центр клетки: там не рисуются рамки и номера подсказок.
             colors[r * 8 + c] = averageColor(
                 src,
                 board.left + (c + 0.5f) * cell,
                 board.top + (r + 0.5f) * cell,
-                cell * 0.15f,
+                cell * 0.12f,
             )
         }
         // Самая тёмная клетка почти наверняка пустая — это эталон фона поля.
@@ -49,12 +49,13 @@ object Vision {
         return mask
     }
 
-    fun readTray(src: PixelSource, tray: Box, boardCell: Float): List<Piece?> {
+    fun readTray(src: PixelSource, tray: Box, boardCell: Float, scale: TrayScale = TrayScale()): List<Piece?> {
         val slotW = tray.width / 3
         val blobs = (0 until 3).map { findBlob(src, Box(tray.left + it * slotW, tray.top, tray.left + (it + 1) * slotW, tray.bottom)) }
         val found = blobs.filterNotNull()
         if (found.isEmpty()) return listOf(null, null, null)
-        val unit = estimateUnit(found, boardCell)
+        val dims = found.flatMap { listOf(it.box.width / boardCell, it.box.height / boardCell) }
+        val unit = scale.update(dims) * boardCell
         return blobs.map { blob -> blob?.let { toPiece(src, it, unit) } }
     }
 
@@ -84,30 +85,6 @@ object Vision {
             Box(slot.left + c0 * step, slot.top + r0 * step, slot.left + (c1 + 1) * step, slot.top + (r1 + 1) * step),
             bg,
         )
-    }
-
-    /**
-     * Размер клетки фигур в лотке неизвестен (они мельче, чем на поле).
-     * Ищем размер, при котором ширина и высота всех фигур кратны ему; при равенстве — больший.
-     */
-    private fun estimateUnit(blobs: List<Blob>, boardCell: Float): Float {
-        var best = boardCell
-        var bestErr = Float.MAX_VALUE
-        var s = boardCell * 0.3f
-        while (s <= boardCell * 1.1f) {
-            var err = 0f
-            for (b in blobs) {
-                for (len in floatArrayOf(b.box.width, b.box.height)) {
-                    val n = len / s
-                    val k = n.roundToInt()
-                    err += if (k < 1 || k > 5) 1f else (n - k) * (n - k)
-                }
-            }
-            err += 0.002f * boardCell / s
-            if (err < bestErr) { bestErr = err; best = s }
-            s += 0.5f
-        }
-        return best
     }
 
     private fun toPiece(src: PixelSource, blob: Blob, unit: Float): Piece? {

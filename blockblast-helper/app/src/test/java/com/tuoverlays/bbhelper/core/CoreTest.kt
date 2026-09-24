@@ -157,3 +157,38 @@ class VisionTest {
         }
     }
 }
+
+class TrayScaleTest {
+
+    private fun dims(unit: Float, vararg pieces: Piece) = pieces.flatMap { listOf(it.width * unit, it.height * unit) }
+
+    @Test
+    fun learnsScaleWhenOddPieceAppears() {
+        val unit = 0.55f
+        val scale = TrayScale()
+        val sq = Piece.parse("##", "##")
+        // Только чётные стороны: по одному кадру удвоенный масштаб неотличим.
+        scale.update(dims(unit, sq, sq, Piece.parse("####", "####")))
+        // Появилась фигура 1×3 — теперь масштаб однозначен.
+        assertEquals(unit, scale.update(dims(unit, Piece.parse("###"), sq, sq)), 0.01f)
+        // И дальше квадраты читаются правильно.
+        assertEquals(unit, scale.update(dims(unit, sq, sq, sq)), 0.01f)
+    }
+
+    @Test
+    fun usesSavedScale() {
+        val scale = TrayScale(saved = 0.5f)
+        val sq = Piece.parse("##", "##")
+        assertEquals(0.5f, scale.update(dims(0.5f, sq, sq, sq)), 0.01f)
+    }
+
+    @Test
+    fun ignoresNoise() {
+        val unit = 0.6f
+        val scale = TrayScale()
+        scale.update(dims(unit, Piece.parse("#"), Piece.parse("###"), Piece.parse("##", "##")))
+        // Кадр анимации: размеры не кратны ничему разумному.
+        scale.update(listOf(0.83f, 0.47f, 2.9f, 1.37f))
+        assertEquals(unit, scale.update(dims(unit, Piece.parse("##", "##"), Piece.parse("##"), Piece.parse("####"))), 0.01f)
+    }
+}
