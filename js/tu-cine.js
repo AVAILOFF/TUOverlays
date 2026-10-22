@@ -216,11 +216,11 @@ update();
 addEventListener('scroll', request, { passive: true });
 addEventListener('resize', () => { measure(); request(); }, { passive: true });
 
-/* the ribbon is dismissable, and the header changes height when it frosts —
-   either one moves the top of the track, so remeasure rather than cache once */
+/* the header changes height when it frosts, which moves the top of the
+   track, so remeasure rather than cache once */
 if (window.ResizeObserver) {
   const ro = new ResizeObserver(() => { measure(); request(); });
-  ['.relribbon', '.hdr'].forEach(sel => {
+  ['.hdr'].forEach(sel => {
     const el = document.querySelector(sel);
     if (el) ro.observe(el);
   });

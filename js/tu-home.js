@@ -65,26 +65,6 @@ const pad2 = n => String(n).padStart(2, '0');
   }, 2400);
 })();
 
-/* ---------- BETA sticker: random pick every load ---------- */
-(() => {
-  const variants = [
-    { cls: 'v1', html: '<span class="q">“</span>BETA<span class="q">”</span>' },
-    { cls: 'v2', html: 'BETA<span class="qm">?</span>' },
-    { cls: 'v3 stack', html: 'BETA<span class="sub">' + (L.betaSub1 || '') + '</span>' },
-    { cls: 'v4', html: '<span class="inner">BETA</span>' },
-    { cls: 'v5', html: '<span class="q">“</span>BETA<span class="q">”</span>' },
-    { cls: 'v6 stack', html: 'BETA<span class="sub">' + (L.betaSub2 || '') + '</span>' },
-  ];
-  const pick = variants[Math.floor(Math.random() * variants.length)];
-  $$('.logo').forEach(logo => {
-    const b = document.createElement('span');
-    b.className = 'beta ' + pick.cls;
-    b.innerHTML = pick.html;
-    b.setAttribute('aria-hidden', 'true');
-    logo.appendChild(b);
-  });
-})();
-
 /* ---------- sticky header: transparent over the hero, frosted after ---------- */
 (() => {
   const hdr = $('#hdr');
@@ -332,7 +312,7 @@ $$('#faqList .qa').forEach(qa => {
   const TARGET = targetStr ? new Date(targetStr).getTime() : Infinity;
 
   const gated = $$('a.btn[href="download.html"]');
-  const ribbon = $('#relRibbon'), cdSr = $('#cdSr');
+  const cdSr = $('#cdSr');
 
   /* ---- live countdown clock (fills the .cddown-grid until release) ---- */
   const cdGrid = cdPanel && $('.cddown-grid', cdPanel);
@@ -418,11 +398,9 @@ $$('#faqList .qa').forEach(qa => {
     });
 
     if (cdPanel) { cdPanel.classList.add('is-live'); spawnConfetti($('.cddown-confetti', cdPanel), 24); }
-    if (ribbon) ribbon.classList.add('is-live');
 
     const u = L.unlock || {};
-    const eyebrow = $('#dlEyebrow'), heading = $('#dlHeading'), lead = $('#dlLead');
-    if (eyebrow && u.eyebrow) eyebrow.textContent = u.eyebrow;
+    const heading = $('#dlHeading'), lead = $('#dlLead');
     if (heading && u.heading) heading.innerHTML = u.heading;
     if (lead && u.lead) lead.textContent = u.lead;
     if (cdSr && u.sr) cdSr.textContent = u.sr;
@@ -449,17 +427,6 @@ $$('#faqList .qa').forEach(qa => {
   tick();
   setInterval(tick, 1000);
 
-  /* ---- ribbon dismiss (persists for this browser session) ---- */
-  const ribbonClose = $('#ribbonClose');
-  if (ribbon) {
-    let dismissed = false;
-    try { dismissed = sessionStorage.getItem('tu-ribbon-dismissed') === '1'; } catch (_) {}
-    if (dismissed) ribbon.hidden = true;
-  }
-  if (ribbonClose) ribbonClose.addEventListener('click', () => {
-    ribbon.hidden = true;
-    try { sessionStorage.setItem('tu-ribbon-dismissed', '1'); } catch (_) {}
-  });
 })();
 
 })();

@@ -396,51 +396,6 @@ p{margin:0}
 }
 
 /* ============================================================
-   release ribbon — the single full-bleed chromatic band
-   ============================================================ */
-.relribbon{position:relative;overflow:hidden;background:var(--brand-lo);color:#fff;
-  border-bottom:1px solid rgba(255,255,255,.14)}
-.relribbon[hidden]{display:none}
-.relribbon-in{position:relative;z-index:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding-block:9px;min-height:22px}
-.relribbon-tx{font-size:13px;font-weight:600;letter-spacing:.005em}
-.relribbon-tx b{font-weight:700}
-.relribbon-cd{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;background:rgba(0,0,0,.2);
-  padding:3px 9px;border-radius:var(--r-pill);font-variant-numeric:tabular-nums}
-.relribbon-cta{display:none;align-items:center;gap:6px;margin-left:2px;
-  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;
-  color:#fff;background:rgba(0,0,0,.24);padding:5px 12px;border-radius:var(--r-pill);
-  transition:background var(--d-1) var(--e-state)}
-.relribbon-cta:hover{background:rgba(0,0,0,.38)}
-.relribbon.is-live .relribbon-cd{display:none}
-.relribbon.is-live .relribbon-cta{display:inline-flex}
-.relribbon-promo{display:none;align-items:center;gap:6px;margin-left:2px;flex:none;
-  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.05em;
-  color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.42);
-  padding:4px 12px 4px 10px;border-radius:var(--r-pill);cursor:pointer;
-  transition:background var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state)}
-.relribbon-promo:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.75)}
-.relribbon-close{margin-left:auto;flex:none;width:24px;height:24px;border-radius:var(--r-1);
-  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);
-  transition:background var(--d-1) var(--e-state)}
-.relribbon-close:hover{background:rgba(0,0,0,.2)}
-.relribbon-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.relribbon-confetti span{position:absolute;top:-12%;width:5px;height:9px;border-radius:1px;opacity:0;
-  animation-name:confettiFall;animation-iteration-count:infinite;animation-timing-function:linear}
-.relribbon-confetti span:nth-child(1){left:8%;background:#fff;animation-duration:2.4s;animation-delay:0s}
-.relribbon-confetti span:nth-child(2){left:22%;background:var(--data);animation-duration:3.1s;animation-delay:.6s}
-.relribbon-confetti span:nth-child(3){left:38%;background:var(--warn);animation-duration:2.7s;animation-delay:1.1s}
-.relribbon-confetti span:nth-child(4){left:61%;background:#fff;animation-duration:3.4s;animation-delay:.3s}
-.relribbon-confetti span:nth-child(5){left:78%;background:var(--good);animation-duration:2.9s;animation-delay:1.6s}
-.relribbon-confetti span:nth-child(6){left:91%;background:var(--data);animation-duration:2.5s;animation-delay:.9s}
-.relribbon-confetti span:nth-child(7){left:15%;background:var(--warn);animation-duration:3.6s;animation-delay:1.9s}
-.relribbon-confetti span:nth-child(8){left:50%;background:#fff;animation-duration:2.2s;animation-delay:1.3s}
-.relribbon-confetti span:nth-child(9){left:69%;background:var(--good);animation-duration:3.3s;animation-delay:.4s}
-@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:0}12%{opacity:.85}100%{transform:translateY(48px) rotate(220deg);opacity:0}}
-@media (max-width:640px){.relribbon-tx{font-size:12px}.relribbon-in{padding-block:8px}.relribbon-promo span{display:none}}
-@media (prefers-reduced-motion: reduce){.relribbon-confetti{display:none}}
-
-/* ============================================================
    footer
    ============================================================ */
 .ftr{border-top:1px solid var(--line);margin-top:var(--sect);padding-block:var(--s7) var(--s6)}

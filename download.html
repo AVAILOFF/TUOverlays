@@ -48,14 +48,6 @@
   background:radial-gradient(50% 50% at 50% 50%, rgba(255,0,102,.4), rgba(255,0,102,0) 70%)}
 .stage-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;max-width:64ch}
 
-.meta-row{display:flex;gap:8px 20px;flex-wrap:wrap;font-family:var(--f-mono);font-size:var(--t-lbl);
-  letter-spacing:.09em;color:var(--tx-3);text-transform:uppercase;margin-top:4px}
-.meta-row i{font-style:normal;color:var(--tx-4)}
-.meta-row .good{color:var(--good)}
-
-/* live sync status */
-.sync{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:var(--t-lbl);
-  letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin-top:10px}
 .btn.is-loading{opacity:.55;pointer-events:none}
 
 /* ---------- download cards ---------- */
@@ -154,12 +146,6 @@
     <span class="eyebrow">Загрузка</span>
     <h1>Скачать <span class="acc">TU Overlays</span></h1>
     <p class="lead">Файлы раздаются через GitHub Releases проекта — без сторонних файлообменников. Установка занимает минуту, аккаунт не нужен.</p>
-    <div class="meta-row">
-      <span>Актуальная версия <b class="mono" id="verBadge">…</b></span><i>/</i>
-      <span>Win 10 · 11 x64</span><i>/</i>
-      <span class="good">Без аккаунта</span>
-    </div>
-    <span class="sync" id="syncStatus"><span id="syncText">Синхронизация с GitHub…</span></span>
   </div>
 </section>
 
@@ -174,7 +160,6 @@
           <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2h7l3 3v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v3h3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
         </span>
         <h3>Установщик (.exe)</h3>
-        <span class="tag">Рекомендуется</span>
       </div>
       <p class="desc">Обычная установка с ярлыками и автообновлением. Подходит для большинства пользователей.</p>
       <a class="btn btn-primary btn-lg is-loading" id="exeBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-exe">
@@ -198,7 +183,6 @@
           <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </span>
         <h3>Portable (.zip)</h3>
-        <span class="tag">Без установки</span>
       </div>
       <p class="desc">Распакуйте архив и запустите exe-файл. Не оставляет следов в системе.</p>
       <a class="btn btn-ghost btn-lg is-loading" id="zipBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-zip">
@@ -249,7 +233,7 @@
       <a href="index.html#features">Возможности</a>
       <a href="index.html#faq">FAQ</a>
       <a href="support.html">Поддержать проект</a>
-      <a href="https://discord.gg/abSH8PHSY" target="_blank" rel="noopener">Discord</a>
+      <a href="https://discord.gg/hsetuZU3Hc" target="_blank" rel="noopener">Discord</a>
     </nav>
     <p class="disc">
       <b>TU Overlays — независимый проект.</b> Приложение не связано с iRacing.com Motorsport Simulations, LLC, не разрабатывается и не поддерживается этой компанией. Все файлы на этой странице раздаются через GitHub Releases проекта (github.com/AVAILOFF/TUOverlays), без переходов на сторонние файлообменники. При разработке приложения и этого сайта использовались инструменты на основе искусственного интеллекта. © 2026 TU Overlays.
@@ -315,9 +299,6 @@
   }
 
   async function sync(){
-    const syncEl = document.getElementById('syncStatus');
-    const syncText = document.getElementById('syncText');
-    const verBadge = document.getElementById('verBadge');
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 6000);
     try {
@@ -334,17 +315,11 @@
       // Prefer the newest stable release for the main cards; keep pre-releases in the archive.
       const latest = published.find(r => !r.prerelease) || published[0];
       const archive = published.filter(r => r !== latest);
-      if (verBadge) verBadge.textContent = latest.tag_name;
       fillCard('exe', latest, '.exe');
       fillCard('zip', latest, '.zip');
       renderArchive(archive);
 
-      if (syncText) syncText.textContent = 'Синхронизировано с GitHub Releases';
-      if (syncEl) syncEl.classList.remove('err');
     } catch (err) {
-      if (syncText) syncText.textContent = 'GitHub Releases недоступны — попробуйте обновить страницу';
-      if (syncEl) syncEl.classList.add('err');
-      if (verBadge) verBadge.textContent = '—';
       document.querySelectorAll('.is-loading').forEach(el => {
         el.href = `https://github.com/${REPO}/releases`;
         el.classList.remove('is-loading');
