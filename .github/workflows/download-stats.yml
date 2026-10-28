@@ -1,0 +1,69 @@
+# Раз в сутки сохраняет счётчики скачиваний GitHub Releases.
+#
+# GitHub показывает по каждому файлу релиза только накопительное число
+# скачиваний, без истории. Этот workflow записывает снимок в ветку `stats`
+# (downloads.csv + README.md со сводкой), и по ней видно динамику:
+#   https://github.com/AVAILOFF/TUOverlays/tree/stats
+#
+# Данные живут в отдельной ветке, а не в main, чтобы ежедневный коммит не
+# передеплоивал сайт. В самой ветке `stats` лежит vercel.json с
+# deploymentEnabled: false — Vercel не собирает и её.
+#
+# Запустить вне расписания: Actions → «Download stats» → «Run workflow», или
+#   gh workflow run download-stats.yml --repo AVAILOFF/TUOverlays
+# Повторный запуск в тот же день (UTC) перезаписывает снимок этого дня.
+
+name: Download stats
+
+on:
+  schedule:
+    - cron: '17 3 * * *'   # 03:17 UTC; не ровный час — меньше очередь на раннерах
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: download-stats
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check out the stats branch
+        run: |
+          set -euo pipefail
+          if git fetch --depth=1 origin stats 2>/dev/null; then
+            git worktree add -B stats stats-data FETCH_HEAD
+          else
+            # Первый запуск: ветки ещё нет — начинаем её с чистого листа.
+            git worktree add --orphan -b stats stats-data
+          fi
+
+      - name: Take snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: node scripts/download-stats.mjs stats-data
+
+      - name: Commit to stats
+        working-directory: stats-data
+        run: |
+          set -euo pipefail
+          [ -f vercel.json ] || echo '{ "git": { "deploymentEnabled": false } }' > vercel.json
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Счётчики не изменились — коммитить нечего."
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898299+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "stats: $(date -u +%F)"
+          git push origin stats
