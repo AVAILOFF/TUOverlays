@@ -339,28 +339,55 @@ $$('#faqList .qa').forEach(qa => {
 
   const reset = () => { shown = past(); seen.clear(); flagged.clear(); sel = null; render(); list.scrollTop = 0; };
 
+  // Clip files are fetched once into memory while the demo is on screen. On a
+  // slow or throttled route a clip requested only on click took seconds to
+  // arrive, and the visitor read the wait as a dead button.
+  const clipUrl = n => rep.dataset.base + pad2(n) + '.mp4';
+  const blobs = {};
+  let warming = false;
+  const warm = async () => {
+    if (warming || !window.fetch || !window.URL) return;
+    warming = true;
+    // newest incidents first: they sit at the top of the log
+    const nums = [...new Set(evs.slice().reverse().map(e => e.clip[0]))];
+    for (const n of nums) {
+      try {
+        const r = await fetch(clipUrl(n));
+        if (r.ok) blobs[n] = URL.createObjectURL(await r.blob());
+      } catch (_) { /* the click path still loads it over the network */ }
+    }
+  };
+
   const replay = (e, lead) => {
     if (!cur) { held = live.currentTime; heldAt = performance.now(); live.pause(); }
     cur = e;
     sel = e.id;
     seen.add(e.id);   // looking at an incident is what "viewed" means, as in the app
     const from = Math.max(0, e.clip[2] - lead);
-    const src = rep.dataset.base + pad2(e.clip[0]) + '.mp4';
+    const src = blobs[e.clip[0]] || clipUrl(e.clip[0]);
     if (rep.getAttribute('src') !== src) rep.src = src;
     // before metadata a seek is dropped by the load, so it waits for it
     if (rep.readyState >= 1) rep.currentTime = from;
     else rep.addEventListener('loadedmetadata', () => { if (cur === e) rep.currentTime = from; }, { once: true });
+    // the frozen live frame stays up until the replay actually moves —
+    // a black stage while the clip loads looks like nothing happened
     rep.hidden = false;
-    live.hidden = true;
+    if (!live.hidden && (rep.readyState < 3 || rep.seeking)) root.classList.add('is-wait');
     play(rep);
     render();
   };
+  rep.addEventListener('playing', () => {
+    if (!cur) return;
+    root.classList.remove('is-wait');
+    live.hidden = true;
+  });
 
   const backToLive = () => {
     if (!cur) return;
     let t = liveT();
     const dur = live.duration || 0;
     cur = null;
+    root.classList.remove('is-wait');
     if (dur && t >= dur) { t %= dur; reset(); }
     rep.pause();
     rep.hidden = true;
@@ -431,6 +458,7 @@ $$('#faqList .qa').forEach(qa => {
   new IntersectionObserver(([en]) => {
     inView = en.isIntersecting;
     if (!inView) { live.pause(); rep.pause(); return; }
+    warm();
     if (cur) play(rep);
     else if (!reduced) play(live);
   }, { threshold: .35 }).observe(root);

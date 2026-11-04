@@ -174,6 +174,11 @@
 .rcd-stage{position:relative;aspect-ratio:1280/682;border:1px solid var(--line-2);border-radius:var(--r-2);
   background:var(--well);overflow:hidden}
 .rcd-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* a replay is loading: the frozen live frame dims, the clip waits unseen */
+.rcd-live{transition:opacity var(--d-1) var(--e-state)}
+.rcd.is-wait .rcd-live{opacity:.55}
+.rcd.is-wait .rcd-rep{opacity:0}
+.rcd.is-wait .rcd-stage{cursor:progress}
 .rcd-cap{margin:var(--s4) 0 0 calc(var(--rcd-win) - var(--rcd-lap));max-width:72ch;font-size:var(--t-sm);line-height:1.6;color:var(--tx-2d)}
 
 .rcd-note{margin-top:var(--s3);font-size:var(--t-xs);line-height:1.55;color:var(--tx-3)}
