@@ -174,11 +174,16 @@
 .rcd-stage{position:relative;aspect-ratio:1280/682;border:1px solid var(--line-2);border-radius:var(--r-2);
   background:var(--well);overflow:hidden}
 .rcd-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* a replay is loading: the frame on screen dims and says so; the clip waits unseen */
-.rcd-stage video{transition:opacity var(--d-1) var(--e-state)}
-/* both cues hold back 180ms so a clip already in memory never flashes them */
-.rcd.is-wait .rcd-stage video{opacity:.5;transition-delay:180ms}
-.rcd.is-wait .rcd-live:not([hidden]) ~ .rcd-rep{opacity:0}
+/* Two replay players take turns over the live feed: the next clip loads and
+   seeks unseen in the back one, then fades in over whatever is on screen, so
+   a switch never shows an empty frame. .is-on = visible, .is-top = the newest. */
+.rcd-stage video{transition:opacity var(--d-2) var(--e-state),filter var(--d-1) var(--e-state)}
+.rcd-rep{opacity:0;pointer-events:none}
+.rcd-rep.is-on{opacity:1;z-index:1}
+.rcd-rep.is-top{z-index:2}
+/* a replay is loading: the frame on screen darkens and says so; the clip waits
+   unseen. Both cues hold back 180ms so a clip already in memory never flashes them */
+.rcd.is-wait .rcd-live,.rcd.is-wait .rcd-rep.is-top{filter:brightness(.5);transition-delay:180ms}
 .rcd.is-wait .rcd-stage{cursor:progress}
 .rcd-stage::after{content:attr(data-wait);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   padding:8px 14px;border-radius:var(--r-pill);background:var(--scrim);border:1px solid var(--line-2);

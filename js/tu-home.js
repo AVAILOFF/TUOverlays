@@ -243,9 +243,9 @@ $$('#faqList .qa').forEach(qa => {
    departure: a single click on a line replays it (the app wants a double
    click, so a broadcast is never cut by accident — a visitor has no broadcast).
 
-   Two videos stand in for the sim. .rcd-live is the race as it happens
+   Videos stand in for the sim. .rcd-live is the race as it happens
    (loops; its first frame is session time `base`); .rcd-rep plays one
-   incident file at a time. event.clip = [file number in clips/, length,
+   incident file at a time, in two copies that take turns (see show()). event.clip = [file number in clips/, length,
    second in the file where the incident happens], so a lead-in of s seconds
    starts at max(0, that - s). One file per incident rather than one long
    cut to seek inside: a seek far into a file needs HTTP Range, and a server
@@ -259,7 +259,11 @@ $$('#faqList .qa').forEach(qa => {
   if (!root || !data) return;
   const D = JSON.parse(data.textContent);
   const T = L.rcd || {};
-  const live = $('.rcd-live', root), rep = $('.rcd-rep', root);
+  const live = $('.rcd-live', root);
+  const reps = [$('.rcd-rep', root)];
+  reps[0].hidden = false;
+  reps.push(reps[0].cloneNode());
+  reps[0].after(reps[1]);
   const list = $('#rcdList');
   const nNew = $('#rcdNew'), nCount = $('#rcdCount'), nPos = $('#rcdPos');
   const flagBtn = $('#rcdFlagged'), flagTxt = $('#rcdFlaggedTxt');
@@ -282,6 +286,7 @@ $$('#faqList .qa').forEach(qa => {
   const cats = { crash: true, 'off-track': true, contact: true };
   let flaggedOnly = false, sel = null, cur = null, lastT = 0, inView = false;
   let held = 0, heldAt = 0;   // live position + wall time when a replay began
+  let front = null, target = null;   // replay player on screen; the one being brought up
 
   const liveT = () => cur ? held + (performance.now() - heldAt) / 1000 : live.currentTime;
   // newest first, the way the app sorts its log
@@ -339,33 +344,56 @@ $$('#faqList .qa').forEach(qa => {
 
   const reset = () => { shown = past(); seen.clear(); flagged.clear(); sel = null; render(); list.scrollTop = 0; };
 
-  // Clip files are fetched once into memory while the demo is on screen. On a
-  // slow or throttled route a clip requested only on click took seconds to
-  // arrive, and the visitor read the wait as a dead button.
-  // A clicked clip that is still in the queue jumps it and is shared with the
-  // queue rather than requested twice.
-  const clipUrl = n => rep.dataset.base + pad2(n) + '.mp4';
-  const blobs = {}, loads = {};
-  const canBlob = !!(window.fetch && window.URL && URL.createObjectURL);
-  const load = n => loads[n] || (loads[n] = fetch(clipUrl(n))
-    .then(r => r.ok ? r.blob() : Promise.reject(r.status))
-    .then(b => (blobs[n] = URL.createObjectURL(b)))
-    .catch(() => { delete loads[n]; return null; }));
+  // Clip files are fetched into memory ahead of the click: on a slow or
+  // throttled route a clip requested only on click took seconds to arrive,
+  // and the visitor read the wait as a dead button. The queue stands behind
+  // the live feed, though — it starts once live can play through and holds
+  // while live stalls or a replay is being brought up — so the clips never
+  // take bandwidth from what is on screen.
+  // A clip clicked before it is in memory streams from its URL instead of
+  // waiting for the whole file (the seek into it needs HTTP Range, which
+  // Vercel serves); its queued fetch is dropped rather than run twice.
+  const clipUrl = n => reps[0].dataset.base + pad2(n) + '.mp4';
+  const blobs = {}, loads = {}, aborts = {};
+  const canBlob = !!(window.fetch && window.URL && URL.createObjectURL && window.AbortController);
+  const load = n => {
+    if (loads[n]) return loads[n];
+    const ac = aborts[n] = new AbortController();
+    return (loads[n] = fetch(clipUrl(n), { signal: ac.signal, priority: 'low' })
+      .then(r => r.ok ? r.blob() : Promise.reject(r.status))
+      .then(b => { delete aborts[n]; return (blobs[n] = URL.createObjectURL(b)); })
+      .catch(() => { delete aborts[n]; delete loads[n]; return null; }));
+  };
+  let liveBusy = !reduced, wakers = [];
+  const waiting = () => root.classList.contains('is-wait');
+  const busy = () => liveBusy || waiting();
+  const kick = () => { if (!busy()) wakers.splice(0).forEach(f => f()); };
+  const idle = () => busy() ? new Promise(f => wakers.push(f)) : null;
+  live.addEventListener('canplaythrough', () => { liveBusy = false; kick(); });
+  live.addEventListener('playing', () => { liveBusy = false; kick(); });
+  live.addEventListener('waiting', () => { liveBusy = true; });
   let warming = false;
   const warm = async () => {
     if (warming || !canBlob) return;
     warming = true;
     // newest incidents first: they sit at the top of the log
-    for (const n of new Set(evs.slice().reverse().map(e => e.clip[0]))) await load(n);
+    for (const n of new Set(evs.slice().reverse().map(e => e.clip[0]))) {
+      await idle();
+      if (!blobs[n]) await load(n);
+    }
   };
 
+  // the player already holding this file (same clip, new lead-in), else the
+  // one not on screen
+  const pick = src => [target, front].find(v => v && v.getAttribute('src') === src) ||
+    (reps[0] === front ? reps[1] : reps[0]);
   const start = (e, from, src) => {
-    if (rep.getAttribute('src') !== src) rep.src = src;
+    const v = target = pick(src);
+    if (v.getAttribute('src') !== src) v.src = src;
     // before metadata a seek is dropped by the load, so it waits for it
-    if (rep.readyState >= 1) rep.currentTime = from;
-    else rep.addEventListener('loadedmetadata', () => { if (cur === e) rep.currentTime = from; }, { once: true });
-    rep.hidden = false;
-    play(rep);
+    if (v.readyState >= 1) v.currentTime = from;
+    else v.addEventListener('loadedmetadata', () => { if (cur === e && target === v) v.currentTime = from; }, { once: true });
+    play(v);
   };
 
   const replay = (e, lead) => {
@@ -374,24 +402,33 @@ $$('#faqList .qa').forEach(qa => {
     sel = e.id;
     seen.add(e.id);   // looking at an incident is what "viewed" means, as in the app
     const from = Math.max(0, e.clip[2] - lead), n = e.clip[0];
-    // the frozen live frame stays up, captioned, until the replay actually
+    // whatever is on screen stays up, captioned, until the replay actually
     // moves — a black or still stage reads as a dead button
     root.classList.add('is-wait');
-    if (blobs[n] || !canBlob) start(e, from, blobs[n] || clipUrl(n));
-    else {
-      rep.pause();   // a replay already on screen holds its frame meanwhile
-      load(n).then(url => { if (cur === e) start(e, from, url || clipUrl(n)); });
-    }
+    if (!blobs[n] && aborts[n]) aborts[n].abort();
+    start(e, from, blobs[n] || clipUrl(n));
     render();
   };
-  const waiting = () => root.classList.contains('is-wait');
-  const settle = () => {
-    if (!cur || rep.paused) return;
-    root.classList.remove('is-wait');
-    live.hidden = true;
+  // the new player fades in over the old one, which stops once covered
+  const show = v => {
+    const old = front;
+    front = v;
+    v.classList.add('is-on', 'is-top');
+    if (!old) return;
+    old.classList.remove('is-top');
+    setTimeout(() => {
+      if (old === front || old === target) return;
+      old.classList.remove('is-on');
+      old.pause();
+    }, 240);
   };
-  rep.addEventListener('playing', settle);
-  rep.addEventListener('seeked', settle);   // same clip, new lead-in: no new 'playing'
+  const settle = ev => {
+    const v = ev.target;
+    if (!cur || v !== target || v.paused || v.seeking) return;
+    root.classList.remove('is-wait');
+    if (v !== front) show(v);
+    kick();
+  };
   $('.rcd-stage', root).dataset.wait = T.loading || '';
 
   const backToLive = () => {
@@ -399,15 +436,15 @@ $$('#faqList .qa').forEach(qa => {
     let t = liveT();
     const dur = live.duration || 0;
     cur = null;
+    target = front = null;
     root.classList.remove('is-wait');
     if (dur && t >= dur) { t %= dur; reset(); }
-    rep.pause();
-    rep.hidden = true;
-    live.hidden = false;
+    reps.forEach(r => { r.pause(); r.classList.remove('is-on', 'is-top'); });
     lastT = t;
     if (!reduced) { live.currentTime = t; if (inView) play(live); }
     render();
     reach(t);
+    kick();
   };
 
   live.addEventListener('timeupdate', () => {
@@ -417,13 +454,17 @@ $$('#faqList .qa').forEach(qa => {
     lastT = t;
     reach(t);
   });
-  rep.addEventListener('timeupdate', () => {
-    // a seek to another clip is still landing: the old position means nothing
-    if (!cur || rep.seeking || waiting()) return;
-    reach(liveT());
-    if (rep.currentTime >= cur.clip[1] - .15) backToLive();
+  reps.forEach(r => {
+    r.addEventListener('playing', settle);
+    r.addEventListener('seeked', settle);   // same clip, new lead-in: no new 'playing'
+    r.addEventListener('timeupdate', () => {
+      // a seek to another clip is still landing: the old position means nothing
+      if (!cur || r !== target || r.seeking || waiting()) return;
+      reach(liveT());
+      if (r.currentTime >= cur.clip[1] - .15) backToLive();
+    });
+    r.addEventListener('ended', () => { if (r === target && !waiting()) backToLive(); });
   });
-  rep.addEventListener('ended', () => { if (!waiting()) backToLive(); });
 
   list.addEventListener('click', ev => {
     const ln = ev.target.closest('.rcd-ln');
@@ -469,14 +510,17 @@ $$('#faqList .qa').forEach(qa => {
   // starts the live feed — a replay is still one click away
   new IntersectionObserver(([en]) => {
     inView = en.isIntersecting;
-    if (!inView) { live.pause(); rep.pause(); return; }
-    if (cur && !waiting()) play(rep);
+    if (!inView) { live.pause(); reps.forEach(r => r.pause()); return; }
+    if (cur) play(target);
     else if (!reduced) play(live);
   }, { threshold: .35 }).observe(root);
-  // clips start downloading while the demo is still a screen away, so they
-  // are in memory by the time a visitor reaches the buttons
+  // a screen away, live starts buffering and the clips queue behind it, so
+  // both are in by the time a visitor reaches the buttons
   const near = new IntersectionObserver(([en]) => {
-    if (en.isIntersecting) { near.disconnect(); warm(); }
+    if (!en.isIntersecting) return;
+    near.disconnect();
+    if (!reduced) live.preload = 'auto';
+    warm();
   }, { rootMargin: '100% 0px' });
   near.observe(root);
 
