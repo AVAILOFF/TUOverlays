@@ -174,11 +174,17 @@
 .rcd-stage{position:relative;aspect-ratio:1280/682;border:1px solid var(--line-2);border-radius:var(--r-2);
   background:var(--well);overflow:hidden}
 .rcd-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* a replay is loading: the frozen live frame dims, the clip waits unseen */
-.rcd-live{transition:opacity var(--d-1) var(--e-state)}
-.rcd.is-wait .rcd-live{opacity:.55}
-.rcd.is-wait .rcd-rep{opacity:0}
+/* a replay is loading: the frame on screen dims and says so; the clip waits unseen */
+.rcd-stage video{transition:opacity var(--d-1) var(--e-state)}
+/* both cues hold back 180ms so a clip already in memory never flashes them */
+.rcd.is-wait .rcd-stage video{opacity:.5;transition-delay:180ms}
+.rcd.is-wait .rcd-live:not([hidden]) ~ .rcd-rep{opacity:0}
 .rcd.is-wait .rcd-stage{cursor:progress}
+.rcd-stage::after{content:attr(data-wait);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  padding:8px 14px;border-radius:var(--r-pill);background:var(--scrim);border:1px solid var(--line-2);
+  font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;
+  color:var(--tx);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--d-1) var(--e-state)}
+.rcd.is-wait .rcd-stage::after{opacity:1;transition-delay:180ms}
 .rcd-cap{margin:var(--s4) 0 0 calc(var(--rcd-win) - var(--rcd-lap));max-width:72ch;font-size:var(--t-sm);line-height:1.6;color:var(--tx-2d)}
 
 .rcd-note{margin-top:var(--s3);font-size:var(--t-xs);line-height:1.55;color:var(--tx-3)}
