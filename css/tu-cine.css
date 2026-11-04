@@ -33,7 +33,7 @@
 :root{
   --cine-zoom: 1.5;                            /* mirrors html{zoom} */
   --vph: calc(100vh / var(--cine-zoom));       /* one real viewport, layout px */
-  --cine-steps: 4.6;                           /* scroll length, in viewports */
+  --cine-steps: 3.0;                           /* scroll length, in viewports */
 }
 
 /* ============================================================
@@ -93,6 +93,19 @@ main:has(> .cine){display:flow-root}
   will-change:transform,opacity;
 }
 
+/* sits on the same top line as the fixed quicknav (left) and language switch
+   (right), centred between them; margin-auto centring rather than a
+   translateX, because the entrance animation owns transform */
+.cine-brand{
+  position:absolute;top:22px;left:0;right:0;width:max-content;margin:0 auto;
+  display:flex;align-items:center;gap:12px;white-space:nowrap;
+  font-family:var(--f-display);font-weight:700;font-stretch:var(--wd-display);
+  font-size:20px;line-height:1;letter-spacing:.02em;
+  text-transform:uppercase;color:var(--brand);
+}
+.cine-brand b{color:var(--tx);font-weight:inherit}
+.cine-brand img{display:block;height:28px;width:auto}
+
 .cine-slogan h1{
   margin:0;max-width:18ch;
   font-size:clamp(2.3rem,5.2vw,5.2rem);
@@ -105,13 +118,17 @@ main:has(> .cine){display:flow-root}
    page. This is the hero exemption to the 2% magenta rule, and the only place
    on the home page where magenta touches display type at this size. */
 .cine-l2{color:var(--brand)}
-.cine-slogan-foot{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap;
-  justify-content:center}
+.cine-slogan-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cine-cta{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap;justify-content:center}
 .cine-scrollhint{
-  display:inline-flex;align-items:center;gap:10px;
+  display:inline-flex;align-items:center;gap:10px;padding-block:6px;
+  border-bottom:1px solid transparent;
+  transition:color var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state);
   font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl-w);
-  text-transform:uppercase;color:var(--tx-4);
+  text-transform:uppercase;color:var(--tx-3);
 }
+.cine-scrollhint:hover{color:var(--tx);border-color:var(--line-3)}
+.cine-scrollhint:focus-visible{outline:2px solid var(--brand);outline-offset:4px;border-radius:2px}
 .cine-scrollhint svg{animation:cineHint 2.2s var(--e-state) infinite}
 @keyframes cineHint{0%,72%,100%{transform:translateY(0);opacity:.5}36%{transform:translateY(4px);opacity:1}}
 
@@ -134,12 +151,16 @@ main:has(> .cine){display:flow-root}
   to  {opacity:1;transform:none;filter:blur(0)}
 }
 @keyframes cineRise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+.cine-slogan .cine-brand,
 .cine-slogan .cine-l1,
 .cine-slogan .cine-l2,
 .cine-slogan .cine-slogan-foot{opacity:0}
+body.is-ready .cine-slogan .cine-brand{animation:cineRise 900ms var(--e-enter) 0ms both}
 body.is-ready .cine-slogan .cine-l1{animation:cineHeadline 2400ms var(--e-enter) 150ms both}
 body.is-ready .cine-slogan .cine-l2{animation:cineWipe 1800ms var(--e-enter) 1450ms both}
-body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-enter) 3100ms both}
+/* the call arrives as the second line finishes its wipe, not after the whole
+   title card has played — it is the one thing on this screen to act on */
+body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-enter) 2100ms both}
 @keyframes cineWipe{
   from{opacity:0;clip-path:inset(0 100% 0 0)}
   to  {opacity:1;clip-path:inset(0 0% 0 0)}
@@ -204,15 +225,18 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
 /* --- the body: archetype E, 7/5 -------------------------------------------- */
 .cine-body{
   min-height:0;
-  display:grid;grid-template-columns:minmax(0,8fr) minmax(0,5fr);
-  gap:clamp(20px,2.6vw,44px);align-items:center;
+  display:grid;grid-template-columns:minmax(0,10fr) minmax(0,5fr);
+  gap:clamp(20px,2.4vw,40px);align-items:center;
 }
 
 /* the screen — one real frame of the product, held in a hairline bezel */
 .cine-screen{min-width:0;will-change:transform,opacity}
+/* an even bezel — the same inset on all four sides, the inner radius following
+   the outer one so the corners stay concentric */
 .cine-screen-frame{
-  position:relative;border:1px solid var(--line-2);border-radius:var(--r-2);
-  background:var(--well);overflow:hidden;
+  position:relative;padding:6px;border:1px solid var(--line-3);border-radius:var(--r-2);
+  background:var(--elev-2);overflow:hidden;
+  width:fit-content;max-width:100%;margin-inline:auto;
 }
 .cine-screen-bar{
   display:flex;align-items:center;gap:var(--s4);
@@ -225,8 +249,9 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
 /* On a short viewport the frame's own aspect ratio would push the metric rail
    off the plate, so the shot is allowed to crop rather than the page to break */
 .cine-screen-frame img{
-  display:block;width:100%;height:auto;aspect-ratio:1800/1013;object-fit:contain;
-  max-height:calc(.46 * var(--vph));
+  display:block;width:auto;max-width:100%;height:auto;aspect-ratio:1800/1013;object-fit:contain;
+  max-height:calc(.56 * var(--vph));
+  border-radius:calc(var(--r-2) - 6px);box-shadow:0 0 0 1px var(--line-2);
 }
 .cine-screen-foot{
   display:flex;gap:var(--s2) var(--s5);flex-wrap:wrap;margin-top:var(--s3);
@@ -240,7 +265,7 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
   will-change:transform,opacity}
 .cine-wordmark{
   font-family:var(--f-display);font-weight:600;font-stretch:var(--wd-display);
-  font-size:clamp(2.2rem,4.4vw,4.4rem);line-height:.86;letter-spacing:-.05em;
+  font-size:clamp(2.2rem,4.4vw,4.4rem);line-height:.88;letter-spacing:-.04em;
   color:var(--tx);text-transform:uppercase;
 }
 .cine-wordmark span{display:block;color:var(--brand)}
@@ -287,17 +312,17 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
    held all the way to 820: collapsing to one column is what makes the page too
    tall for its own plate, not what saves it. */
 @media (max-width:1040px){
-  :root{--cine-steps:4.2}
+  :root{--cine-steps:2.8}
   .cine-body{gap:var(--s4)}
   .cine-copy{gap:var(--s3)}
   .cine-copy .lead{display:none}   /* the claim survives, the paragraph does not */
   .cine-wordmark{font-size:clamp(1.6rem,4.2vw,2.6rem)}
   .cine-copy h2{font-size:clamp(1.05rem,1.7vw,1.4rem)}
   .cine-screen-foot{display:none}
-  .cine-screen-frame img{max-height:calc(.40 * var(--vph))}
+  .cine-screen-frame img{max-height:calc(.46 * var(--vph))}
 }
 @media (max-width:820px){
-  :root{--cine-steps:3.8}
+  :root{--cine-steps:2.6}
   /* The chrome above the fold is two stacked bars here, not one, and the track
      is pulled up under both of them, so the slogan centres below the header
      rather than behind it. */
@@ -310,7 +335,7 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
   .cine-body{grid-template-columns:minmax(0,1fr);align-content:center}
   .cine-copy{gap:var(--s2)}
   .cine-copy h2{font-size:clamp(1rem,1.6vw,1.25rem)}
-  .cine-screen-frame img{max-height:calc(.28 * var(--vph))}
+  .cine-screen-frame img{max-height:calc(.32 * var(--vph))}
   .cine-rail{grid-template-columns:repeat(2,1fr)}
   .cine-mi + .cine-mi{padding-left:0}
   .cine-mi + .cine-mi::before{display:none}
@@ -340,6 +365,10 @@ body.is-ready .cine-slogan .cine-slogan-foot{animation:cineRise 900ms var(--e-en
 .cine:not(.is-live) .cine-bg{display:none}
 .cine:not(.is-live) .cine-slogan{position:static;opacity:1;transform:none;visibility:visible;
   margin-inline:auto;padding-block:var(--s7) 0}
+.cine:not(.is-live) .cine-brand{position:static;margin-bottom:var(--s5)}
+/* no room beside the quicknav and language pills on a phone */
+@media (max-width:620px){.cine-brand{display:none}}
+.cine:not(.is-live) .cine-slogan .cine-brand,
 .cine:not(.is-live) .cine-slogan .cine-l1,
 .cine:not(.is-live) .cine-slogan .cine-l2,
 .cine:not(.is-live) .cine-slogan .cine-slogan-foot{opacity:1;animation:none}

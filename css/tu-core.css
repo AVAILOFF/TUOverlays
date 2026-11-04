@@ -28,17 +28,17 @@
 
 :root{
   /* ---- surface: a four-step contrast ladder, no blur, no shadow ---------- */
-  --bg:        #02102c;   /* L0  canvas — ~85% of every viewport            */
-  --well:      #010b1f;   /* L-1 recessed well: media frames, insets        */
-  --elev-1:    #061a3c;   /* L1  card / panel                               */
-  --elev-2:    #0a2450;   /* L2  hover, active row, ghost numeral           */
-  --elev-3:    #0e2d62;   /* L3  modal, popover                             */
-  --scrim:     rgba(1,7,20,.88);
+  --bg:        #041128;   /* L0  canvas — ~85% of every viewport            */
+  --well:      #020b1c;   /* L-1 recessed well: media frames, insets        */
+  --elev-1:    #0a1b37;   /* L1  card / panel                               */
+  --elev-2:    #0f254a;   /* L2  hover, active row, ghost numeral           */
+  --elev-3:    #142e5b;   /* L3  modal, popover                             */
+  --scrim:     rgba(2,7,18,.88);
 
   /* aliases kept so pages not yet migrated keep resolving */
-  --bg-sub:    #010b1f;
-  --glass:     rgba(8,30,68,.58);
-  --glass-2:   rgba(6,24,56,.78);
+  --bg-sub:    #020b1c;
+  --glass:     rgba(12,31,63,.58);
+  --glass-2:   rgba(9,25,52,.78);
 
   /* ---- hairlines: the only way an edge is ever drawn --------------------- */
   --line:      rgba(124,162,224,.12);
@@ -50,8 +50,8 @@
   --tx:        #e4ecfb;
   --tx-2:      #9fb2d4;
   --tx-2d:     #8ea3c8;
-  --tx-3:      #7186ad;   /* 5.1:1 on canvas — secondary UI text          */
-  --tx-4:      #5f76a0;   /* 4.1:1 on canvas — micro labels and indices    */
+  --tx-3:      #8196bd;   /* 6.0:1 on canvas — secondary UI text          */
+  --tx-4:      #7086b0;   /* 5.0:1 on canvas, 4.6:1 on cards — micro labels */
 
   /* ---- brand: FIXED. Not a starting point, a constraint. ----------------- */
   --brand:     #ff0066;
@@ -60,16 +60,21 @@
   --brand-dim: rgba(255,0,102,.10);
 
   /* ---- data voice: live telemetry only, never decoration ----------------- */
-  --data:      #3fd8e0;
-  --data-dim:  rgba(63,216,224,.16);
-  --good:      #35e08d;
-  --warn:      #ffb02e;
-  --cls-1:#ff0066; --cls-2:#3fd8e0; --cls-3:#8b7dff; --cls-4:#ffb02e; --cls-5:#35e08d;
+  --data:      #6cd7e3;
+  --data-dim:  rgba(108,215,227,.16);
+  --good:      #63d99b;
+  --warn:      #f2b95a;
+  --cls-1:#ff0066; --cls-2:#6cd7e3; --cls-3:#b6aaff; --cls-4:#f2b95a; --cls-5:#63d99b;
+  /* widget families — one hue per family, all >=5:1 on --bg. Magenta stays out:
+     it is the action colour. A family colour is always paired with its text label. */
+  --k-race:#b6aaff; --k-safety:#f2b95a; --k-strategy:#63d99b; --k-car:#6cd7e3;
+  --k-track:#f69370; --k-weather:#85bcf5; --k-stream:#bfd869;
 
   /* ---- families: Windows-first technical stack, deliberately not Inter --- */
   --f-display:'Bahnschrift','DIN Alternate','DIN Condensed','Avenir Next Condensed','Segoe UI Variable Display','Franklin Gothic Medium',system-ui,sans-serif;
   --f-text:'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   --f-mono:'Cascadia Mono','Cascadia Code','SFMono-Regular','SF Mono','JetBrains Mono',Consolas,'Liberation Mono',monospace;
+  --f-body:var(--f-text);   /* alias: three rules referenced this name but it was never defined */
 
   /* width axis — the signature move of the whole system */
   --wd-display: 78%;   /* h1 / h2 / display numerals */
@@ -82,7 +87,8 @@
   --t-lead:  clamp(.98rem, .95vw, 1.12rem);
   --t-body:  1rem;
   --t-xs:    .8rem;      /* 12.8px — dense meta / captions */
-  --t-sm:    .875rem;
+  --t-sm:    .875rem;    /* 14px — secondary UI, card copy */
+  --t-md:    .95rem;     /* 15.2px — FAQ answers, quotes   */
   --t-num:   clamp(1.6rem, 2vw, 2.3rem);
   --t-lbl:   .6875rem;   /* 11px — the mono label */
   --t-lbl-s: .625rem;    /* 10px — the micro label */
@@ -129,7 +135,7 @@
    base
    ============================================================ */
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;zoom:1.5;scroll-behavior:smooth;scroll-padding-top:96px}
+html{-webkit-text-size-adjust:100%;color-scheme:dark;scrollbar-color:var(--line-3) var(--bg);accent-color:var(--brand);caret-color:var(--brand-hi);zoom:1.5;scroll-behavior:smooth;scroll-padding-top:96px}
 html,body{max-width:100%;overflow-x:clip}
 body{
   margin:0;
@@ -140,7 +146,7 @@ body{
   line-height:var(--lh-body);
   letter-spacing:.005em;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  text-rendering:optimizeLegibility;font-kerning:normal;font-optical-sizing:auto;
 }
 img,svg{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -173,7 +179,7 @@ h1,h2,h3,h4{
 h1{font-size:var(--t-hero);font-stretch:var(--wd-display);letter-spacing:var(--tr-hero);line-height:var(--lh-tight)}
 h2{font-size:var(--t-h2);font-stretch:var(--wd-display);letter-spacing:var(--tr-h2)}
 h3{font-size:var(--t-h3);line-height:1.3}
-p{margin:0}
+p{margin:0;text-wrap:pretty}
 
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"ss01" 1}
 .num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
@@ -225,11 +231,11 @@ p{margin:0}
    buttons — one chromatic action, pill, no lift, no shadow
    ============================================================ */
 .btn{
-  --bh:46px;
+  --bh:36px;
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  height:var(--bh);padding:0 22px;border-radius:var(--r-pill);
-  font-family:var(--f-display);font-stretch:var(--wd-title);font-weight:600;font-size:15px;
-  letter-spacing:.006em;white-space:nowrap;position:relative;
+  height:var(--bh);padding:0 16px;border-radius:6px;
+  font-family:var(--f-body);font-weight:500;font-size:var(--t-sm);line-height:1;
+  letter-spacing:0;white-space:nowrap;position:relative;
   transition:background var(--d-1) var(--e-state),
              border-color var(--d-1) var(--e-state),
              color var(--d-1) var(--e-state);
@@ -239,7 +245,7 @@ p{margin:0}
 
 /* primary = the sole chromatic action on the page */
 .btn-primary{background:var(--brand-lo);color:#fff;border:1px solid var(--brand-lo)}
-.btn-primary:hover{background:var(--brand);border-color:var(--brand)}
+.btn-primary:hover{background:#e8005f;border-color:#e8005f}
 .btn-primary:active{background:var(--brand-lo);border-color:var(--brand-lo)}
 /* the arrow is the whole hover interaction: 4px, 200ms, mechanical */
 .btn-arrow{display:inline-flex;transition:transform var(--d-2) var(--e-state)}
@@ -248,8 +254,8 @@ p{margin:0}
 .btn-ghost{color:var(--tx);border:1px solid var(--line-2);background:transparent}
 .btn-ghost:hover{border-color:var(--line-3);background:var(--elev-1)}
 
-.btn-lg{--bh:54px;padding:0 28px;font-size:16px}
-.btn-sm{--bh:36px;padding:0 16px;font-size:13.5px}
+.btn-lg{--bh:40px;padding:0 20px;border-radius:8px}
+.btn-sm{--bh:32px;padding:0 12px;font-size:var(--t-xs)}
 
 /* "SOON…" swap — label dims out, tip fades in. Opacity only. */
 .btn[data-tip]{overflow:hidden}
@@ -327,7 +333,7 @@ p{margin:0}
   transition:background var(--d-2) var(--e-state),border-color var(--d-2) var(--e-state);
 }
 .hdr.stuck{
-  background:rgba(2,14,38,.72);
+  background:rgba(4,15,35,.72);
   border-bottom-color:var(--line);
   backdrop-filter:blur(20px) saturate(1.35);
   -webkit-backdrop-filter:blur(20px) saturate(1.35);
@@ -342,7 +348,7 @@ p{margin:0}
 /* nav links: no pill, no fill. A hairline grows in from the left. */
 .nav{display:flex;gap:var(--s5);margin-left:var(--s4)}
 .nav a{
-  position:relative;padding:6px 0;font-size:14.5px;color:var(--tx-2);
+  position:relative;padding:6px 0;font-size:var(--t-sm);color:var(--tx-2);
   transition:color var(--d-1) var(--e-state);
 }
 .nav a::after{
@@ -354,7 +360,7 @@ p{margin:0}
 .nav a:hover::after{transform:scaleX(1)}
 
 .hdr-cta{margin-left:auto;display:flex;align-items:center;gap:var(--s3)}
-.hdr-cta .btn{--bh:40px;font-size:14px;padding:0 18px}
+.hdr-cta .btn{--bh:36px}
 
 .lang-switch{display:flex;align-items:center;gap:2px;margin-left:var(--s4);padding:3px;
   border:1px solid var(--line-2);border-radius:var(--r-pill);flex:none}
@@ -364,7 +370,7 @@ p{margin:0}
 .lang-switch a.on{color:var(--tx);background:var(--elev-2)}
 
 .m-lang{display:flex;gap:10px;padding:4px var(--pad) 18px}
-.m-lang a{padding:8px 14px;border-radius:var(--r-pill);border:1px solid var(--line-2);
+.m-lang a{padding:8px 14px;border-radius:6px;border:1px solid var(--line-2);
   font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.06em;color:var(--tx-3)}
 .m-lang a.on{color:var(--tx);border-color:var(--line-3);background:var(--elev-2)}
 
@@ -379,11 +385,11 @@ p{margin:0}
 .burger[aria-expanded="true"] span::before{transform:translateY(3.75px) rotate(45deg)}
 .burger[aria-expanded="true"] span::after{transform:translateY(-3.75px) rotate(-45deg)}
 
-.mnav{display:none;border-top:1px solid var(--line);background:rgba(2,14,38,.94);
+.mnav{display:none;border-top:1px solid var(--line);background:rgba(4,15,35,.94);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .mnav.open{display:block}
 .mnav ul{list-style:none;margin:0;padding:var(--s2) var(--pad) var(--s4)}
-.mnav ul a{display:block;padding:13px 0;border-bottom:1px solid var(--line);color:var(--tx-2);font-size:15px;
+.mnav ul a{display:block;padding:13px 0;border-bottom:1px solid var(--line);color:var(--tx-2);font-size:var(--t-md);
   transition:color var(--d-1) var(--e-state)}
 .mnav ul a:hover{color:var(--tx)}
 .mnav ul li:last-child a{border-bottom:0}
@@ -401,9 +407,9 @@ p{margin:0}
 .ftr{border-top:1px solid var(--line);margin-top:var(--sect);padding-block:var(--s7) var(--s6)}
 .ftr-in{display:flex;flex-wrap:wrap;gap:var(--s6) var(--s7);align-items:flex-start}
 .ftr-links{display:flex;gap:var(--s6);flex-wrap:wrap;margin-left:auto}
-.ftr-links a{font-size:13.5px;color:var(--tx-3);transition:color var(--d-1) var(--e-state)}
+.ftr-links a{font-size:var(--t-sm);color:var(--tx-3);transition:color var(--d-1) var(--e-state)}
 .ftr-links a:hover{color:var(--tx)}
-.disc{width:100%;color:var(--tx-3);font-size:12.5px;line-height:1.65;max-width:74ch;
+.disc{width:100%;color:var(--tx-3);font-size:var(--t-xs);line-height:1.65;max-width:74ch;
   padding-top:var(--s5);margin-top:var(--s1);border-top:1px solid var(--line)}
 .disc b{color:var(--tx-3);font-weight:500}
 
@@ -413,10 +419,10 @@ p{margin:0}
 .support-fab,.discord-fab{
   position:fixed;bottom:22px;z-index:50;
   display:inline-flex;align-items:center;gap:9px;
-  padding:12px 20px;border-radius:var(--r-pill);
+  height:36px;padding:0 16px;border-radius:6px;
   background:var(--elev-1);border:1px solid var(--line-2);
-  color:var(--tx);font-family:var(--f-display);font-stretch:var(--wd-title);
-  font-weight:600;font-size:14px;letter-spacing:.004em;
+  color:var(--tx);font-family:var(--f-body);
+  font-weight:500;font-size:14px;line-height:1;
   box-shadow:var(--shadow-overlay);
   opacity:0;transform:translateY(12px);pointer-events:none;
   transition:opacity var(--d-3) var(--e-enter),transform var(--d-3) var(--e-enter),
@@ -500,10 +506,10 @@ p{margin:0}
   letter-spacing:var(--tr-lbl);text-transform:uppercase;color:var(--brand-hi);background:var(--brand-dim);
   border:1px solid rgba(255,0,102,.3);padding:5px 12px;border-radius:var(--r-pill);margin-bottom:var(--s4)}
 .promo-box h3{font-size:clamp(1.15rem,1.5vw,1.4rem);margin-bottom:10px}
-.promo-lead{color:var(--tx-2);font-size:14px;line-height:1.6;margin-bottom:var(--s5)}
+.promo-lead{color:var(--tx-2);font-size:var(--t-sm);line-height:1.6;margin-bottom:var(--s5)}
 .promo-lead b{color:var(--tx)}
 .promo-dl{width:100%;justify-content:center}
-.promo-note{margin-top:var(--s4);color:var(--tx-2d);font-size:11.5px;line-height:1.5}
+.promo-note{margin-top:var(--s4);color:var(--tx-2d);font-size:var(--t-xs);line-height:1.55}
 
 /* ============================================================
    motion — one reveal, one stagger unit, nothing else
@@ -522,3 +528,35 @@ p{margin:0}
   }
   [data-reveal]{opacity:1;transform:none}
 }
+
+/* ============================================================
+   DOWNLOAD BUTTONS — every download on the site (Origin UI «button-04»)
+   ============================================================ */
+/* Origin UI «button-04» — leading icon at 60 %, no trailing
+   arrow, 6 px corners, medium weight, hairline shadow. Colours stay the
+   site's own: a brand fill for the primary, the ghost outline for the rest. */
+.obtn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 16px;border-radius:6px;
+  font-family:var(--f-body);font-size:var(--t-sm);font-weight:500;line-height:1;
+  white-space:nowrap;cursor:pointer;text-decoration:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.18);
+  transition:background-color var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state),color var(--d-1) var(--e-state);
+}
+.obtn svg{flex:none;margin-inline:-4px 8px;opacity:.6}
+/* Segoe's ascent (15) outweighs its descent (4) at 14px, and «Скачать» has no
+   descenders, so the box-centred label reads ~2px low; lift the ink to the
+   optical middle between cap height and x-height */
+.obtn span{transform:translateY(-.1em)}
+.obtn:focus-visible{outline:2px solid var(--brand-hi);outline-offset:2px}
+/* a step brighter than --brand-lo, still short of --brand so white text keeps
+   AA (≈4.6:1); full --brand is the hover */
+.obtn-primary{--ob:#e4005b;background:var(--ob);color:#fff;border:1px solid var(--ob)}
+.obtn-primary:hover{background:#e8005f;border-color:#e8005f}
+.obtn-primary:active{background:var(--brand-lo);border-color:var(--brand-lo)}
+.obtn-ghost{background:transparent;color:var(--tx);border:1px solid var(--line-2)}
+.obtn-ghost:hover{background:var(--elev-1);border-color:var(--line-3)}
+/* Origin's lg: a touch taller and wider for the one call in the title card */
+.obtn-lg{height:40px;padding:0 20px;border-radius:8px}
+/* the download page holds its buttons until the GitHub release resolves */
+.obtn.is-loading{opacity:.55;pointer-events:none}

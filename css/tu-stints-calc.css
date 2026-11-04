@@ -135,7 +135,7 @@
 .calc-grid td.r { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 .calc-grid td.is-in { background: rgba(124, 162, 224, .05); }
 .calc-grid td.is-err { color: var(--bad); font-family: var(--f-mono); font-size: 12px; }
-.calc-grid td.is-sel { outline: 2px solid var(--data); outline-offset: -2px; background: rgba(63, 216, 224, .09); }
+.calc-grid td.is-sel { outline: 2px solid var(--data); outline-offset: -2px; background: rgba(108,215,227, .09); }
 
 /* A cell that replaces its column's formula with its own. */
 .calc-grid td.is-ovr::after {

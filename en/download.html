@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Download TU Overlays — installer and portable build for Windows</title>
 <meta name="description" content="Download TU Overlays straight from this site: exe installer or portable build for Windows 10/11 x64. Version archive and file checksums included.">
-<meta name="theme-color" content="#02102c">
+<meta name="theme-color" content="#041128">
 <script src="/scripts/analytics.js" defer></script>
 <link rel="canonical" href="https://tuoverlays.xyz/en/download">
 <link rel="alternate" hreflang="ru" href="https://tuoverlays.xyz/download">
@@ -73,7 +73,9 @@
 
 /* ---------- info strip ---------- */
 .note{display:flex;gap:12px;padding:16px 18px;align-items:flex-start}
-.note svg{flex:none;margin-top:2px;color:var(--data)}
+.note svg{flex:none;margin-top:2px;color:var(--warn)}
+.dlcard.is-zip .ic{color:var(--k-race);border-color:rgba(169,159,255,.3);background:rgba(169,159,255,.08)}
+.dlcard:not(.is-zip) .ic{border-color:rgba(108,215,227,.3);background:rgba(108,215,227,.08)}
 .note p{font-size:var(--t-sm);color:var(--tx-2d);line-height:1.55}
 .note b{color:var(--tx-2);font-weight:600}
 
@@ -162,10 +164,7 @@
         <h3>Installer (.exe)</h3>
       </div>
       <p class="desc">Regular install with shortcuts and auto-update. Best for most users.</p>
-      <a class="btn btn-primary btn-lg is-loading" id="exeBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-exe">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Download installer
-      </a>
+      <a class="obtn obtn-primary obtn-lg is-loading" id="exeBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-exe"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><span>Download installer</span></a>
       <div class="filemeta">
         <span>Version <b class="mono" id="exeVer">—</b></span>
         <span>Size <b class="mono" id="exeSize">—</b></span>
@@ -177,7 +176,7 @@
     </div>
 
     <!-- Portable -->
-    <div class="panel brk dlcard">
+    <div class="panel brk dlcard is-zip">
       <div class="hd">
         <span class="ic">
           <svg width="19" height="19" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -185,10 +184,7 @@
         <h3>Portable (.zip)</h3>
       </div>
       <p class="desc">Unzip and run the exe. Doesn't touch the registry — fine to run off a USB stick.</p>
-      <a class="btn btn-ghost btn-lg is-loading" id="zipBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-zip">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Download portable
-      </a>
+      <a class="obtn obtn-ghost obtn-lg is-loading" id="zipBtn" href="https://github.com/AVAILOFF/TUOverlays/releases/latest" download data-goatcounter-click="download-zip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><span>Download portable</span></a>
       <div class="filemeta">
         <span>Version <b class="mono" id="zipVer">—</b></span>
         <span>Size <b class="mono" id="zipSize">—</b></span>

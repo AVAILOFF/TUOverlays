@@ -119,16 +119,20 @@ const enter = (el, t, dx, dy, scale) => {
    There is no act 3: the info page (act 2) holds full-bleed, then contentOut
    fades it and plateExit slides the plate away in the same breath, releasing
    the pin straight into 01 / Features underneath — nothing is ever parked
-   behind the plate for it to reveal. */
+   behind the plate for it to reveal.
+
+   The track is 3 viewports now (was 4.6): every beat is the same, only the
+   slogan's clearing and the plate's climb spend less scroll, and act 2 keeps
+   a readable hold (0.70–0.84) before it leaves. */
 const T = {
-  sloganOut : [0.00, 0.16],
-  plateRise : [0.03, 0.26],
-  plateFull : [0.24, 0.38],
-  pageIn    : [0.32, 0.42],   /* the container, so no hairline leaks in early */
-  screenIn  : [0.36, 0.54],
-  copyIn    : [0.40, 0.58],
-  railIn    : [0.48, 0.66],   /* + 0.02 stagger per tile */
-  count     : [0.48, 0.68],
+  sloganOut : [0.00, 0.18],
+  plateRise : [0.03, 0.30],
+  plateFull : [0.26, 0.42],
+  pageIn    : [0.36, 0.46],   /* the container, so no hairline leaks in early */
+  screenIn  : [0.40, 0.58],
+  copyIn    : [0.44, 0.62],
+  railIn    : [0.50, 0.68],   /* + 0.02 stagger per tile */
+  count     : [0.50, 0.70],
   contentOut: [0.84, 0.94],
   plateExit : [0.88, 1.00],
 };
@@ -138,6 +142,9 @@ const T = {
 const INSET = { w: 88, h: 78, r: 18 };   /* % of stage, % of stage, px */
 
 let counted = -1;
+/* the act on screen, published on .cine[data-act] with a cine:act event —
+   js/tu-home.js brings the header in at act 2, once the plate is open */
+let act = -1;
 
 const render = p => {
   /* --- act 0: the slogan clears the frame ------------------------------- */
@@ -190,6 +197,13 @@ const render = p => {
       el.textContent = (to * c).toFixed(dec);
     });
   }
+
+  const a = p < T.plateRise[0] + .02 ? 0 : p < T.plateFull[1] ? 1 : p < T.contentOut[0] ? 2 : 3;
+  if (a !== act) {
+    act = a;
+    track.dataset.act = String(a);
+    track.dispatchEvent(new CustomEvent('cine:act', { detail: a }));
+  }
 };
 
 /* ---------- the scrubber ----------------------------------------------------
@@ -220,11 +234,18 @@ addEventListener('resize', () => { measure(); request(); }, { passive: true });
    track, so remeasure rather than cache once */
 if (window.ResizeObserver) {
   const ro = new ResizeObserver(() => { measure(); request(); });
-  ['.hdr'].forEach(sel => {
-    const el = document.querySelector(sel);
-    if (el) ro.observe(el);
-  });
+  const hdr = document.querySelector('.hdr');
+  if (hdr) ro.observe(hdr);
 }
+
+/* «Листайте» is a link to #features; a plain hash jump would land on the
+   section's top edge mid-release, so it scrolls to the end of the track */
+const hint = $('.cine-scrollhint');
+if (hint) hint.addEventListener('click', e => {
+  e.preventDefault();
+  const r = track.getBoundingClientRect();
+  scrollTo({ top: scrollY + r.bottom - vh * 0.08, behavior: 'smooth' });
+});
 
 /* a switch to reduced motion mid-session has to give the inline styles back,
    or the static layout inherits a half-scrubbed frame */

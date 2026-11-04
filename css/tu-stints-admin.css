@@ -8,23 +8,23 @@
 */
 
 :root {
-  --bg: #02102c;
-  --well: #010b1f;
-  --elev-1: #061a3c;
-  --elev-2: #0a2450;
+  --bg: #041128;
+  --well: #020b1c;
+  --elev-1: #0a1b37;
+  --elev-2: #0f254a;
   --line: rgba(124, 162, 224, .12);
   --line-2: rgba(124, 162, 224, .22);
   --line-3: rgba(124, 162, 224, .38);
   --tx: #e4ecfb;
   --tx-2: #9fb2d4;
-  --tx-3: #7186ad;
-  --tx-4: #5f76a0;
+  --tx-3: #8196bd;
+  --tx-4: #7086b0;
   --brand: #ff0066;
   --brand-lo: #c8004f;
   --brand-hi: #ff5f96;
-  --data: #3fd8e0;
-  --good: #35e08d;
-  --warn: #ffb02e;
+  --data: #6cd7e3;
+  --good: #63d99b;
+  --warn: #f2b95a;
   --bad: #ff5577;
 
   --f-display: 'Bahnschrift', 'DIN Alternate', 'DIN Condensed', 'Avenir Next Condensed', 'Segoe UI Variable Display', 'Franklin Gothic Medium', system-ui, sans-serif;
@@ -102,14 +102,14 @@ textarea { min-height: 72px; resize: vertical; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 38px;
+  height: 36px;
   padding: 0 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid var(--line-2);
   background: transparent;
   color: var(--tx);
   font-family: var(--f-text);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
@@ -335,11 +335,11 @@ textarea { min-height: 72px; resize: vertical; }
 }
 .key .name { font-family: var(--f-display); font-stretch: 92%; font-weight: 600; font-size: 14.5px; }
 .key .role { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .17em; text-transform: uppercase; color: var(--tx-3); border: 1px solid var(--line-2); border-radius: 999px; padding: 2px 8px; }
-.key .role.is-owner { color: var(--brand-hi); border-color: rgba(255, 0, 102, .35); }
+.key .role.is-owner { color: var(--brand-hi); border-color: rgba(255,0,102, .35); }
 .key .when { font-family: var(--f-mono); font-size: 11px; color: var(--tx-4); }
 .key .grow { flex: 1; }
 
-.issued { border: 1px solid var(--brand); border-radius: 10px; padding: 16px; margin-top: 14px; background: rgba(255, 0, 102, .06); }
+.issued { border: 1px solid var(--brand); border-radius: 10px; padding: 16px; margin-top: 14px; background: rgba(255,0,102, .06); }
 .issued .lbl { color: var(--brand-hi); }
 .issued input { font-family: var(--f-mono); font-size: 12.5px; }
 

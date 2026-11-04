@@ -65,35 +65,36 @@ const pad2 = n => String(n).padStart(2, '0');
   }, 2400);
 })();
 
-/* ---------- sticky header: transparent over the hero, frosted after ---------- */
-(() => {
-  const hdr = $('#hdr');
-  if (!hdr) return;
-  const onScroll = () => hdr.classList.toggle('stuck', scrollY > 14);
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-})();
-
-/* ---------- top bar (ribbon + header): stays hidden over the hero,
-   fades in once block 01 (#features) starts entering the viewport ---------- */
+/* ---------- top bar (the header): hidden over the title card, in from act 2
+   ----------------------------------------------------------------------------
+   js/tu-cine.js publishes the act on .cine[data-act]. The header arrives once
+   the plate is open (act 2) and stays transparent over it — it frosts only
+   when 01 (#features) comes up. Without a live scrubber (reduced motion, no
+   pin) the old rule holds: everything keys off #features. */
 (() => {
   const bar = $('#topBar');
+  const hdr = $('#hdr');
   const feat = $('#features');
+  const cine = $('.cine');
   const heroLang = $('#heroLang');
   const heroNav = $('#heroQuicknav');
   if (!bar || !feat) return;
-  const onScroll = () => {
-    const show = feat.getBoundingClientRect().top <= innerHeight * 0.85;
+  const sync = () => {
+    const near = feat.getBoundingClientRect().top <= innerHeight * 0.85;
+    const live = cine && cine.classList.contains('is-live');
+    const show = near || (live && Number(cine.dataset.act) >= 2);
     bar.classList.toggle('show', show);
+    if (hdr) hdr.classList.toggle('stuck', live ? near : scrollY > 14);
     if (heroLang) heroLang.classList.toggle('is-hidden', show);
     if (heroNav) heroNav.classList.toggle('is-hidden', show);
   };
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  addEventListener('scroll', sync, { passive: true });
+  if (cine) cine.addEventListener('cine:act', sync);
+  sync();
 
   // .rc-rail (Race Control's sticky log) clears the bar's real height via
-  // --topbar-h — the ribbon inside it is dismissable, so that height isn't
-  // constant and has to be tracked, not hard-coded.
+  // --topbar-h — the header frosts and so changes height, so it is tracked,
+  // not hard-coded.
   const setH = () => document.documentElement.style.setProperty('--topbar-h', bar.offsetHeight + 'px');
   setH();
   if (window.ResizeObserver) new ResizeObserver(setH).observe(bar);
@@ -139,6 +140,61 @@ const pad2 = n => String(n).padStart(2, '0');
   all.forEach(el => io.observe(el));
 })();
 
+/* ---------- widget gallery (01): a tile puts its widget on the stage -------
+   Each tile carries its own copy in data-*, so this stays locale-free. */
+(() => {
+  const root = $('#wg');
+  if (!root) return;
+  const tiles = $$('.wg-tile[data-i]', root);
+  const shot = $('#wgShot'), img = $('#wgImg'), bg = $('#wgBg');
+  if (!tiles.length || !shot || !img) return;
+  let cur = 0, timer = 0;
+
+  /* warm the cache so a swap never flashes an empty stage */
+  tiles.forEach(t => { const i = new Image(); i.src = $('img', t).src; });
+
+  const show = i => {
+    if (i === cur) return;
+    cur = i;
+    const t = tiles[i], th = $('img', t), d = t.dataset;
+    tiles.forEach((x, k) => {
+      x.classList.toggle('is-on', k === i);
+      x.setAttribute('aria-pressed', String(k === i));
+    });
+    $('#wg').style.setProperty('--k', 'var(--k-' + d.fam + ')');
+    $('#wgHead').textContent = d.head;
+    $('#wgDesc').textContent = d.desc;
+    const swap = () => {
+      img.src = th.getAttribute('src');
+      /* the attributes, not .width — that is the thumbnail's rendered size */
+      img.setAttribute('width', th.getAttribute('width'));
+      img.setAttribute('height', th.getAttribute('height'));
+      img.alt = d.alt;
+      if (bg) bg.style.backgroundImage = 'url(' + d.bg + ')';
+      shot.classList.remove('is-swap');
+    };
+    if (reduced) { swap(); return; }
+    clearTimeout(timer);
+    shot.classList.add('is-swap');
+    timer = setTimeout(swap, 160);
+  };
+
+  tiles.forEach(t => t.addEventListener('click', () => show(Number(t.dataset.i))));
+  root.addEventListener('keydown', e => {
+    if (!e.target.closest('.wg-tile[data-i]')) return;
+    const k = e.key;
+    const d = k === 'ArrowRight' || k === 'ArrowDown' ? 1 : k === 'ArrowLeft' || k === 'ArrowUp' ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    const n = (cur + d + tiles.length) % tiles.length;
+    show(n);
+    tiles[n].focus();
+  });
+  /* «+16» opens the catalog it points at */
+  const more = $('.wg-more', root), cat = $('#wgCatalog');
+  if (more && cat) more.addEventListener('click', () => { cat.open = true; });
+})();
+
 /* ---------- FAQ accordion ---------- */
 $$('#faqList .qa').forEach(qa => {
   const btn = $('.qa-q', qa);
@@ -178,6 +234,208 @@ $$('#faqList .qa').forEach(qa => {
     requestAnimationFrame(update);
   }, { passive: true });
   update();
+})();
+
+/* ---------- race control: live demo ------------------------------------------
+   Race footage beside the app's popped-out Race Control window, behaving as
+   the app does: newest line first, filter chips, flags, prev/next, 5s/10s/15s replay
+   lead-ins, viewed lines dimmed, the player's own lines edged in amber. One
+   departure: a single click on a line replays it (the app wants a double
+   click, so a broadcast is never cut by accident — a visitor has no broadcast).
+
+   Two videos stand in for the sim. .rcd-live is the race as it happens
+   (loops; its first frame is session time `base`); .rcd-rep plays one
+   incident file at a time. event.clip = [file number in clips/, length,
+   second in the file where the incident happens], so a lead-in of s seconds
+   starts at max(0, that - s). One file per incident rather than one long
+   cut to seek inside: a seek far into a file needs HTTP Range, and a server
+   without it silently starts every replay at 0. Lines later than `base` land
+   in the log when the live footage reaches them; the rest are the race so far. While a replay runs, live is paused
+   and its time kept on the wall clock — a hidden muted video may be throttled
+   by the browser, so it cannot be trusted to keep counting. All copy comes
+   from TU_L.rcd and #rcdData, so the locales cannot drift. */
+(() => {
+  const root = $('#rcd'), data = $('#rcdData');
+  if (!root || !data) return;
+  const D = JSON.parse(data.textContent);
+  const T = L.rcd || {};
+  const live = $('.rcd-live', root), rep = $('.rcd-rep', root);
+  const list = $('#rcdList');
+  const nNew = $('#rcdNew'), nCount = $('#rcdCount'), nPos = $('#rcdPos');
+  const flagBtn = $('#rcdFlagged'), flagTxt = $('#rcdFlaggedTxt');
+  const STAR = $('svg', flagBtn).outerHTML;
+  const PRESETS = [5, 10, 15];
+
+  const plural = new Intl.PluralRules(document.documentElement.lang || 'en');
+  const count = (forms, n) => fmt((forms || {})[plural.select(n)] || (forms || {}).other || '{n}', { n });
+  const clk = s => { s = Math.max(0, Math.floor(s)); return (s / 3600 | 0) + ':' + pad2((s % 3600) / 60 | 0) + ':' + pad2(s % 60); };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const type = e => (T.types || {})[e.kind] || e.kind;
+  // lost-control and crash share the "Crashes" chip, as in the app's categoryOf()
+  const cat = e => e.kind === 'off-track' || e.kind === 'contact' ? e.kind : 'crash';
+  const mine = e => e.cars.some(c => c[0] === D.me);
+  const play = v => { const p = v.play(); if (p) p.catch(() => {}); };
+
+  const evs = D.events.map((e, i) => Object.assign({ id: i, live: e.t > D.base ? e.t - D.base : null }, e));
+  const past = () => new Set(evs.filter(e => e.live == null || reduced).map(e => e.id));
+  let shown = past(), seen = new Set(), flagged = new Set(), fresh = new Set();
+  const cats = { crash: true, 'off-track': true, contact: true };
+  let flaggedOnly = false, sel = null, cur = null, lastT = 0, inView = false;
+  let held = 0, heldAt = 0;   // live position + wall time when a replay began
+
+  const liveT = () => cur ? held + (performance.now() - heldAt) / 1000 : live.currentTime;
+  // newest first, the way the app sorts its log
+  const visible = () => evs.filter(e => shown.has(e.id) && cats[cat(e)] && (!flaggedOnly || flagged.has(e.id))).reverse();
+
+  const line = e => {
+    const cls = 'rcd-ln' + (mine(e) ? ' is-me' : '') + (sel === e.id ? ' is-sel' : '') +
+      (seen.has(e.id) ? ' is-seen' : '') + (fresh.has(e.id) && !reduced ? ' is-new' : '');
+    const on = flagged.has(e.id);
+    return '<div class="' + cls + '" data-id="' + e.id + '">' +
+      '<button type="button" class="rcd-go" data-s="5">' +
+        '<span class="c">' + clk(e.t) + '</span><span class="l">L' + e.lap + '</span>' +
+        '<span class="k k-' + e.kind + '">' + esc(type(e)) + '</span></button>' +
+      '<span class="rcd-cars">' + e.cars.map(c =>
+        '<span class="rcd-car' + (c[0] === D.me ? ' is-me' : '') + '">#' + c[0] + ' <span>' + esc(c[1]) + '</span></span>').join('') +
+        (e.cars.length > 1 ? '<span class="rcd-n">' + esc(count(T.carsCount, e.cars.length)) + '</span>' : '') + '</span>' +
+      (e.pts ? '<span class="rcd-pts">' + e.pts + 'x</span>' : '') +
+      '<button type="button" class="rcd-star' + (on ? ' is-on' : '') + '" data-flag aria-pressed="' + on + '" title="' +
+        esc(on ? T.unflag : T.flag) + '" aria-label="' + esc(on ? T.unflag : T.flag) + '">' + STAR + '</button>' +
+      '<span class="rcd-pre">' + PRESETS.map(s =>
+        '<button type="button" data-s="' + s + '" title="' + esc(fmt(T.replayFrom, { n: s })) + '">' + s + 's</button>').join('') + '</span>' +
+    '</div>';
+  };
+
+  const render = () => {
+    const f = document.activeElement;
+    const keep = f && list.contains(f) ? [f.closest('.rcd-ln').dataset.id, f.dataset.s, f.hasAttribute('data-flag')] : null;
+    const rows = visible();
+    list.innerHTML = rows.length ? rows.map(line).join('') : '<div class="rcd-empty">' + esc(T.emptyFiltered) + '</div>';
+    fresh.clear();
+
+    const total = evs.filter(e => shown.has(e.id)).length;
+    const unseen = evs.filter(e => shown.has(e.id) && !seen.has(e.id)).length;
+    nNew.textContent = unseen ? count(T.newCount, unseen) : '';
+    nCount.textContent = rows.length === total ? total : rows.length + ' / ' + total;
+    const i = rows.findIndex(e => e.id === sel);
+    nPos.textContent = i >= 0 ? (rows.length - i) + ' / ' + rows.length : '';
+    flagTxt.textContent = flagged.size ? flagged.size : T.flagged;
+
+    if (keep) {
+      const ln = $('.rcd-ln[data-id="' + keep[0] + '"]', list);
+      const b = ln && (keep[2] ? $('[data-flag]', ln) : $('[data-s="' + (keep[1] || 5) + '"]', ln));
+      if (b) b.focus({ preventScroll: true });
+    }
+  };
+
+  // land every live event the footage has reached by second t
+  const reach = t => {
+    let added = false;
+    evs.forEach(e => {
+      if (e.live != null && !shown.has(e.id) && t >= e.live) { shown.add(e.id); fresh.add(e.id); added = true; }
+    });
+    if (added) { render(); if (!cur) list.scrollTop = 0; }
+  };
+
+  const reset = () => { shown = past(); seen.clear(); flagged.clear(); sel = null; render(); list.scrollTop = 0; };
+
+  const replay = (e, lead) => {
+    if (!cur) { held = live.currentTime; heldAt = performance.now(); live.pause(); }
+    cur = e;
+    sel = e.id;
+    seen.add(e.id);   // looking at an incident is what "viewed" means, as in the app
+    const from = Math.max(0, e.clip[2] - lead);
+    const src = rep.dataset.base + pad2(e.clip[0]) + '.mp4';
+    if (rep.getAttribute('src') !== src) rep.src = src;
+    // before metadata a seek is dropped by the load, so it waits for it
+    if (rep.readyState >= 1) rep.currentTime = from;
+    else rep.addEventListener('loadedmetadata', () => { if (cur === e) rep.currentTime = from; }, { once: true });
+    rep.hidden = false;
+    live.hidden = true;
+    play(rep);
+    render();
+  };
+
+  const backToLive = () => {
+    if (!cur) return;
+    let t = liveT();
+    const dur = live.duration || 0;
+    cur = null;
+    if (dur && t >= dur) { t %= dur; reset(); }
+    rep.pause();
+    rep.hidden = true;
+    live.hidden = false;
+    lastT = t;
+    if (!reduced) { live.currentTime = t; if (inView) play(live); }
+    render();
+    reach(t);
+  };
+
+  live.addEventListener('timeupdate', () => {
+    if (cur) return;
+    const t = live.currentTime;
+    if (t + 1 < lastT) reset();   // the loop wrapped: the race starts over
+    lastT = t;
+    reach(t);
+  });
+  rep.addEventListener('timeupdate', () => {
+    // a seek to another clip is still landing: the old position means nothing
+    if (!cur || rep.seeking) return;
+    reach(liveT());
+    if (rep.currentTime >= cur.clip[1] - .15) backToLive();
+  });
+  rep.addEventListener('ended', backToLive);
+
+  list.addEventListener('click', ev => {
+    const ln = ev.target.closest('.rcd-ln');
+    if (!ln) return;
+    const e = evs[Number(ln.dataset.id)];
+    if (ev.target.closest('[data-flag]')) {
+      flagged.has(e.id) ? flagged.delete(e.id) : flagged.add(e.id);
+      render();
+      return;
+    }
+    const b = ev.target.closest('[data-s]');
+    if (b) replay(e, Number(b.dataset.s));
+  });
+
+  // "next" is newer, which is *up* a newest-first log — same walk as the app
+  const step = dir => {
+    const rows = visible();
+    if (!rows.length) return;
+    const i = rows.findIndex(e => e.id === sel);
+    const j = i < 0 ? (dir === 'next' ? rows.length - 1 : 0)
+                    : Math.max(0, Math.min(rows.length - 1, dir === 'next' ? i - 1 : i + 1));
+    replay(rows[j], 5);
+    const ln = $('.rcd-ln[data-id="' + rows[j].id + '"]', list);
+    if (ln) ln.scrollIntoView({ block: 'nearest' });
+  };
+  $('#rcdPrev').addEventListener('click', () => step('prev'));
+  $('#rcdNext').addEventListener('click', () => step('next'));
+
+  $$('.rcd-fchip[data-cat]', root).forEach(b => b.addEventListener('click', () => {
+    cats[b.dataset.cat] = !cats[b.dataset.cat];
+    b.setAttribute('aria-pressed', String(cats[b.dataset.cat]));
+    render();
+  }));
+  flagBtn.addEventListener('click', () => {
+    flaggedOnly = !flaggedOnly;
+    flagBtn.setAttribute('aria-pressed', String(flaggedOnly));
+    render();
+  });
+  $('#rcdLive').addEventListener('click', backToLive);
+  $('#rcdMyCar').addEventListener('click', backToLive);
+
+  // footage only runs while the demo is on screen; reduced motion never
+  // starts the live feed — a replay is still one click away
+  new IntersectionObserver(([en]) => {
+    inView = en.isIntersecting;
+    if (!inView) { live.pause(); rep.pause(); return; }
+    if (cur) play(rep);
+    else if (!reduced) play(live);
+  }, { threshold: .35 }).observe(root);
+
+  render();
 })();
 
 /* ---------- composed-screenshot lightbox (kept for [data-shot] scenes) ------- */
@@ -291,6 +549,20 @@ $$('#faqList .qa').forEach(qa => {
   });
 })();
 
+/* ---------- gallery video: plays only while on screen -----------------------
+   Muted footage in place of a still. Reduced motion never starts it on its
+   own; the visitor gets the controls and decides. */
+(() => {
+  const vids = $$('.g-video');
+  if (!vids.length) return;
+  if (reduced) { vids.forEach(v => { v.controls = true; }); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { const p = e.target.play(); if (p) p.catch(() => {}); }
+    else e.target.pause();
+  }), { threshold: .35 });
+  vids.forEach(v => io.observe(v));
+})();
+
 /* ---------- latest release tag ---------- */
 (() => {
   const slots = $$('.js-version');
@@ -369,7 +641,7 @@ $$('#faqList .qa').forEach(qa => {
 
   function spawnConfetti(container, count) {
     if (reduced || !container) return;
-    const colors = ['#ff5f96', '#3fd8e0', '#ffb02e', '#35e08d', '#ffffff'];
+    const colors = ['#ff5f96', '#6cd7e3', '#f2b95a', '#63d99b', '#ffffff'];
     for (let i = 0; i < count; i++) {
       const p = document.createElement('span');
       p.style.left = (Math.random() * 100).toFixed(1) + '%';

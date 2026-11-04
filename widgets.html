@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Все виджеты TU Overlays — каталог из 38 оверлеев для iRacing</title>
 <meta name="description" content="Полный каталог виджетов TU Overlays: 38 независимых оверлеев для iRacing — таблица, relative, карта трассы, топливо, телеметрия, погода и стрим-виджеты.">
-<meta name="theme-color" content="#02102c">
+<meta name="theme-color" content="#041128">
 <script src="/scripts/analytics.js" defer></script>
 <link rel="canonical" href="https://tuoverlays.xyz/widgets">
 <link rel="alternate" hreflang="ru" href="https://tuoverlays.xyz/widgets">
@@ -59,7 +59,7 @@
 .srch{position:relative;flex:0 1 260px;max-width:100%}
 .srch svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--tx-4);pointer-events:none}
 .srch input{
-  width:100%;height:40px;padding:0 34px 0 36px;border-radius:var(--r-pill);
+  width:100%;height:36px;padding:0 34px 0 36px;border-radius:6px;
   background:var(--elev-1);border:1px solid var(--line-2);color:var(--tx);
   font-family:var(--f-text);font-size:14px;
   transition:border-color var(--d-1) var(--e-state),background var(--d-1) var(--e-state);
@@ -76,8 +76,8 @@
 
 .chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
 .chip{
-  display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;
-  border:1px solid var(--line-2);border-radius:var(--r-pill);
+  display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 16px;
+  border:1px solid var(--line-2);border-radius:6px;
   font-family:var(--f-mono);font-size:var(--t-lbl);letter-spacing:.06em;text-transform:uppercase;
   color:var(--tx-3);white-space:nowrap;
   transition:color var(--d-1) var(--e-state),border-color var(--d-1) var(--e-state),background var(--d-1) var(--e-state);
@@ -86,6 +86,15 @@
 .chip-n{font-size:var(--t-lbl-s);color:var(--tx-4);transition:color var(--d-1) var(--e-state)}
 .chip.is-on{color:var(--tx);border-color:var(--line-hot);background:var(--brand-dim)}
 .chip.is-on .chip-n{color:var(--brand-hi)}
+
+/* family colour — chips and cards share one --k per data-cat */
+[data-cat="race"]{--k:var(--k-race)}[data-cat="safety"]{--k:var(--k-safety)}
+[data-cat="strategy"]{--k:var(--k-strategy)}[data-cat="car"]{--k:var(--k-car)}
+[data-cat="track"]{--k:var(--k-track)}[data-cat="weather"]{--k:var(--k-weather)}
+[data-cat="stream"]{--k:var(--k-stream)}
+.chip[data-cat]:not([data-cat="all"]){color:var(--k)}
+.chip[data-cat]:not([data-cat="all"]).is-on{border-color:var(--k);background:color-mix(in srgb,var(--k) 12%,transparent)}
+.chip[data-cat]:not([data-cat="all"]).is-on .chip-n{color:var(--k)}
 
 .count{margin-left:auto;font-family:var(--f-mono);font-variant-numeric:tabular-nums;
   font-size:var(--t-lbl);letter-spacing:var(--tr-lbl);text-transform:uppercase;color:var(--tx-4);white-space:nowrap}
@@ -103,13 +112,13 @@
 .wcard:hover{background:var(--elev-2);border-color:var(--line-3)}
 /* same hover affordance as the feature cards on the home page: a hairline
    drawing itself left to right, never a lift */
-.wcard::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:var(--brand);
+.wcard::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:var(--k,var(--brand));
   transform:scaleX(0);transform-origin:left;transition:transform var(--d-2) var(--e-state)}
 .wcard:hover::after{transform:scaleX(1)}
 
 .wc-hd{display:flex;align-items:baseline;gap:10px;margin-bottom:var(--s2)}
 .wc-tag{font-family:var(--f-mono);font-size:var(--t-lbl-s);letter-spacing:var(--tr-lbl);
-  text-transform:uppercase;color:var(--tx-4)}
+  text-transform:uppercase;color:var(--k,var(--tx-4))}
 .wc-n{margin-left:auto;font-size:var(--t-lbl-s);letter-spacing:.12em;color:var(--tx-4);flex:none}
 .wcard h3{color:var(--tx)}
 .wc-gloss{font-size:var(--t-lbl);letter-spacing:.04em;color:var(--tx-3)}
@@ -244,7 +253,7 @@
   <div class="wgrid" id="grid">
     <article class="panel brk wcard has-mv" data-cat="race" data-keys="standings турнирная таблица позиции, отрывы, лучшие круги, пит-стопы и классы. позиции и темп positions &amp; pace" data-name="Standings" data-reveal>
       <div class="wc-mv">
-        <img src="img/standings.png" alt="Виджет Standings — как он выглядит в игре" width="845" height="418" loading="lazy" decoding="async">
+        <img src="img/standings.png" alt="Виджет Standings — как он выглядит в игре" width="968" height="530" loading="lazy" decoding="async">
         <span class="wc-zoom" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </span>
@@ -259,7 +268,7 @@
     </article>
     <article class="panel brk wcard has-mv" data-cat="race" data-keys="relative относительные позиции машины вокруг вас и интервалы до них в реальном времени. позиции и темп positions &amp; pace" data-name="Relative" data-reveal>
       <div class="wc-mv">
-        <img src="img/relative.png" alt="Виджет Relative — как он выглядит в игре" width="584" height="307" loading="lazy" decoding="async">
+        <img src="img/relative.png" alt="Виджет Relative — как он выглядит в игре" width="564" height="331" loading="lazy" decoding="async">
         <span class="wc-zoom" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </span>
@@ -559,7 +568,7 @@
     </article>
     <article class="panel brk wcard has-mv" data-cat="car" data-keys="input traces педали и руль газ, тормоз, сцепление, руль, передача и скорость. телеметрия telemetry" data-name="Input Traces" data-reveal>
       <div class="wc-mv">
-        <img src="img/inputs.png" alt="Виджет Input Traces — как он выглядит в игре" width="453" height="102" loading="lazy" decoding="async">
+        <img src="img/inputs.png" alt="Виджет Input Traces — как он выглядит в игре" width="538" height="100" loading="lazy" decoding="async">
         <span class="wc-zoom" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </span>
@@ -762,16 +771,8 @@
     <h2>Список будет расти</h2>
     <p>TU Overlays развивается вместе с сообществом: предложите виджет, которого вам не хватает, — и он вполне может появиться в следующем релизе.</p>
     <div class="cta-actions">
-      <a class="btn btn-primary" href="download.html">
-        <span class="btn-content">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v9m0 0 3.4-3.4M8 11 4.6 7.6M2.5 13.5h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="btn-label">Скачать TU Overlays</span>
-        </span>
-        <span class="btn-arrow" aria-hidden="true">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </a>
-      <a class="btn btn-ghost" href="https://discord.gg/hsetuZU3Hc" target="_blank" rel="noopener">Предложить виджет в Discord</a>
+      <a class="obtn obtn-primary" href="download.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><span>Скачать TU Overlays</span></a>
+      <a class="obtn obtn-ghost" href="https://discord.gg/hsetuZU3Hc" target="_blank" rel="noopener"><span>Предложить виджет в Discord</span></a>
     </div>
   </div>
 </section>
