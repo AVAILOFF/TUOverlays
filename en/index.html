@@ -448,12 +448,16 @@ body.is-booting{overflow:hidden}
     </div>
 
     <!-- Live demo. Footage: a Le Mans practice replay; the log in #rcdData is
-         that session's Race Log, each line's replay cut into clips/NN.mp4. -->
+         that session's Race Log, each line's replay cut into clips/NN.mp4. Every file also has an
+         AV1 copy (NN.av1.mp4), ~40% lighter; H.264 stays for browsers without AV1. -->
     <figure class="rcd" id="rcd" data-reveal>
       <div class="rcd-main">
         <div class="rcd-stage">
-          <video class="rcd-live" src="/media/race-control/live.mp4" poster="/media/race-control/live-poster.jpg"
-                 muted loop playsinline preload="none" aria-label="Race footage with TU overlays on screen"></video>
+          <video class="rcd-live" poster="/media/race-control/live-poster.jpg"
+                 muted loop playsinline preload="none" aria-label="Race footage with TU overlays on screen">
+            <source src="/media/race-control/live.av1.mp4" type='video/mp4; codecs="av01.0.05M.08"'>
+            <source src="/media/race-control/live.mp4" type="video/mp4">
+          </video>
           <video class="rcd-rep" data-base="/media/race-control/clips/" muted playsinline preload="none" aria-hidden="true" hidden></video>
         </div>
 
@@ -570,7 +574,10 @@ body.is-booting{overflow:hidden}
 
       <!-- SHOT 2 -->
       <div class="panel brk gcard" data-reveal>
-        <div class="frame"><video class="g-video" src="/media/gallery/shelik-race.mp4" poster="/media/gallery/shelik-race-poster.jpg" muted loop playsinline preload="none" aria-label="TU Overlays widgets on Shelik's stream — a race on track"></video></div>
+        <div class="frame"><video class="g-video" poster="/media/gallery/shelik-race-poster.jpg" muted loop playsinline preload="none" aria-label="TU Overlays widgets on Shelik's stream — a race on track">
+            <source src="/media/gallery/shelik-race.av1.mp4" type='video/mp4; codecs="av01.0.05M.08"'>
+            <source src="/media/gallery/shelik-race.mp4" type="video/mp4">
+          </video></div>
         <div class="gcap"><h3>Example from Shelik's stream</h3><span>On track</span>
           <span class="g-live">Video</span>
         </div>

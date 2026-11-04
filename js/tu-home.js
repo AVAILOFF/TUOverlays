@@ -353,7 +353,9 @@ $$('#faqList .qa').forEach(qa => {
   // A clip clicked before it is in memory streams from its URL instead of
   // waiting for the whole file (the seek into it needs HTTP Range, which
   // Vercel serves); its queued fetch is dropped rather than run twice.
-  const clipUrl = n => reps[0].dataset.base + pad2(n) + '.mp4';
+  // each clip has an AV1 copy ~40% lighter; H.264 where AV1 cannot play
+  const ext = reps[0].canPlayType('video/mp4; codecs="av01.0.05M.08"') ? '.av1.mp4' : '.mp4';
+  const clipUrl = n => reps[0].dataset.base + pad2(n) + ext;
   const blobs = {}, loads = {}, aborts = {};
   const canBlob = !!(window.fetch && window.URL && URL.createObjectURL && window.AbortController);
   const load = n => {
